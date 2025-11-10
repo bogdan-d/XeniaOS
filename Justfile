@@ -1,7 +1,7 @@
-image_name := env("BUILD_IMAGE_NAME", "arch-bootc")
+image_name := env("BUILD_IMAGE_NAME", "xeniaos")
 image_tag := env("BUILD_IMAGE_TAG", "latest")
 base_dir := env("BUILD_BASE_DIR", ".")
-filesystem := env("BUILD_FILESYSTEM", "ext4")
+filesystem := env("BUILD_FILESYSTEM", "btrfs")
 
 build-containerfile $image_name=image_name:
     sudo podman build -t "${image_name}:latest" .
@@ -25,3 +25,8 @@ generate-bootable-image $base_dir=base_dir $filesystem=filesystem:
         fallocate -l 20G "${base_dir}/bootable.img"
     fi
     just bootc install to-disk --composefs-backend --via-loopback /data/bootable.img --filesystem "${filesystem}" --wipe --bootloader systemd
+
+
+rootful $image=image_name:
+    #!/usr/bin/env bash
+    podman image scp $USER@localhost::$image root@localhost::$image
