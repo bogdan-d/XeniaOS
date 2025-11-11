@@ -31,7 +31,7 @@ It can be used by first installing [Bluefin](https://projectbluefin.io/) (or any
 -Noctalia/Quickshell
 
 
--CachyOS Kernel
+-CachyOS Kernel with cpu optimizations (for V3 cpus)
 
 
 -Content creator oriented flatpaks set preinstalled
