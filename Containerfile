@@ -47,7 +47,7 @@ RUN pacman -Syyuu --noconfirm \
 \
 # Media/Install utilities
       librsvg libglvnd qt6-multimedia-ffmpeg plymouth flatpak acpid aha clinfo ddcutil dmidecode mesa-utils ntfs-3g nvme-cli vulkan-tools wayland-utils \
-      haruna-git pinta \
+      haruna \
 \
 # Fonts
       noto-fonts noto-fonts-cjk noto-fonts-emoji \
@@ -76,6 +76,7 @@ RUN pacman -Syyuu --noconfirm \
 # Desktop Environment needs
       greetd udiskie polkit-kde-agent xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs dolphin \
       ffmpegthumbs filelight kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi flatpak matugen \
+      accountsservice quickshell dgop cliphist cava \
 \
       ${DEV_DEPS} && \
   pacman -S --clean --noconfirm && \
@@ -120,15 +121,15 @@ RUN pacman -Sy --noconfirm
 
 RUN pacman -S \
       chaotic-aur/niri-git \
-      chaotic-aur/noctalia-shell \
       chaotic-aur/input-remapper-git \
       chaotic-aur/vesktop-git \
       chaotic-aur/sc-controller \
       chaotic-aur/protonup-qt \
       chaotic-aur/obs-vkcapture-git \
       chaotic-aur/obs-studio-git \
-      chaotic-aur/dms-shell-niri-git \
+      chaotic-aur/dms-shell-git \
       chaotic-aur/krita-git \
+      chaotic-aur/pinta \
         --noconfirm
 
 ########################################################################################################################################
@@ -153,20 +154,6 @@ RUN mkdir -p /usr/share/xeniaos/ && \
 # Flatpak repo add
 RUN mkdir -p /etc/flatpak/remotes.d/ && \
       curl --retry 3 -Lo /etc/flatpak/remotes.d/flathub.flatpakrepo https://dl.flathub.org/repo/flathub.flatpakrepo
-
-# Noctalia Service add
-RUN echo -ne '[Unit] \n\
-Description=Noctalia Shell Service \n\
-PartOf=graphical-session.target \n\
-After=graphical-session.target \n\
- \n\
-[Service] \n\
-ExecStart=qs -p /etc/xdg/quickshell/noctalia-shell \n\
-Restart=on-failure \n\
-RestartSec=1 \n\
-\n\
-[Install] \n\
-WantedBy=graphical-session.target' > /usr/lib/systemd/user/noctalia.service
 
 # OS Release and Update uwu
 RUN echo -ne 'NAME="XeniaOS" \n\
@@ -212,12 +199,25 @@ RestartSec=1 \n\
 [Install] \n\
 WantedBy=graphical-session.target' > /usr/lib/systemd/user/xwayland-satellite.service
 
+# DMS Service Systemd Service
+RUN echo -ne '[Unit]\n\
+Description=Shell Service\n\
+PartOf=graphical-session.target\n\
+After=graphical-session.target\n\
+\n\
+[Service]\n\
+ExecStart=dms run\n\
+Restart=on-failure\n\
+RestartSec=1\n\
+\n\
+[Install]\n\
+WantedBy=graphical-session.target' > /usr/lib/systemd/user/dms.service
+
 # Starts with Niri Session - Services for User Interaction
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=plasma-polkit-agent.service/" "/usr/lib/systemd/user/niri.service"
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=udiskie.service/" "/usr/lib/systemd/user/niri.service"
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=xwayland-satellite.service/" "/usr/lib/systemd/user/niri.service"
-RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=noctalia.service/" "/usr/lib/systemd/user/niri.service"
-RUN systemctl enable greetd
+RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=dms.service/" "/usr/lib/systemd/user/niri.service"
 
 RUN echo -ne '[Unit]\n\
 Description=Initializes Chezmoi if directory is missing\n\
@@ -274,13 +274,17 @@ WantedBy=timers.target' >> /usr/lib/systemd/user/chezmoi-update.timer
 RUN echo 'u     greetd -     "greetd daemon" /var/lib/greetd' > /usr/lib/sysusers.d/greetd.conf
 RUN echo 'Z  /var/lib/greetd -    greetd greetd -   -' > /usr/lib/tmpfiles.d/greetd.conf
 
-# Login tui setup
+# Login DMS Greeter setup
 RUN echo -ne '[terminal]\n\
 vt = 1\n\
 \n\
 [default_session]\n\
-command = "tuigreet --time --user-menu --remember --remember-session --asterisks --power-no-setsid --width 140 --theme border=magenta;text=magenta;prompt=lightmagenta;time=magenta;action=lightmagenta;button=magenta;container=gray;input=magenta --cmd niri-session"\n\
+command = "dms-greeter --command niri" \n\
 user = "greetd"' > /etc/greetd/config.toml
+
+RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
+
+RUN systemctl enable --global dms.service
 
 ########################################################################################################################################
 # Section 5 - Final Bootc Setup ########################################################################################################
