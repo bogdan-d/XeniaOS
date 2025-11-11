@@ -48,7 +48,7 @@ The project is in its infancy, I would not use this for any serious work/use for
 
 
 ## Contact and thx
-<img align="right" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/prototypelogo_delphic_melody.svg" width="300">
+<img align="right" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/prototypelogo_2025_jasper_valery.svg" width="300">
 
 Developers can currently most easily be reached 
 
@@ -70,4 +70,6 @@ Special thank yous to [Tulip](https://github.com/tulilirockz) for general help
 
 for Xenia artwork/logos/assets/concepting.
 
+
+<img align="right" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/textlogo_jasper_valery.svg" width="300">
 
