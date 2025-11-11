@@ -7,7 +7,7 @@
 </div>
 
 
-This is an opinionated gaming-oriented bootc image, an "immutable" linux-based operating system. Featuring the CachyOS kernel optimizations, a tiling window manager, [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my, Xenia Meraki, tastes. Its emphasis is on gaming performance on bootc at most any other cost.
+This is an opinionated gaming-oriented bootc image, an "immutable" linux-based operating system. Featuring the CachyOS kernel optimizations, a tiling window manager, [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on gaming performance on bootc at most any other cost. It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc.
 
 
 It can be used by first installing [Bluefin](https://projectbluefin.io/) (or any related Bootc image) and rebasing with command:
