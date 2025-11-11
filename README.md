@@ -47,7 +47,10 @@ The project is in its infancy, I would not use this for any serious work/use for
 ## Contact and thx
 <img align="right" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/prototypelogo_delphic_melody.svg" width="300">
 
-Developers can currently most easily be reached in the [Zirconium Discord](https://discord.gg/mmgNQpxwhW) (a sister project)
+Developers can currently most easily be reached 
+
+
+in the [Zirconium Discord](https://discord.gg/mmgNQpxwhW) (a sister project)
 
 
 XeniaOS headed by [Xenia Meraki](https://xeniameraki.com)
@@ -56,6 +59,9 @@ XeniaOS headed by [Xenia Meraki](https://xeniameraki.com)
 Special thank yous to [Tulip](https://github.com/tulilirockz) for general help
 
 
-[Chimmie Firefly](https://github.com/GamePlayer-8/xenia.chimmie.k.vu) [Jasper Valery](https://www.artstation.com/jasperjvalery) [Delphic Melody](https://github.com/delphicmelody) for Xenia artwork/logos/assets/concepting.
+[Chimmie Firefly](https://github.com/GamePlayer-8/xenia.chimmie.k.vu) [Jasper Valery](https://www.artstation.com/jasperjvalery) [Delphic Melody](https://github.com/delphicmelody) 
+
+
+for Xenia artwork/logos/assets/concepting.
 
 
