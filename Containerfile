@@ -47,6 +47,7 @@ RUN pacman -Syyuu --noconfirm \
 \
 # Media/Install utilities
       librsvg libglvnd qt6-multimedia-ffmpeg plymouth flatpak acpid aha clinfo ddcutil dmidecode mesa-utils ntfs-3g nvme-cli vulkan-tools wayland-utils \
+      haruna-git pinta \
 \
 # Fonts
       noto-fonts noto-fonts-cjk noto-fonts-emoji \
@@ -122,6 +123,12 @@ RUN pacman -S \
       chaotic-aur/noctalia-shell \
       chaotic-aur/input-remapper-git \
       chaotic-aur/vesktop-git \
+      chaotic-aur/sc-controller \
+      chaotic-aur/protonup-qt \
+      chaotic-aur/obs-vkcapture-git \
+      chaotic-aur/obs-studio-git \
+      chaotic-aur/dms-shell-niri-git \
+      chaotic-aur/krita-git \
         --noconfirm
 
 ########################################################################################################################################
