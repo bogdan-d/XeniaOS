@@ -26,7 +26,7 @@
 #                    1   ][[
 #                       `            Credit art: Cathodegaytube for original art, @catumin for ascii-ification
 
-FROM docker.io/cachyos/cachyos:latest
+FROM docker.io/cachyos/cachyos-v3:latest
 
 ENV DEV_DEPS="base-devel git rust"
 
@@ -46,7 +46,7 @@ ENV DRACUT_NO_XATTR=1
 
 RUN pacman -Syyuu --noconfirm \
 # Base packages
-      base dracut linux linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow \
+      base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow \
 \
 # Media/Install utilities
       librsvg libglvnd qt6-multimedia-ffmpeg plymouth flatpak acpid aha clinfo ddcutil dmidecode mesa-utils ntfs-3g nvme-cli vulkan-tools wayland-utils \
@@ -181,6 +181,13 @@ RestartSec=1 \n\
 \n\
 [Install] \n\
 WantedBy=graphical-session.target' > /usr/lib/systemd/user/udiskie.service
+
+# Secondary HDD/SSD automounter, supports ext4/btrfs, mounts to /media/media-automount by default. Made by @Zeglius
+# Feel free to use your own fstab/mount things your own way if you understand how to do so
+# Disable with sudo ln -s /dev/null /etc/media-automount.d/_all.conf
+RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator \
+cd ./media-automount-generator \
+./install_udev.sh
 
 ########################################################################################################################################
 # Section 5 - CachyOS settings | Since we have  the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
