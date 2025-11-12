@@ -60,7 +60,6 @@ Exec = /usr/bin/rm -rf /var/cache/pacman/pkg\n" | tee /usr/share/libalpm/hooks/p
 
 RUN pacman -Syu
 
-RUN pacman -Syyuu --noconfirm \
 # Base packages
       base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow \
 \
