@@ -9,18 +9,18 @@
 #   rr  )        v  @;@rx                             Trans rights are human rights!
 #     rrr)    \__^__/   ji                                Xenia means helping and supporting each other.
 #      rj].           . r
-#      [[]]11111111111111111]                                   Credits
-#     ][[[]]][11111111111111111<            Arch | Bootc | Aurora | Bazzite | Ublue | Zirconium | Bluefin
-#     ][[[[[]]]]]]]]]]]]]]-111111[      Xenia Meraki the transfem package fox | @tulilirockz saved the distro
-#     ]-[[[[[[;]]]]]]]]]]]]]]]]   1            Docker | Podman | Fedora | Proton | Wine | Ubuntu
-#     ]][[[[[[[[[[[]]]]]]]]]]]]]                      @kylegospo @valerie-tar-gz @cyrv6737
-#     1]][[[[[[[[[[[[[[<]]]]]]]]]                    Artists Jasper Valery | Delphic Melody
-#      11]]][[[[[[[[[[[[[[[]]]]]]]                           Chimmie Firefly
+#      [[]]11111111111111111]                                   
+#     ][[[]]][11111111111111111<                                 XeniaOS
+#     ][[[[[]]]]]]]]]]]]]]-111111[        Xenia Meraki the transfem package fox | @tulilirockz saved the distro
+#     ]-[[[[[[;]]]]]]]]]]]]]]]]   1             Artists Jasper Valery | Delphic Melody | Chimmie Firefly
+#     ]][[[[[[[[[[[]]]]]]]]]]]]]      
+#     1]][[[[[[[[[[[[[[<]]]]]]]]]      
+#      11]]][[[[[[[[[[[[[[[]]]]]]]                         
 #       111]]]]'[[[[[[[[[[[[[[]]]]
-#         111-]]]]][[[[[[[[[[[[[]]
-#           11111]]]]]_[[[[[[[[[[]
-#               11111]]]i[[[[[[[[
-#                  1111]]+[[[[[[^
+#         111-]]]]][[[[[[[[[[[[[]]  Software that makes this OS possible - Distros for inspiration and whose members helped in some way
+#           11111]]]]]_[[[[[[[[[[]                   Arch | Bootc | Aurora | Bazzite | Ublue | Zirconium | Bluefin
+#               11111]]]i[[[[[[[[                          Docker | Podman | Fedora | Proton | Wine | Ubuntu
+#                  1111]]+[[[[[[^                                @kylegospo @valerie-tar-gz @cyrv6737
 #                    11 ]][[[[[[
 #                    11 +][[[[
 #                    1   ][[
@@ -182,7 +182,7 @@ RestartSec=1 \n\
 WantedBy=graphical-session.target' > /usr/lib/systemd/user/udiskie.service
 
 ########################################################################################################################################
-# Section 5 - CachyOS settings #########################################################################################################
+# Section 5 - CachyOS settings | Since we have  the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
 ########################################################################################################################################
 
 # Activate NTSync
@@ -193,7 +193,7 @@ RUN echo -ne 'net.core.default_qdisc=fq \n\
 net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
 
 ########################################################################################################################################
-# Section 6 - Niri/Chezmoi/DMS #########################################################################################################
+# Section 6 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
 ########################################################################################################################################
 
 # Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
@@ -299,7 +299,7 @@ RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
 RUN systemctl enable --global dms.service
 
 ########################################################################################################################################
-# Section 7 - Final Bootc Setup ########################################################################################################
+# Section 7 - Final Bootc Setup # the horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew ######################
 ########################################################################################################################################
 
 #This fixes a user/groups error with Arch Bootc setup
@@ -345,3 +345,28 @@ RUN pacman -S whois --noconfirm
 RUN usermod -p "$(echo "changeme" | mkpasswd -s)" root
 
 RUN bootc container lint
+
+#                                                       ✧⋆✩₊⋆⁺₊˚.
+#     ,c.                       .c;                    ✩₊˚.⋆☾⋆⁺₊✧
+#   .KMMMk....             ....kMMMK.                  ₊˚.⋆⁺₊✧⋆✩
+#   .WMMMMMX.....         .....KMMMMMW.                       
+#   XMMMMMMM0.....        ....OMMMMMMMN
+#  dMMMMMMMMM;.... ..... ....,MMMMMMMMMd
+#  WMMMMMMMMMl;okKKKKKKKKKOo;cMMMMMMMMMM
+# 'MMMMMMMNXK0KKKKKKKKKKKKKKK0KXNMMMMMMM;
+# oMMMMMMMOxoKKKKKKKKKKKKKKKKKoxOMMMMMMMd
+# dMMMMMMMdxxxKKKKKKKKKKKKKKKxxxdNMMMMMMk
+# :MMMMX0xxxxxx0KKKKKKKK0KK0xxxxxx0XMMMMc
+#  MMMOxxxxxxxxdxkdd0x0ddkxdxxxxxxxxOMMM
+# ;xxkxddxxxxdodxxxxdxdxxxxdodxxxxddxkxx;
+#dxdKMMMWXo'.....'cdxxxdc'.....'lXWMMMXdxd
+# cxdXMMMN,..........dxd'.........'XMMMNdxl
+#  .xxWMMl...''....'.;k:.'....''...lMMWxx.
+# ..:kXMMx..'....''..kMk..''....'..xMMXkc..
+#  dMMMMMMd.....'...xMMMx...''....dMMMMMMx
+#    kMMMMWOoc:coOkolllokOoc:coOWMMMMO
+#         .MMMMMMMMl...lNMMMMMMM.
+#            KMMMMMMXlKMMMMMMX
+#               .MMMMMMMMM. 
+#
+# Art by @bhavyakukkar and @ioletsgo
