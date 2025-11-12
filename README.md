@@ -1,7 +1,7 @@
 <div align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/xeniaos_text_logo_delphic_melody.svg" width="700">
-  <img alt="Xenia OS logo dark/light mode. Light: src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/xeniaos_text_logo_whitever_delphic_melody.svg" width="700">
+  <source media="(prefers-color-scheme: light)" srcset=https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/xeniaos_text_logo_whitever_delphic_melody.svg" width="700">
 </picture>
 </div>
 
