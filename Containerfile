@@ -44,17 +44,6 @@ ENV DRACUT_NO_XATTR=1
 # Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
 ########################################################################################################################################
 
-#Set up CachyOS repo just in case
-RUN pacman-key --recv-key F3B607488DB35A47 --keyserver keyserver.ubuntu.com
-
-RUN pacman-key --init && pacman-key --lsign-key F3B607488DB35A47
-
-RUN pacman -U 'https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-keyring-20240331-1-any.pkg.tar.zst' --noconfirm
-
-RUN pacman -U 'https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-v3-mirrorlist-22-1-any.pkg.tar.zst' --noconfirm
-
-RUN echo -e 'Include = /etc/pacman.d/cachyos-v3-mirrorlist' >> /etc/pacman.conf
-
 # Set it up such that pacman will automatically clean package cache after each install
 # So that we don't run out of memory in image generation
 RUN echo -e "[Trigger]\n\
@@ -69,9 +58,9 @@ Depends = coreutils\n\
 When = PostTransaction\n\
 Exec = /usr/bin/rm -rf /var/cache/pacman/pkg\n" | tee /usr/share/libalpm/hooks/package-cleanup.hook
 
-RUN pacman -Sy
+RUN pacman -Syu
 
-RUN pacman -Syu --noconfirm \
+RUN pacman -S --noconfirm \
 # Base packages
       base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow \
 \
