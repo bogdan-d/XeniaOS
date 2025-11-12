@@ -58,50 +58,47 @@ Depends = coreutils\n\
 When = PostTransaction\n\
 Exec = /usr/bin/rm -rf /var/cache/pacman/pkg\n" | tee /usr/share/libalpm/hooks/package-cleanup.hook
 
-RUN pacman -Syu
+RUN pacman -Syu --noconfirm
 
 # Base packages
-      base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow \
-\
+RUN pacman -Sy --noconfirm base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
+
 # Media/Install utilities
-      librsvg libglvnd qt6-multimedia-ffmpeg plymouth flatpak acpid aha clinfo ddcutil dmidecode mesa-utils ntfs-3g nvme-cli vulkan-tools wayland-utils \
-      haruna playerctl \
-\
+RUN pacman -Sy --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth flatpak acpid aha clinfo ddcutil dmidecode mesa-utils ntfs-3g nvme-cli \
+      vulkan-tools wayland-utils haruna playerctl
+
 # Fonts
-      noto-fonts noto-fonts-cjk noto-fonts-emoji \
-\
+RUN pacman -Sy --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
+
 # CLI Utilities
-      bash-completion bat busybox duf fastfetch gping grml-zsh-config htop jq less lsof mcfly nano nvtop openssh powertop \
+RUN pacman -Sy --noconfirm bash-completion bat busybox duf fastfetch gping grml-zsh-config htop jq less lsof mcfly nano nvtop openssh powertop \
       procs ripgrep tldr trash-cli tree usbutils vim wget wl-clipboard ydotool zsh zsh-completions yay unzip ptyxis glibc-locales \
-      starship tuned-ppd tuned hyfetch \
-\
+      starship tuned-ppd tuned hyfetch
+
 # Drivers
-      amd-ucode intel-ucode edk2-shell efibootmgr shim mesa libva-intel-driver libva-mesa-driver \
-      vpl-gpu-rt vulkan-icd-loader vulkan-intel vulkan-radeon apparmor \
-\
+RUN pacman -Sy --noconfirm amd-ucode intel-ucode edk2-shell efibootmgr shim mesa libva-intel-driver libva-mesa-driver \
+      vpl-gpu-rt vulkan-icd-loader vulkan-intel vulkan-radeon apparmor
+
 # Network / VPN / SMB
-      dnsmasq freerdp2 iproute2 iwd libmtp networkmanager-l2tp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp \
-      networkmanager-strongswan networkmanager-vpnc nfs-utils nss-mdns samba smbclient networkmanager firewalld \
-\
+RUN pacman -Sy --noconfirm dnsmasq freerdp2 iproute2 iwd libmtp networkmanager-l2tp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp \
+      networkmanager-strongswan networkmanager-vpnc nfs-utils nss-mdns samba smbclient networkmanager firewalld
+
 # Accessibility
-      espeak-ng orca \
-\
+RUN pacman -Sy --noconfirm espeak-ng orca
+
 # Pipewire
-      pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber pipewire-jack \
-\
+RUN pacman -Sy --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber pipewire-jack
+
 # Printer
-      cups cups-browsed gutenprint ipp-usb hplip splix system-config-printer \
-\
+RUN pacman -Sy --noconfirm cups cups-browsed gutenprint ipp-usb hplip splix system-config-printer
+
 # Desktop Environment needs
-      greetd udiskie polkit-kde-agent xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
+RUN pacman -Sy --noconfirm greetd udiskie polkit-kde-agent xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs filelight kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi flatpak matugen \
-      accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil \
+      accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil
+
 # User frontend programs/apps
-      kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity gnome-disk-utility \
-\
-      ${DEV_DEPS} && \
-  pacman -S --noconfirm && \
-  rm -rf /var/cache/pacman/pkg/*
+RUN pacman -Sy --noconfirm kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity gnome-disk-utility
 
 # Add Maple Mono font
 RUN mkdir -p "/usr/share/fonts/Maple Mono" \
