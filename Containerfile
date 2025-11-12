@@ -132,6 +132,8 @@ RUN pacman -S \
       chaotic-aur/pinta \
         --noconfirm
 
+RUN systemctl enable greetd
+
 ########################################################################################################################################
 # Section 4 - Spawn config files #######################################################################################################
 ########################################################################################################################################
@@ -147,6 +149,11 @@ org.freedesktop.impl.portal.FileChooser=kde;' > /usr/share/xdg-desktop-portal/ni
 # Use Chezmoi to set up visual assets, avatars, and wallpapers
 RUN mkdir -p /usr/share/xeniaos/ && \
       git clone https://github.com/XeniaMeraki/XeniaOS-HRT /usr/share/xeniaos/zdots
+
+# Place XeniaOS logo at plymouth folder location to appear on boot
+RUN mkdir -p /usr/share/plymouth/themes/spinner/
+
+RUN curl -O https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/xeniaos_text_logo_whitever_delphic_melody.svg > /usr/share/plymouth/themes/spinner/watermark.png
 
 RUN mkdir -p /usr/share/xeniaos/ && \
       git clone https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
@@ -243,16 +250,18 @@ Type=oneshot" >> /usr/lib/systemd/user/chezmoi-update.service
 
 RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
 
+RUN echo -ne '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | awk "NF" | awk '\''{print $2}'\'' | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
+RUN chmod +x /usr/libexec/xeniaos-group-fix
 RUN echo -ne '[Unit]\n\
 Description=Fix groups\n\
 Wants=local-fs.target\n\
 After=local-fs.target\n\
-ConditionPathExists=!/etc/.xeniaos-fix-group-done\n\
+ConditionPathExists=!/var/cache/.xeniaos-fix-group-done\n\
 [Service]\n\
 Type=oneshot\n\
-ExecStart=/usr/bin/cp /usr/etc/group /etc/group\n\
-ExecStart=/usr/bin/cp /usr/etc/group- /etc/group-\n\
-ExecStart=/usr/bin/touch /etc/.xeniaos-fix-group-done\n\
+ExecStart=/usr/libexec/xeniaos-group-fix /etc/group\n\
+ExecStart=/usr/libexec/xeniaos-group-fix /etc/gshadow\n\
+ExecStart=/usr/bin/touch /var/cache/.xeniaos-fix-group-done\n\
 [Install]\n\
 WantedBy=default.target multi-user.target' > /usr/lib/systemd/system/xeniaos-group-fix.service
 
@@ -274,12 +283,12 @@ WantedBy=timers.target' >> /usr/lib/systemd/user/chezmoi-update.timer
 RUN echo 'u     greetd -     "greetd daemon" /var/lib/greetd' > /usr/lib/sysusers.d/greetd.conf
 RUN echo 'Z  /var/lib/greetd -    greetd greetd -   -' > /usr/lib/tmpfiles.d/greetd.conf
 
-# Login DMS Greeter setup
+# Login tui setup
 RUN echo -ne '[terminal]\n\
 vt = 1\n\
 \n\
 [default_session]\n\
-command = "dms-greeter --command niri" \n\
+command = "tuigreet --time --user-menu --remember --remember-session --asterisks --power-no-setsid --width 140 --theme border=magenta;text=magenta;prompt=lightmagenta;time=magenta;action=lightmagenta;button=magenta;container=gray;input=magenta --cmd niri-session"\n\
 user = "greetd"' > /etc/greetd/config.toml
 
 RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
