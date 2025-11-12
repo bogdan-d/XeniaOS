@@ -1,19 +1,19 @@
 #       !`              @                            ☆ﾟ.*･｡ﾟXeniaOS ﾟ｡･*.ﾟ☆
 #      @```b        @@@@@                         Arch/CachyOS Bootc | Niri
-#     @`````@     @/@@@@                       Noctalia | DMS | Gaming On Linux
+#     @`````@     @/@@@@                         DMS | Gaming On Linux | Bazaar
 #    @@``'))))))))))C@@                       Starship | Ptyxis | Dolphin on Niri
 #   @@@){)))))())))))))                              ☆ﾟ.Flatpaks | FOSS.ﾟ☆
 #    @r))))@oooo)))))h)))[                                 
 #    rr)))joooooo(xooooo@)
 # rrrxr))r/l;,,,z@{,,,,,@@                         One container file to rule them all!
 #   rr  )        v  @;@rx                             Trans rights are human rights!
-#     rrr)    \__^__/   ji                                
+#     rrr)    \__^__/   ji                                Xenia means helping and supporting each other.
 #      rj].           . r
 #      [[]]11111111111111111]                                   Credits
-#     ][[[]]][11111111111111111<                  Arch | Bootc | Bazzite | Ublue | Zirconium 
-#     ][[[[[]]]]]]]]]]]]]]-111111[                  Xenia Meraki the transfem package fox
-#     ]-[[[[[[;]]]]]]]]]]]]]]]]   1                 Docker | Podman | Fedora | Proton | Wine 
-#     ]][[[[[[[[[[[]]]]]]]]]]]]]                    @tulilirockz @kylegospo @valerie-tar-gz
+#     ][[[]]][11111111111111111<            Arch | Bootc | Aurora | Bazzite | Ublue | Zirconium | Bluefin
+#     ][[[[[]]]]]]]]]]]]]]-111111[      Xenia Meraki the transfem package fox | @tulilirockz saved the distro
+#     ]-[[[[[[;]]]]]]]]]]]]]]]]   1            Docker | Podman | Fedora | Proton | Wine | Ubuntu
+#     ]][[[[[[[[[[[]]]]]]]]]]]]]                      @kylegospo @valerie-tar-gz @cyrv6737
 #     1]][[[[[[[[[[[[[[<]]]]]]]]]                    Artists Jasper Valery | Delphic Melody
 #      11]]][[[[[[[[[[[[[[[]]]]]]]                           Chimmie Firefly
 #       111]]]]'[[[[[[[[[[[[[[]]]]
@@ -26,7 +26,7 @@
 #                    1   ][[
 #                       `            Credit art: Cathodegaytube for original art, @catumin for ascii-ification
 
-FROM docker.io/cachyos/cachyos:latest
+FROM docker.io/cachyos/cachyos-v3:latest
 
 ENV DEV_DEPS="base-devel git rust"
 
@@ -35,10 +35,12 @@ ENV DRACUT_NO_XATTR=1
 # Section 1 - Package Installs
 # Section 2 - Set up bootc dracut
 # Section 3 - Chaotic AUR
-# Section 4 - Spawn config files
-# Section 5 - Final Bootc Setup
+# Section 4 - Linux OS Stuffs
+# Section 5 - CachyOS Settings
+# Section 6 - Niri/Chezmoi/DMS
+# Section 7 - Final Bootc Setup
 ########################################################################################################################################
-# Section 1 - Package Installs #########################################################################################################
+# Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
 ########################################################################################################################################
 
 RUN pacman -Syyuu --noconfirm \
@@ -91,7 +93,7 @@ RUN mkdir -p "/usr/share/fonts/Maple Mono" \
       && unzip "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
 
 ########################################################################################################################################
-# Section 2 - Set up bootc dracut ######################################################################################################
+# Section 2 - Set up bootc dracut | I think it sets up the bootc initial image / Compiles Bootc Package :D #############################
 ########################################################################################################################################
 
 # Workaround due to dracut version bump, please remove eventually
@@ -107,7 +109,7 @@ RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
     pacman -S --clean --noconfirm
 
 ########################################################################################################################################
-# Section 3 - Chaotic AUR ##############################################################################################################
+# Section 3 - Chaotic AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
 ########################################################################################################################################
 
 RUN pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
@@ -138,7 +140,7 @@ RUN pacman -S \
 RUN systemctl enable greetd
 
 ########################################################################################################################################
-# Section 4 - Spawn config files #######################################################################################################
+# Section 4 - Linux OS stuffs | We set some nice defaults for a regular user + set up a couple XeniaOS details owo #####################
 ########################################################################################################################################
 
 #Set up zram
@@ -150,25 +152,10 @@ RUN systemctl preset systemd-resolved.service
 #Enable wifi, firewall, power profiles
 RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
-# Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
-RUN echo -ne '[preferred] \n\
-default=kde;gtk;gnome; \n\
-org.freedesktop.impl.portal.Access=kde; \n\
-org.freedesktop.impl.portal.Notification=kde; \n\
-org.freedesktop.impl.portal.Secret=gnome-keyring; \n\
-org.freedesktop.impl.portal.FileChooser=kde;' > /usr/share/xdg-desktop-portal/niri-portals.conf
-
-# Use Chezmoi to set up visual assets, avatars, and wallpapers
-RUN mkdir -p /usr/share/xeniaos/ && \
-      git clone https://github.com/XeniaMeraki/XeniaOS-HRT /usr/share/xeniaos/zdots
-
 # Place XeniaOS logo at plymouth folder location to appear on boot
 RUN mkdir -p /usr/share/plymouth/themes/spinner/
 
 RUN curl -O https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_text_logo_whitever_delphic_melody.png > /usr/share/plymouth/themes/spinner/watermark.png
-
-RUN mkdir -p /usr/share/xeniaos/ && \
-      git clone https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
 
 # Flatpak repo add
 RUN mkdir -p /etc/flatpak/remotes.d/ && \
@@ -179,16 +166,6 @@ RUN echo -ne 'NAME="XeniaOS" \n\
 PRETTY_NAME="XeniaOS" \n\
 DEFAULT_HOSTNAME="XeniaOS" \n\
 HOME_URL="https://github.com/XeniaMeraki/XeniaOS"' > /etc/os-release
-
-# Activate NTSync
-RUN echo 'ntsync' > /etc/modules-load.d/ntsync.conf
-
-# CachyOS bbr3 Config Option
-RUN echo -ne 'net.core.default_qdisc=fq \n\
-net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
-
-#Starship setup
-RUN echo 'eval "$(starship init bash)"' >> /etc/bash.bashrc
 
 # Automounter Systemd Service
 RUN echo -ne '[Unit] \n\
@@ -203,6 +180,39 @@ RestartSec=1 \n\
 \n\
 [Install] \n\
 WantedBy=graphical-session.target' > /usr/lib/systemd/user/udiskie.service
+
+########################################################################################################################################
+# Section 5 - CachyOS settings #########################################################################################################
+########################################################################################################################################
+
+# Activate NTSync
+RUN echo 'ntsync' > /etc/modules-load.d/ntsync.conf
+
+# CachyOS bbr3 Config Option
+RUN echo -ne 'net.core.default_qdisc=fq \n\
+net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
+
+########################################################################################################################################
+# Section 6 - Niri/Chezmoi/DMS #########################################################################################################
+########################################################################################################################################
+
+# Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
+RUN echo -ne '[preferred] \n\
+default=kde;gtk;gnome; \n\
+org.freedesktop.impl.portal.Access=kde; \n\
+org.freedesktop.impl.portal.Notification=kde; \n\
+org.freedesktop.impl.portal.Secret=gnome-keyring; \n\
+org.freedesktop.impl.portal.FileChooser=kde;' > /usr/share/xdg-desktop-portal/niri-portals.conf
+
+# Use Chezmoi to set up config files, visual assets, avatars, and wallpapers
+RUN mkdir -p /usr/share/xeniaos/ && \
+      git clone https://github.com/XeniaMeraki/XeniaOS-HRT /usr/share/xeniaos/zdots
+
+RUN mkdir -p /usr/share/xeniaos/ && \
+      git clone https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
+
+#Starship setup
+RUN echo 'eval "$(starship init bash)"' >> /etc/bash.bashrc
 
 # XWayland Satellite Systemd Service
 RUN echo -ne '[Unit] \n\
@@ -260,26 +270,6 @@ ExecStart=touch %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
 ExecStart=sh -c 'yes s | chezmoi apply --no-tty --keep-going -S /usr/share/xeniaos/zdots --verbose --config %h/.config/xeniaos/chezmoi/chezmoi.toml'\n\
 Type=oneshot" >> /usr/lib/systemd/user/chezmoi-update.service
 
-RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
-
-RUN echo -ne '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | awk "NF" | awk '\''{print $2}'\'' | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
-RUN chmod +x /usr/libexec/xeniaos-group-fix
-RUN echo -ne '[Unit]\n\
-Description=Fix groups\n\
-Wants=local-fs.target\n\
-After=local-fs.target\n\
-ConditionPathExists=!/var/cache/.xeniaos-group-fix\n\
-[Service]\n\
-Type=oneshot\n\
-ExecStart=/usr/libexec/xeniaos-group-fix /etc/group\n\
-ExecStart=/usr/libexec/xeniaos-group-fix /etc/gshadow\n\
-ExecStart=systemd-sysusers\n\
-ExecStart=/usr/bin/touch /var/cache/.xeniaos-group-fix\n\
-[Install]\n\
-WantedBy=default.target multi-user.target' > /usr/lib/systemd/system/xeniaos-group-fix.service
-
-RUN echo "enable xeniaos-group-fix.service" > /usr/lib/systemd/system-preset/01-xeniaos-group-fix.preset
-RUN systemctl enable xeniaos-group-fix.service
 RUN echo -ne '[Unit]\n\
 Description=Timer for Chezmoi Update\n\
 # This service will only execute for a user with an existing chezmoi directory\n\
@@ -309,8 +299,32 @@ RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
 RUN systemctl enable --global dms.service
 
 ########################################################################################################################################
-# Section 5 - Final Bootc Setup ########################################################################################################
+# Section 7 - Final Bootc Setup ########################################################################################################
 ########################################################################################################################################
+
+#This fixes a user/groups error with Arch Bootc setup
+#Do NOT remove until fixed upstream
+
+RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
+
+RUN echo -ne '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | awk "NF" | awk '\''{print $2}'\'' | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
+RUN chmod +x /usr/libexec/xeniaos-group-fix
+RUN echo -ne '[Unit]\n\
+Description=Fix groups\n\
+Wants=local-fs.target\n\
+After=local-fs.target\n\
+ConditionPathExists=!/var/cache/.xeniaos-group-fix\n\
+[Service]\n\
+Type=oneshot\n\
+ExecStart=/usr/libexec/xeniaos-group-fix /etc/group\n\
+ExecStart=/usr/libexec/xeniaos-group-fix /etc/gshadow\n\
+ExecStart=systemd-sysusers\n\
+ExecStart=/usr/bin/touch /var/cache/.xeniaos-group-fix\n\
+[Install]\n\
+WantedBy=default.target multi-user.target' > /usr/lib/systemd/system/xeniaos-group-fix.service
+
+RUN echo "enable xeniaos-group-fix.service" > /usr/lib/systemd/system-preset/01-xeniaos-group-fix.preset
+RUN systemctl enable xeniaos-group-fix.service
 
 # Necessary for general behavior expected by image-based systems
 RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
