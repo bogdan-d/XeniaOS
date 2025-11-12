@@ -82,7 +82,7 @@ RUN pacman -Syyuu --noconfirm \
       ffmpegthumbs filelight kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi flatpak matugen \
       accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil \
 # User frontend programs/apps
-      kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity \
+      kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity gnome-disk-utility \
 \
       ${DEV_DEPS} && \
   pacman -S --clean --noconfirm && \
@@ -185,9 +185,9 @@ WantedBy=graphical-session.target' > /usr/lib/systemd/user/udiskie.service
 # Secondary HDD/SSD automounter, supports ext4/btrfs, mounts to /media/media-automount by default. Made by @Zeglius
 # Feel free to use your own fstab/mount things your own way if you understand how to do so
 # Disable with sudo ln -s /dev/null /etc/media-automount.d/_all.conf
-RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator \
-cd ./media-automount-generator \
-./install_udev.sh
+RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator
+RUN cd ./media-automount-generator
+RUN ./install_udev.sh
 
 ########################################################################################################################################
 # Section 5 - CachyOS settings | Since we have  the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
