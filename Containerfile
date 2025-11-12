@@ -187,7 +187,7 @@ WantedBy=graphical-session.target' > /usr/lib/systemd/user/udiskie.service
 # Disable with sudo ln -s /dev/null /etc/media-automount.d/_all.conf
 RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator
 RUN cd ./media-automount-generator
-RUN ./install_udev.sh
+RUN DESTDIR=/usr/local ./install.sh
 
 ########################################################################################################################################
 # Section 5 - CachyOS settings | Since we have  the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
