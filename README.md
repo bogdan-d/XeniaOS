@@ -1,12 +1,11 @@
-<h1 align="center">XeniaOS</h1>
-<h3 align="center">Arch Bootc / Niri / DMS / Xenia / Gaming On Linux</h3>
-
 <div align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/xeniaos_text_logo_delphic_melody.svg">
   <img alt="Xenia OS logo dark/light mode. Light: src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/xeniaos_text_logo_whitever_delphic_melody.svg">
 </picture>
 </div>
+
+<h3 align="center">Arch Bootc / Niri / DMS / Xenia / Gaming On Linux</h3>
 
 This is an opinionated gaming-oriented bootc image, an "immutable" linux-based operating system. Featuring the CachyOS kernel optimizations, a tiling window manager, [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on gaming performance on bootc at most any other cost. It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc.
 
