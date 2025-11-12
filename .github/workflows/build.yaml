@@ -46,6 +46,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
 
+      - name: Mount BTRFS for podman storage
+        uses: ublue-os/container-storage-action@main
+
       - name: Get current date
         id: date
         run: |
