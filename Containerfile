@@ -119,7 +119,7 @@ RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
     make -C /tmp/bootc bin install-all install-initramfs-dracut && \
     sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
     dracut --force --no-hostonly --reproducible --zstd --verbose --add ostree --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"' && \
-    pacman -S --clean --noconfirm
+    pacman -S --noconfirm
 
 ########################################################################################################################################
 # Section 3 - Chaotic AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
@@ -312,7 +312,7 @@ RUN echo -ne '[terminal]\n\
 vt = 1\n\
 \n\
 [default_session]\n\
-command = "tuigreet --time --user-menu --remember --remember-session --asterisks --power-no-setsid --width 140 --theme border=magenta;text=magenta;prompt=lightmagenta;time=magenta;action=lightmagenta;button=magenta;container=gray;input=magenta --cmd niri-session"\n\
+command = "tuigreet --time --user-menu --remember --remember-session --asterisks --power-no-setsid --width 140 --theme border=orange;text=orange;prompt=orange;time=orange;action=orange;button=orange;container=gray;input=orange --cmd niri-session"\n\
 user = "greetd"' > /etc/greetd/config.toml
 
 RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
