@@ -44,7 +44,19 @@ ENV DRACUT_NO_XATTR=1
 # Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
 ########################################################################################################################################
 
-RUN pacman -Syyuu --noconfirm \
+RUN pacman-key --recv-key F3B607488DB35A47 --keyserver keyserver.ubuntu.com
+
+RUN pacman-key --init && pacman-key --lsign-key F3B607488DB35A47
+
+RUN pacman -U 'https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-keyring-20240331-1-any.pkg.tar.zst' --noconfirm
+
+RUN pacman -U 'https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-v3-mirrorlist-22-1-any.pkg.tar.zst' --noconfirm
+
+RUN echo -e 'Include = /etc/pacman.d/cachyos-v3-mirrorlist' >> /etc/pacman.conf
+
+RUN pacman -Syu
+
+RUN pacman -S --noconfirm \
 # Base packages
       base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow \
 \
