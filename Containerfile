@@ -81,7 +81,7 @@ RUN pacman -Syyuu --noconfirm \
       ffmpegthumbs filelight kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi flatpak matugen \
       accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil \
 # User frontend programs/apps
-      kate ark gwenview kdenlive okular steam \
+      kate ark gwenview kdenlive okular steam scx-scheds scx-tools scx-manager \
 \
       ${DEV_DEPS} && \
   pacman -S --clean --noconfirm && \
