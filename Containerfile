@@ -87,7 +87,7 @@ RUN pacman -Sy --noconfirm dnsmasq freerdp2 iproute2 iwd libmtp networkmanager-l
 RUN pacman -Sy --noconfirm espeak-ng orca
 
 # Pipewire
-RUN pacman -Sy --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber pipewire-jack
+RUN pacman -Sy --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber
 
 # Printer
 RUN pacman -Sy --noconfirm cups cups-browsed gutenprint ipp-usb hplip splix system-config-printer
