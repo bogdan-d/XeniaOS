@@ -44,6 +44,7 @@ ENV DRACUT_NO_XATTR=1
 # Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
 ########################################################################################################################################
 
+#Set up CachyOS repo just in case
 RUN pacman-key --recv-key F3B607488DB35A47 --keyserver keyserver.ubuntu.com
 
 RUN pacman-key --init && pacman-key --lsign-key F3B607488DB35A47
@@ -54,7 +55,19 @@ RUN pacman -U 'https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-v3-mirrorl
 
 RUN echo -e 'Include = /etc/pacman.d/cachyos-v3-mirrorlist' >> /etc/pacman.conf
 
-RUN pacman -Syu
+# Set it up such that pacman will automatically clean package cache after each install
+# So that we don't run out of memory in image generation
+RUN echo -e "[Trigger]\n\
+Operation = Install\n\
+Operation = Upgrade\n\
+Type = Package\n\
+Target = *\n\
+\n\
+[Action]\n\
+Description = Cleaning up package cache...\n\
+Depends = coreutils\n\
+When = PostTransaction\n\
+Exec = /usr/bin/rm -rf /var/cache/pacman/pkg\n" | tee /usr/share/libalpm/hooks/package-cleanup.hook
 
 RUN pacman -S --noconfirm \
 # Base packages
@@ -97,7 +110,7 @@ RUN pacman -S --noconfirm \
       kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity gnome-disk-utility \
 \
       ${DEV_DEPS} && \
-  pacman -S --clean --noconfirm && \
+  pacman -S --noconfirm && \
   rm -rf /var/cache/pacman/pkg/*
 
 # Add Maple Mono font
@@ -119,7 +132,7 @@ RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
     make -C /tmp/bootc bin install-all install-initramfs-dracut && \
     sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
     dracut --force --no-hostonly --reproducible --zstd --verbose --add ostree --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"' && \
-    pacman -S --clean --noconfirm
+    pacman -S --noconfirm
 
 ########################################################################################################################################
 # Section 3 - Chaotic AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
