@@ -95,7 +95,7 @@ RUN pacman -Sy --noconfirm cups cups-browsed gutenprint ipp-usb hplip splix syst
 # Desktop Environment needs
 RUN pacman -Sy --noconfirm greetd udiskie polkit-kde-agent xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs filelight kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi flatpak matugen \
-      accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil
+      accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
 
 # User frontend programs/apps
 RUN pacman -Sy --noconfirm kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity gnome-disk-utility
