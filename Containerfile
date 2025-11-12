@@ -26,7 +26,7 @@
 #                    1   ][[
 #                       `            Credit art: Cathodegaytube for original art, @catumin for ascii-ification
 
-FROM docker.io/cachyos/cachyos-v3:latest
+FROM docker.io/cachyos/cachyos:latest
 
 ENV DEV_DEPS="base-devel git rust"
 
@@ -39,6 +39,7 @@ ENV DRACUT_NO_XATTR=1
 # Section 5 - CachyOS Settings
 # Section 6 - Niri/Chezmoi/DMS
 # Section 7 - Final Bootc Setup
+
 ########################################################################################################################################
 # Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
 ########################################################################################################################################
@@ -81,7 +82,7 @@ RUN pacman -Syyuu --noconfirm \
       ffmpegthumbs filelight kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi flatpak matugen \
       accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil \
 # User frontend programs/apps
-      kate ark gwenview kdenlive okular steam scx-scheds scx-manager \
+      kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity \
 \
       ${DEV_DEPS} && \
   pacman -S --clean --noconfirm && \
@@ -143,13 +144,13 @@ RUN systemctl enable greetd
 # Section 4 - Linux OS stuffs | We set some nice defaults for a regular user + set up a couple XeniaOS details owo #####################
 ########################################################################################################################################
 
-#Set up zram
+# Set up zram, this will help users not run out of memory
 RUN printf "[zram0]\nzram-size = min(ram, 8192)" | tee /usr/lib/systemd/zram-generator.conf
 RUN echo "enable systemd-resolved.service" | tee /usr/lib/systemd/system-preset/91-resolved-default.preset
 RUN echo "L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf" | tee /usr/lib/tmpfiles.d/resolved-default.conf
 RUN systemctl preset systemd-resolved.service
 
-#Enable wifi, firewall, power profiles
+# Enable wifi, firewall, power profiles
 RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
 # Place XeniaOS logo at plymouth folder location to appear on boot
@@ -167,7 +168,7 @@ PRETTY_NAME="XeniaOS" \n\
 DEFAULT_HOSTNAME="XeniaOS" \n\
 HOME_URL="https://github.com/XeniaMeraki/XeniaOS"' > /etc/os-release
 
-# Automounter Systemd Service
+# Automounter Systemd Service for flash drives and CDs
 RUN echo -ne '[Unit] \n\
 Description=Udiskie automount \n\
 PartOf=graphical-session.target \n\
