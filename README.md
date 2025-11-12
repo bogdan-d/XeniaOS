@@ -1,13 +1,10 @@
 <h1 align="center">XeniaOS</h1>
-<h3 align="center">Arch Bootc / Niri / Noctalia / Xenia / Gaming On Linux</h3>
+<h3 align="center">Arch Bootc / Niri / DMS / Xenia / Gaming On Linux</h3>
 
 
 <div align="center">
   <img alt="Logo Banner" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/xeniaos_text_logo_delphic_melody.svg?sanitize=true" width="600"/>
 </div>
-
-
-(Note: As of this current exact moment (Nov 10th 2025) this OS does not boot properly, stay tuned.)
 
 
 This is an opinionated gaming-oriented bootc image, an "immutable" linux-based operating system. Featuring the CachyOS kernel optimizations, a tiling window manager, [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on gaming performance on bootc at most any other cost. It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc.
@@ -18,6 +15,8 @@ It can be used by first installing [Bluefin](https://projectbluefin.io/) (or any
 
 `sudo bootc switch ghcr.io/xeniameraki/xeniaos`
 
+
+(You may be aware from Bazzite a warning to not rebase between desktop environments. This has to do with KDE -> Gnome, or Gnome -> KDE. Rebasing from KDE or Gnome Bootc to XeniaOS' Niri base is unproblematic.)
 
 ## Featuressss
 
@@ -31,16 +30,17 @@ It can be used by first installing [Bluefin](https://projectbluefin.io/) (or any
 -Niri, a tiling window manager
 
 
--Noctalia/Quickshell
+-DMS/Quickshell
 
 
 -CachyOS Kernel with cpu optimizations (for V3 cpus)
 
 
--Content creator oriented flatpaks set preinstalled
+-Content creator oriented software preinstalled (Kdenlive, Krita, Audacity, etc)
 
 
-The project is in its infancy, I would not use this for any serious work/use for right now.
+-You are encouraged to use Bazaar for a majority of your software installs
+
 
 <p align="center">
 <img alt="Screenshot" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/examplescreenshot.png?sanitize=true"/>
