@@ -59,17 +59,6 @@ Depends = coreutils\n\
 When = PostTransaction\n\
 Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" | tee /usr/share/libalpm/hooks/package-cleanup.hook
 
-# Use the Arch repos as backup for when CachyOS does not have a package
-RUN echo -ne '\nServer = https://geo.mirror.pkgbuild.com/$repo/os/$arch\n' >> /etc/pacman.d/mirrorlist-arch
-
-RUN echo -ne '[extra]\n\
-Include = /etc/pacman.d/mirrorlist-arch\n\
-Priority = 1\n\
-\n\
-[community]\n\
-Include = /etc/pacman.d/mirrorlist-arch\n\
-Priority = 1\n' >> /etc/pacman.conf
-
 # Force refresh and keyring update
 RUN pacman -Syy --noconfirm archlinux-keyring
 
