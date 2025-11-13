@@ -72,7 +72,7 @@ Include = /etc/pacman.d/mirrorlist-arch\n\
 Priority = 1\n\' >> /etc/pacman.conf
 
 # Refresh the package database for fox to retrieve packages!
-RUN pacman -Syyu --noconfirm archlinux-keyring
+RUN pacman -Syyu --noconfirm
 
 # Base packages \ Linux Foundation \ Foss is love, foss is life! We split up packages by category for readability, debug ease, and less dependency trouble
 RUN pacman -S --noconfirm base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
