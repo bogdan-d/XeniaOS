@@ -60,18 +60,9 @@ When = PostTransaction\n\
 Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" | tee /usr/share/libalpm/hooks/package-cleanup.hook
 
 # Set up Arch official repos as a backup in case a package isn't in Cachy repos! Fox will plan ahead.
-RUN echo -ne 'Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch' >> /etc/pacman.d/mirrorlist-arch
+RUN pacman-key --init 
 
-RUN echo -ne '#Arch Linux fallback repos\n\
-[extra]\n\
-Include = /etc/pacman.d/mirrorlist-arch\n\
-Priority = 1\n\
-\n\
-[community]\n\
-Include = /etc/pacman.d/mirrorlist-arch\n\
-Priority = 1\n\' >> /etc/pacman.conf
-
-RUN pacman-key --init && --populate archlinux
+RUN pacman-key --populate archlinux
 
 # Refresh the package database for fox to retrieve packages!
 RUN pacman -Syu --noconfirm
