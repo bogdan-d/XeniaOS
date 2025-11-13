@@ -324,19 +324,17 @@ RUN systemctl enable --global dms.service
 
 RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
 
-RUN echo -ne '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | awk "NF" | awk '\''{print $2}'\'' | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
+RUN echo -ne '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | grep -v -e "wheel" | awk "NF" | awk '\''{print $2}'\'' | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
 RUN chmod +x /usr/libexec/xeniaos-group-fix
 RUN echo -ne '[Unit]\n\
 Description=Fix groups\n\
 Wants=local-fs.target\n\
 After=local-fs.target\n\
-ConditionPathExists=!/var/cache/.xeniaos-group-fix\n\
 [Service]\n\
 Type=oneshot\n\
 ExecStart=/usr/libexec/xeniaos-group-fix /etc/group\n\
 ExecStart=/usr/libexec/xeniaos-group-fix /etc/gshadow\n\
 ExecStart=systemd-sysusers\n\
-ExecStart=/usr/bin/touch /var/cache/.xeniaos-group-fix\n\
 [Install]\n\
 WantedBy=default.target multi-user.target\n' > /usr/lib/systemd/system/xeniaos-group-fix.service
 
