@@ -193,9 +193,9 @@ WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/udiskie.service
 
 # Secondary HDD/SSD automounter, supports ext4/btrfs, mounts to /media/media-automount by default. Made by @Zeglius
 # Feel free to use your own fstab/mount things your own way if you understand how to do so
-# Disable with ``sudo ln -s /dev/null /etc/media-automount.d/_all.conf``
-RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator \
-      cd /tmp/media-automount-generator \
+# Disable with "sudo ln -s /dev/null /etc/media-automount.d/_all.conf"
+RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator && \
+      cd /tmp/media-automount-generator && \
       DESTDIR=/usr/local ./install.sh
 
 ########################################################################################################################################
