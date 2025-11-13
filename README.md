@@ -15,6 +15,8 @@
 
 <h3 align="center">Arch Bootc / Niri / DMS / Xenia / Gaming On Linux</h3>
 
+(As of this current moment, November 13th 2025, this OS does not create a sudo user properly/log in properly. Lots of elements do not work together just yet. This project is in heavy Work In Progress state and not for casual consumption/regular use just yet. I will make a release announcement of 1.0 in the releases section when we are ready for regular users. Potential contributors and maintainers are appreciated for any bug crushing, and helping the process of normal boot/login/ISO creation.)
+
 This is an opinionated gaming-oriented bootc image, an "immutable" linux-based operating system. Featuring the CachyOS kernel optimizations, a tiling window manager, [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on gaming performance on bootc at most any other cost. It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc.
 
 
