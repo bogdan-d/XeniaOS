@@ -26,7 +26,7 @@
 #                    1   ][[
 #                       `            Credit art: Cathodegaytube for original art, @catumin for ascii-ification
 
-FROM docker.io/cachyos/cachyos:latest
+FROM docker.io/cachyos/cachyos-v3:latest
 
 ENV DEV_DEPS="base-devel git rust"
 
@@ -45,7 +45,8 @@ ENV DRACUT_NO_XATTR=1
 ########################################################################################################################################
 
 # Set it up such that pacman will automatically clean package cache after each install
-# So that we don't run out of memory in image generation
+# So that we don't run out of memory in image generation and don't need to append --clean after everything
+# ALSO DO NOT APPEND --CLEAN TO ANYTHING :D
 RUN echo -e "[Trigger]\n\
 Operation = Install\n\
 Operation = Upgrade\n\
@@ -56,9 +57,21 @@ Target = *\n\
 Description = Cleaning up package cache...\n\
 Depends = coreutils\n\
 When = PostTransaction\n\
-Exec = /usr/bin/rm -rf /var/cache/pacman/pkg\n" | tee /usr/share/libalpm/hooks/package-cleanup.hook
+Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" | tee /usr/share/libalpm/hooks/package-cleanup.hook
 
-RUN pacman -Syu --noconfirm
+# Use the Arch repos as backup for when CachyOS does not have a package
+RUN echo -ne '\nServer = https://geo.mirror.pkgbuild.com/$repo/os/$arch\n' >> /etc/pacman.d/mirrorlist-arch
+
+RUN echo -ne '[extra]\n\
+Include = /etc/pacman.d/mirrorlist-arch\n\
+Priority = 1\n\
+\n\
+[community]\n\
+Include = /etc/pacman.d/mirrorlist-arch\n\
+Priority = 1\n' >> /etc/pacman.conf
+
+# Force refresh and keyring update
+RUN pacman -Syy --noconfirm archlinux-keyring
 
 # Base packages
 RUN pacman -Sy --noconfirm base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
@@ -118,8 +131,7 @@ RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
     git clone https://github.com/bootc-dev/bootc.git /tmp/bootc && \
     make -C /tmp/bootc bin install-all install-initramfs-dracut && \
     sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
-    dracut --force --no-hostonly --reproducible --zstd --verbose --add ostree --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"' && \
-    pacman -S --noconfirm
+    dracut --force --no-hostonly --reproducible --zstd --verbose --add ostree --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
 
 ########################################################################################################################################
 # Section 3 - Chaotic AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
@@ -168,7 +180,7 @@ RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 # Place XeniaOS logo at plymouth folder location to appear on boot
 RUN mkdir -p /usr/share/plymouth/themes/spinner/
 
-RUN curl -O https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_text_logo_whitever_delphic_melody.png > /usr/share/plymouth/themes/spinner/watermark.png
+RUN wget https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_text_logo_whitever_delphic_melody.png > /usr/share/plymouth/themes/spinner/watermark.png
 
 # Flatpak repo add
 RUN mkdir -p /etc/flatpak/remotes.d/ && \
@@ -178,7 +190,7 @@ RUN mkdir -p /etc/flatpak/remotes.d/ && \
 RUN echo -ne 'NAME="XeniaOS" \n\
 PRETTY_NAME="XeniaOS" \n\
 DEFAULT_HOSTNAME="XeniaOS" \n\
-HOME_URL="https://github.com/XeniaMeraki/XeniaOS"' > /etc/os-release
+HOME_URL="https://github.com/XeniaMeraki/XeniaOS\n"' > /etc/os-release
 
 # Automounter Systemd Service for flash drives and CDs
 RUN echo -ne '[Unit] \n\
@@ -192,7 +204,7 @@ Restart=on-failure \n\
 RestartSec=1 \n\
 \n\
 [Install] \n\
-WantedBy=graphical-session.target' > /usr/lib/systemd/user/udiskie.service
+WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/udiskie.service
 
 # Secondary HDD/SSD automounter, supports ext4/btrfs, mounts to /media/media-automount by default. Made by @Zeglius
 # Feel free to use your own fstab/mount things your own way if you understand how to do so
@@ -210,7 +222,7 @@ RUN echo 'ntsync' > /etc/modules-load.d/ntsync.conf
 
 # CachyOS bbr3 Config Option
 RUN echo -ne 'net.core.default_qdisc=fq \n\
-net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
+net.ipv4.tcp_congestion_control=bbr\n' > /etc/sysctl.d/99-bbr3.conf
 
 ########################################################################################################################################
 # Section 6 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
@@ -222,7 +234,7 @@ default=kde;gtk;gnome; \n\
 org.freedesktop.impl.portal.Access=kde; \n\
 org.freedesktop.impl.portal.Notification=kde; \n\
 org.freedesktop.impl.portal.Secret=gnome-keyring; \n\
-org.freedesktop.impl.portal.FileChooser=kde;' > /usr/share/xdg-desktop-portal/niri-portals.conf
+org.freedesktop.impl.portal.FileChooser=kde;\n' >> /usr/share/xdg-desktop-portal/niri-portals.conf
 
 # Use Chezmoi to set up config files, visual assets, avatars, and wallpapers
 RUN mkdir -p /usr/share/xeniaos/ && \
@@ -246,7 +258,7 @@ Restart=on-failure \n\
 RestartSec=1 \n\
 \n\
 [Install] \n\
-WantedBy=graphical-session.target' > /usr/lib/systemd/user/xwayland-satellite.service
+WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/xwayland-satellite.service
 
 # DMS Service Systemd Service
 RUN echo -ne '[Unit]\n\
@@ -260,7 +272,7 @@ Restart=on-failure\n\
 RestartSec=1\n\
 \n\
 [Install]\n\
-WantedBy=graphical-session.target' > /usr/lib/systemd/user/dms.service
+WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/dms.service
 
 # Starts with Niri Session - Services for User Interaction
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=plasma-polkit-agent.service/" "/usr/lib/systemd/user/niri.service"
@@ -280,7 +292,7 @@ ExecStart=chezmoi apply -S /usr/share/xeniaos/zdots --config %h/.config/xeniaos/
 Type=oneshot\n\
 \n\
 [Install]\n\
-WantedBy=default.target' >> /usr/lib/systemd/user/chezmoi-init.service
+WantedBy=default.target\n' >> /usr/lib/systemd/user/chezmoi-init.service
 
 RUN echo -ne "[Unit]\n\
 Description=Chezmoi Update\n\
@@ -289,7 +301,7 @@ Description=Chezmoi Update\n\
 ExecStart=mkdir -p %h/.config/xeniaos/chezmoi\n\
 ExecStart=touch %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
 ExecStart=sh -c 'yes s | chezmoi apply --no-tty --keep-going -S /usr/share/xeniaos/zdots --verbose --config %h/.config/xeniaos/chezmoi/chezmoi.toml'\n\
-Type=oneshot" >> /usr/lib/systemd/user/chezmoi-update.service
+Type=oneshot\n" >> /usr/lib/systemd/user/chezmoi-update.service
 
 RUN echo -ne '[Unit]\n\
 Description=Timer for Chezmoi Update\n\
@@ -301,7 +313,7 @@ OnBootSec=5m\n\
 OnUnitInactiveSec=1d\n\
 \n\
 [Install]\n\
-WantedBy=timers.target' >> /usr/lib/systemd/user/chezmoi-update.timer
+WantedBy=timers.target\n' >> /usr/lib/systemd/user/chezmoi-update.timer
 
 # Greetd Setup - Login Manager
 RUN echo 'u     greetd -     "greetd daemon" /var/lib/greetd' > /usr/lib/sysusers.d/greetd.conf
@@ -359,11 +371,6 @@ RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
     echo "d /var/roothome 0700 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
     echo "d /run/media 0755 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
     printf "[composefs]\nenabled = yes\n[sysroot]\nreadonly = true\n" | tee "/usr/lib/ostree/prepare-root.conf"
-
-#Final user setup and lint
-
-RUN pacman -S whois --noconfirm
-RUN usermod -p "$(echo "changeme" | mkpasswd -s)" root
 
 RUN bootc container lint
 
