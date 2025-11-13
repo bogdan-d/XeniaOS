@@ -84,8 +84,8 @@ RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth flatpa
 RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 # CLI Utilities
-RUN pacman -S --noconfirm sudo bash-completion bat busybox duf fastfetch gping grml-zsh-config htop jq less lsof mcfly nano nvtop openssh powertop \
-      procs ripgrep tldr trash-cli tree usbutils vim wget wl-clipboard ydotool zsh zsh-completions yay unzip ptyxis glibc-locales \
+RUN pacman -S --noconfirm sudo bash bash-completion bat busybox duf fastfetch gping htop jq less lsof mcfly nano nvtop openssh powertop \
+      procs ripgrep tldr trash-cli tree usbutils vim wget wl-clipboard ydotool yay unzip ptyxis glibc-locales tar udev \
       starship tuned-ppd tuned hyfetch docker podman yt-dlp
 
 # Drivers
