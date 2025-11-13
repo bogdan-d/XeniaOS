@@ -59,50 +59,62 @@ Depends = coreutils\n\
 When = PostTransaction\n\
 Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" | tee /usr/share/libalpm/hooks/package-cleanup.hook
 
-# Force refresh and keyring update
-RUN pacman -Syy --noconfirm archlinux-keyring
+# Set up Arch official repos as a backup in case a package isn't in Cachy repos! Fox will plan ahead.
+RUN echo -ne 'Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch' >> /etc/pacman.d/mirrorlist-arch
 
-# Base packages
-RUN pacman -Sy --noconfirm base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
+RUN echo -ne '#Arch Linux fallback repos\n\
+[extra]\n\
+Include = /etc/pacman.d/mirrorlist-arch\n\
+Priority = 1\n\
+\n\
+[community]\n\
+Include = /etc/pacman.d/mirrorlist-arch\n\
+Priority = 1\n\' >> /etc/pacman.conf
 
-# Media/Install utilities
-RUN pacman -Sy --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth flatpak acpid aha clinfo ddcutil dmidecode mesa-utils ntfs-3g nvme-cli \
-      vulkan-tools wayland-utils haruna playerctl
+# Refresh the package database for fox to retrieve packages!
+RUN pacman -Syyu --noconfirm archlinux-keyring
+
+# Base packages \ Linux Foundation \ Foss is love, foss is life! We split up packages by category for readability, debug ease, and less dependency trouble
+RUN pacman -S --noconfirm base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
+
+# Media/Install utilities/Media drivers
+RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth flatpak acpid aha clinfo ddcutil dmidecode mesa-utils ntfs-3g nvme-cli \
+      vulkan-tools wayland-utils playerctl
 
 # Fonts
-RUN pacman -Sy --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
+RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 # CLI Utilities
-RUN pacman -Sy --noconfirm bash-completion bat busybox duf fastfetch gping grml-zsh-config htop jq less lsof mcfly nano nvtop openssh powertop \
+RUN pacman -S --noconfirm bash-completion bat busybox duf fastfetch gping grml-zsh-config htop jq less lsof mcfly nano nvtop openssh powertop \
       procs ripgrep tldr trash-cli tree usbutils vim wget wl-clipboard ydotool zsh zsh-completions yay unzip ptyxis glibc-locales \
       starship tuned-ppd tuned hyfetch
 
 # Drivers
-RUN pacman -Sy --noconfirm amd-ucode intel-ucode edk2-shell efibootmgr shim mesa libva-intel-driver libva-mesa-driver \
+RUN pacman -S --noconfirm amd-ucode intel-ucode edk2-shell efibootmgr shim mesa libva-intel-driver libva-mesa-driver \
       vpl-gpu-rt vulkan-icd-loader vulkan-intel vulkan-radeon apparmor
 
 # Network / VPN / SMB
-RUN pacman -Sy --noconfirm dnsmasq freerdp2 iproute2 iwd libmtp networkmanager-l2tp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp \
+RUN pacman -S --noconfirm dnsmasq freerdp2 iproute2 iwd libmtp networkmanager-l2tp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp \
       networkmanager-strongswan networkmanager-vpnc nfs-utils nss-mdns samba smbclient networkmanager firewalld
 
 # Accessibility
-RUN pacman -Sy --noconfirm espeak-ng orca
+RUN pacman -S --noconfirm espeak-ng orca
 
 # Pipewire
-RUN pacman -Sy --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber
+RUN pacman -S --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber
 
 # Printer
-RUN pacman -Sy --noconfirm cups cups-browsed gutenprint ipp-usb hplip splix system-config-printer
+RUN pacman -S --noconfirm cups cups-browsed gutenprint ipp-usb hplip splix system-config-printer
 
 # Desktop Environment needs
-RUN pacman -Sy --noconfirm greetd udiskie polkit-kde-agent xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
+RUN pacman -S --noconfirm greetd udiskie polkit-kde-agent xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs filelight kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi flatpak matugen \
       accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
 
 # User frontend programs/apps
-RUN pacman -Sy --noconfirm kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity gnome-disk-utility
+RUN pacman -S --noconfirm kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity gnome-disk-utility haruna
 
-# Add Maple Mono font
+# Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
 RUN mkdir -p "/usr/share/fonts/Maple Mono" \
       && curl -fSsLo "/tmp/maple.zip" "$(curl "https://api.github.com/repos/subframe7536/maple-font/releases/latest" | jq '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url' -rc)" \
       && unzip "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
@@ -139,17 +151,10 @@ RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/
 RUN pacman -Sy --noconfirm
 
 RUN pacman -S \
-      chaotic-aur/niri-git \
-      chaotic-aur/input-remapper-git \
-      chaotic-aur/vesktop-git \
-      chaotic-aur/sc-controller \
-      chaotic-aur/protonup-qt \
-      chaotic-aur/obs-vkcapture-git \
-      chaotic-aur/obs-studio-git \
-      chaotic-aur/dms-shell-git \
-      chaotic-aur/krita-git \
-      chaotic-aur/pinta \
-        --noconfirm
+      chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller \
+      chaotic-aur/protonup-qt chaotic-aur/obs-vkcapture-git chaotic-aur/obs-studio-git chaotic-aur/dms-shell-git \
+      chaotic-aur/krita-git chaotic-aur/pinta chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola \
+      --noconfirm
 
 RUN systemctl enable greetd
 
@@ -157,21 +162,19 @@ RUN systemctl enable greetd
 # Section 4 - Linux OS stuffs | We set some nice defaults for a regular user + set up a couple XeniaOS details owo #####################
 ########################################################################################################################################
 
-# Set up zram, this will help users not run out of memory
-RUN printf "[zram0]\nzram-size = min(ram, 8192)" | tee /usr/lib/systemd/zram-generator.conf
-RUN echo "enable systemd-resolved.service" | tee /usr/lib/systemd/system-preset/91-resolved-default.preset
-RUN echo "L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf" | tee /usr/lib/tmpfiles.d/resolved-default.conf
+# Set up zram, this will help users not run out of memory. Fox will fix!
+RUN echo -ne '[zram0]\nzram-size = min(ram, 8192)' >> /usr/lib/systemd/zram-generator.conf
+RUN echo -ne 'enable systemd-resolved.service' >> usr/lib/systemd/system-preset/91-resolved-default.preset
+RUN echo -ne 'L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf' >> /usr/lib/tmpfiles.d/resolved-default.conf
 RUN systemctl preset systemd-resolved.service
 
-# Enable wifi, firewall, power profiles
+# Enable wifi, firewall, power profiles. Fox will protect!
 RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
-# Place XeniaOS logo at plymouth folder location to appear on boot
-RUN mkdir -p /usr/share/plymouth/themes/spinner/
+# Place XeniaOS logo at plymouth folder location to appear on boot.
+RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_text_logo_whitever_delphic_melody.png
 
-RUN wget https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_text_logo_whitever_delphic_melody.png > /usr/share/plymouth/themes/spinner/watermark.png
-
-# Flatpak repo add
+# Flatpak repo add. Waves my hand in your face hypnotically, you want fluuuuuff, you want a tail wooooooOOOOooo.
 RUN mkdir -p /etc/flatpak/remotes.d/ && \
       curl --retry 3 -Lo /etc/flatpak/remotes.d/flathub.flatpakrepo https://dl.flathub.org/repo/flathub.flatpakrepo
 
@@ -198,15 +201,16 @@ WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/udiskie.service
 # Secondary HDD/SSD automounter, supports ext4/btrfs, mounts to /media/media-automount by default. Made by @Zeglius
 # Feel free to use your own fstab/mount things your own way if you understand how to do so
 # Disable with sudo ln -s /dev/null /etc/media-automount.d/_all.conf
-# RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator
-# RUN cd ./media-automount-generator
-# RUN DESTDIR=/usr/local ./install.sh
+RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator \
+      cd /tmp/media-automount-generator \
+      DESTDIR=/usr/local ./install.sh \
+      rm -rf /tmp/media-automount-generator
 
 ########################################################################################################################################
-# Section 5 - CachyOS settings | Since we have  the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
+# Section 5 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
 ########################################################################################################################################
 
-# Activate NTSync
+# Activate NTSync, wags my tail in your general direction
 RUN echo 'ntsync' > /etc/modules-load.d/ntsync.conf
 
 # CachyOS bbr3 Config Option
@@ -222,8 +226,7 @@ RUN echo -ne '[preferred] \n\
 default=kde;gtk;gnome; \n\
 org.freedesktop.impl.portal.Access=kde; \n\
 org.freedesktop.impl.portal.Notification=kde; \n\
-org.freedesktop.impl.portal.Secret=gnome-keyring; \n\
-org.freedesktop.impl.portal.FileChooser=kde;\n' >> /usr/share/xdg-desktop-portal/niri-portals.conf
+org.freedesktop.impl.portal.Secret=gnome-keyring' >> /usr/share/xdg-desktop-portal/niri-portals.conf
 
 # Use Chezmoi to set up config files, visual assets, avatars, and wallpapers
 RUN mkdir -p /usr/share/xeniaos/ && \
@@ -321,11 +324,11 @@ RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
 RUN systemctl enable --global dms.service
 
 ########################################################################################################################################
-# Section 7 - Final Bootc Setup # the horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew ######################
+# Section 7 - Final Bootc Setup. The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #######################
 ########################################################################################################################################
 
-#This fixes a user/groups error with Arch Bootc setup
-#Do NOT remove until fixed upstream
+#This fixes a user/groups error with Arch Bootc setup. We are suffering for not using the rechunker, but we persist.
+#Do NOT remove until fixed upstream. Script created by Tulip.
 
 RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
 
@@ -343,7 +346,7 @@ ExecStart=/usr/libexec/xeniaos-group-fix /etc/gshadow\n\
 ExecStart=systemd-sysusers\n\
 ExecStart=/usr/bin/touch /var/cache/.xeniaos-group-fix\n\
 [Install]\n\
-WantedBy=default.target multi-user.target' > /usr/lib/systemd/system/xeniaos-group-fix.service
+WantedBy=default.target multi-user.target\n' > /usr/lib/systemd/system/xeniaos-group-fix.service
 
 RUN echo "enable xeniaos-group-fix.service" > /usr/lib/systemd/system-preset/01-xeniaos-group-fix.preset
 RUN systemctl enable xeniaos-group-fix.service
