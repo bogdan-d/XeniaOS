@@ -80,7 +80,7 @@ RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
 # CLI Utilities
 RUN pacman -S --noconfirm bash-completion bat busybox duf fastfetch gping grml-zsh-config htop jq less lsof mcfly nano nvtop openssh powertop \
       procs ripgrep tldr trash-cli tree usbutils vim wget wl-clipboard ydotool zsh zsh-completions yay unzip ptyxis glibc-locales \
-      starship tuned-ppd tuned hyfetch
+      starship tuned-ppd tuned hyfetch docker podman yt-dlp
 
 # Drivers
 RUN pacman -S --noconfirm amd-ucode intel-ucode edk2-shell efibootmgr shim mesa libva-intel-driver libva-mesa-driver \
@@ -146,7 +146,7 @@ RUN pacman -Sy --noconfirm
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller \
       chaotic-aur/protonup-qt chaotic-aur/obs-vkcapture-git chaotic-aur/obs-studio-git chaotic-aur/dms-shell-git \
-      chaotic-aur/krita-git chaotic-aur/pinta chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola \
+      chaotic-aur/krita-git chaotic-aur/pinta chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/bazaar-git \
       --noconfirm
 
 RUN systemctl enable greetd
