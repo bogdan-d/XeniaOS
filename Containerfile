@@ -32,6 +32,7 @@ ENV DEV_DEPS="base-devel git rust"
 
 ENV DRACUT_NO_XATTR=1
 
+# Section 0 - Pre-setup
 # Section 1 - Package Installs
 # Section 2 - Set up bootc dracut
 # Section 3 - Chaotic AUR
@@ -41,7 +42,7 @@ ENV DRACUT_NO_XATTR=1
 # Section 7 - Final Bootc Setup
 
 ########################################################################################################################################
-# Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
+# Section 0 - Pre-setup | We do some system maintenance tasks + Set up some things for the rest of the containerfile to go smooothly! ##
 ########################################################################################################################################
 
 # Set it up such that pacman will automatically clean package cache after each install
@@ -67,6 +68,11 @@ RUN pacman-key --populate archlinux
 # Refresh the package database for fox to retrieve packages!
 RUN pacman -Syu --noconfirm
 
+
+########################################################################################################################################
+# Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
+########################################################################################################################################
+
 # Base packages \ Linux Foundation \ Foss is love, foss is life! We split up packages by category for readability, debug ease, and less dependency trouble
 RUN pacman -S --noconfirm base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
 
@@ -78,7 +84,7 @@ RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth flatpa
 RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 # CLI Utilities
-RUN pacman -S --noconfirm bash-completion bat busybox duf fastfetch gping grml-zsh-config htop jq less lsof mcfly nano nvtop openssh powertop \
+RUN pacman -S --noconfirm sudo bash-completion bat busybox duf fastfetch gping grml-zsh-config htop jq less lsof mcfly nano nvtop openssh powertop \
       procs ripgrep tldr trash-cli tree usbutils vim wget wl-clipboard ydotool zsh zsh-completions yay unzip ptyxis glibc-locales \
       starship tuned-ppd tuned hyfetch docker podman yt-dlp
 
