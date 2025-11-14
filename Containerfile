@@ -36,10 +36,11 @@ ENV DRACUT_NO_XATTR=1
 # Section 1 - Package Installs
 # Section 2 - Set up bootc dracut
 # Section 3 - Chaotic AUR
-# Section 4 - Linux OS Stuffs
-# Section 5 - CachyOS Settings
-# Section 6 - Niri/Chezmoi/DMS
-# Section 7 - Final Bootc Setup
+# Section 4 - Flatpaks preinstalls
+# Section 5 - Linux OS Stuffs
+# Section 6 - CachyOS Settings
+# Section 7 - Niri/Chezmoi/DMS
+# Section 8 - Final Bootc Setup
 
 ########################################################################################################################################
 # Section 0 - Pre-setup | We do some system maintenance tasks + Set up some things for the rest of the containerfile to go smooothly! ##
@@ -67,7 +68,6 @@ RUN pacman-key --populate archlinux
 
 # Refresh the package database for fox to retrieve packages!
 RUN pacman -Syu --noconfirm
-
 
 ########################################################################################################################################
 # Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
@@ -106,12 +106,12 @@ RUN pacman -S --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffa
 RUN pacman -S --noconfirm cups cups-browsed gutenprint ipp-usb hplip splix system-config-printer
 
 # Desktop Environment needs
-RUN pacman -S --noconfirm greetd udiskie polkit-kde-agent xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
-      ffmpegthumbs filelight kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi flatpak matugen \
+RUN pacman -S --noconfirm greetd udiskie xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
+      ffmpegthumbs filelight kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi matugen \
       accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
 
 # User frontend programs/apps
-RUN pacman -S --noconfirm kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity gnome-disk-utility haruna
+RUN pacman -S --noconfirm kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity gnome-disk-utility haruna flatpak
 
 # Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
 RUN mkdir -p "/usr/share/fonts/Maple Mono" \
@@ -152,13 +152,23 @@ RUN pacman -Sy --noconfirm
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller \
       chaotic-aur/protonup-qt chaotic-aur/obs-vkcapture-git chaotic-aur/obs-studio-git chaotic-aur/dms-shell-git \
-      chaotic-aur/krita-git chaotic-aur/pinta chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/bazaar-git \
+      chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola \
       --noconfirm
 
 RUN systemctl enable greetd
 
 ########################################################################################################################################
-# Section 4 - Linux OS stuffs | We set some nice defaults for a regular user + set up a couple XeniaOS details owo #####################
+# Section 4 Flatpaks preinstalls | We love containers, flatpaks, and protecting installs from breaking! ################################
+########################################################################################################################################
+
+RUN echo -ne '[Flatpak Preinstall io.github.kolunmi.Bazaar]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/bazaar.preinstall
+
+RUN echo -ne '[Flatpak Preinstall org.kde.krita]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/krita.preinstall
+
+RUN echo -ne '[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/pinta.preinstall
+
+########################################################################################################################################
+# Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a couple XeniaOS details owo #####################
 ########################################################################################################################################
 
 RUN echo "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
@@ -174,21 +184,17 @@ RUN systemctl preset systemd-resolved.service
 RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
 # Place XeniaOS logo at plymouth folder location to appear on boot.
-RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_text_logo_whitever_delphic_melody.png
-
-# Flatpak repo add. Waves my hand in your face hypnotically, you want fluuuuuff, you want a tail wooooooOOOOooo.
-RUN mkdir -p /etc/flatpak/remotes.d/ && \
-      curl --retry 3 -Lo /etc/flatpak/remotes.d/flathub.flatpakrepo https://dl.flathub.org/repo/flathub.flatpakrepo
+RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
 # OS Release and Update uwu
-RUN echo -ne 'NAME="XeniaOS" \n\
+RUN echo -ne 'NAME="XeniaOS"\n\
 PRETTY_NAME="XeniaOS"\n\
 ID=arch\n\
 BUILD_ID=rolling\n\
 ANSI_COLOR="38;2;23;147;209"\n\
 HOME_URL="https://github.com/XeniaMeraki/XeniaOS"\n\
-LOGO=archlinux-logo
-DEFAULT_HOSTNAME="XeniaOS" \n\' > /etc/os-release
+LOGO=archlinux-logo\n\
+DEFAULT_HOSTNAME="XeniaOS"\n\' > /etc/os-release
 
 # Automounter Systemd Service for flash drives and CDs
 RUN echo -ne '[Unit] \n\
@@ -212,7 +218,7 @@ RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tm
       DESTDIR=/usr/local ./install.sh
 
 ########################################################################################################################################
-# Section 5 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
+# Section 6 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
 ########################################################################################################################################
 
 # Activate NTSync, wags my tail in your general direction
@@ -223,7 +229,7 @@ RUN echo -ne 'net.core.default_qdisc=fq \n\
 net.ipv4.tcp_congestion_control=bbr\n' > /etc/sysctl.d/99-bbr3.conf
 
 ########################################################################################################################################
-# Section 6 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
+# Section 7 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
 ########################################################################################################################################
 
 # Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
@@ -329,7 +335,7 @@ RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
 RUN systemctl enable --global dms.service
 
 ########################################################################################################################################
-# Section 7 - Final Bootc Setup. The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #######################
+# Section 8 - Final Bootc Setup. The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #######################
 ########################################################################################################################################
 
 #This fixes a user/groups error with Arch Bootc setup. We are suffering for not using the rechunker, but we persist.
@@ -369,27 +375,27 @@ RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
 
 RUN bootc container lint
 
-#                                                       ✧⋆✩₊⋆⁺₊˚.
-#     ,c.                       .c;                    ✩₊˚.⋆☾⋆⁺₊✧
-#   .KMMMk....             ....kMMMK.                  ₊˚.⋆⁺₊✧⋆✩
-#   .WMMMMMX.....         .....KMMMMMW.                       
-#   XMMMMMMM0.....        ....OMMMMMMMN
-#  dMMMMMMMMM;.... ..... ....,MMMMMMMMMd
-#  WMMMMMMMMMl;okKKKKKKKKKOo;cMMMMMMMMMM
-# 'MMMMMMMNXK0KKKKKKKKKKKKKKK0KXNMMMMMMM;
-# oMMMMMMMOxoKKKKKKKKKKKKKKKKKoxOMMMMMMMd
-# dMMMMMMMdxxxKKKKKKKKKKKKKKKxxxdNMMMMMMk
-# :MMMMX0xxxxxx0KKKKKKKK0KK0xxxxxx0XMMMMc
-#  MMMOxxxxxxxxdxkdd0x0ddkxdxxxxxxxxOMMM
-# ;xxkxddxxxxdodxxxxdxdxxxxdodxxxxddxkxx;
-#dxdKMMMWXo'.....'cdxxxdc'.....'lXWMMMXdxd
-# cxdXMMMN,..........dxd'.........'XMMMNdxl
-#  .xxWMMl...''....'.;k:.'....''...lMMWxx.
-# ..:kXMMx..'....''..kMk..''....'..xMMXkc..
-#  dMMMMMMd.....'...xMMMx...''....dMMMMMMx
-#    kMMMMWOoc:coOkolllokOoc:coOWMMMMO
-#         .MMMMMMMMl...lNMMMMMMM.
-#            KMMMMMMXlKMMMMMMX
-#               .MMMMMMMMM. 
-#
-# Art by @bhavyakukkar and @ioletsgo
+#####################                                                       ✧⋆✩₊⋆⁺₊˚.
+#####################     ,c.                       .c;                    ✩₊˚.⋆☾⋆⁺₊✧
+#####################   .KMMMk....             ....kMMMK.                  ₊˚.⋆⁺₊✧⋆✩
+#####################   .WMMMMMX.....         .....KMMMMMW.                       
+#####################   XMMMMMMM0.....        ....OMMMMMMMN
+#####################  dMMMMMMMMM;.... ..... ....,MMMMMMMMMd
+#####################  WMMMMMMMMMl;okKKKKKKKKKOo;cMMMMMMMMMM
+##################### 'MMMMMMMNXK0KKKKKKKKKKKKKKK0KXNMMMMMMM;
+##################### oMMMMMMMOxoKKKKKKKKKKKKKKKKKoxOMMMMMMMd
+##################### dMMMMMMMdxxxKKKKKKKKKKKKKKKxxxdNMMMMMMk
+##################### :MMMMX0xxxxxx0KKKKKKKK0KK0xxxxxx0XMMMMc
+#####################  MMMOxxxxxxxxdxkdd0x0ddkxdxxxxxxxxOMMM
+##################### ;xxkxddxxxxdodxxxxdxdxxxxdodxxxxddxkxx;
+#####################dxdKMMMWXo'.....'cdxxxdc'.....'lXWMMMXdxd
+##################### cxdXMMMN,..........dxd'.........'XMMMNdxl
+#####################  .xxWMMl...''....'.;k:.'....''...lMMWxx.
+##################### ..:kXMMx..'....''..kMk..''....'..xMMXkc..
+#####################  dMMMMMMd.....'...xMMMx...''....dMMMMMMx
+#####################    kMMMMWOoc:coOkolllokOoc:coOWMMMMO
+#####################         .MMMMMMMMl...lNMMMMMMM.
+#####################            KMMMMMMXlKMMMMMMX
+#####################               .MMMMMMMMM. 
+#####################
+##################### Art by @bhavyakukkar and @ioletsgo
