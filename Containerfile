@@ -107,7 +107,7 @@ RUN pacman -S --noconfirm cups cups-browsed gutenprint ipp-usb hplip splix syste
 
 # Desktop Environment needs
 RUN pacman -S --noconfirm greetd udiskie xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
-      ffmpegthumbs filelight kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi matugen \
+      ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi matugen \
       accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
 
 # User frontend programs/apps
@@ -151,7 +151,7 @@ RUN pacman -Sy --noconfirm
 
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop chaotic-aur/sc-controller \
-      chaotic-aur/obs-vkcapture-git chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola \
+      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola \
       --noconfirm
 
 RUN systemctl enable greetd
@@ -174,6 +174,9 @@ RUN echo -ne '[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\
 # OBS | Video recording/streaming!
 RUN echo -ne '[Flatpak Preinstall com.obsproject.Studio]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/OBS.preinstall
 
+# OBSVKCapture | Games capture in OBS scenes on linux!
+RUN echo -ne '[Flatpak Preinstall com.obsproject.Studio.Plugin.OBSVkCapture]\nBranch=stable\nIsRuntime=true' >> /usr/share/flatpak/preinstall.d/OBSVKCapture.preinstall
+
 # Ark | For unzipping files and file compression! (Imagine a fox whose face you may squish...)
 RUN echo -ne '[Flatpak Preinstall org.kde.ark]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Ark.preinstall
 
@@ -181,43 +184,49 @@ RUN echo -ne '[Flatpak Preinstall org.kde.ark]\nBranch=stable\nIsRuntime=false' 
 RUN echo -ne '[Flatpak Preinstall com.gitlab.coringao.cavestory-nx]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/CaveStory.preinstall
 
 # Faugus Launcher | This is fantastic for using windows software on linux, exes and whatnot
-RUN echo -ne '[Flatpak Preinstall io.github.faugus.faugus-launcher]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/FaugusLauncher.preinstall
+RUN echo -ne '[Flatpak Preinstall io.github.faugus.faugus-launcher]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/FaugusLauncher.preinstall
 
 # ProtonUp-Qt | For installing different versions of proton! Emulation for windows games via Steam/Valve's work
-RUN echo -ne '[Flatpak Preinstall net.davidotek.pupgui2]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/ProtonUp-Qt.preinstall
+RUN echo -ne '[Flatpak Preinstall net.davidotek.pupgui2]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/ProtonUp-Qt.preinstall
 
 # Kdenlive | Video editing!
-RUN echo -ne '[Flatpak Preinstall org.kde.kdenlive]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Kdenlive.preinstall
+RUN echo -ne '[Flatpak Preinstall org.kde.kdenlive]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Kdenlive.preinstall
 
 # Okular | Viewing pdfs~
-RUN echo -ne '[Flatpak Preinstall org.kde.okular]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Okular.preinstall
+RUN echo -ne '[Flatpak Preinstall org.kde.okular]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Okular.preinstall
 
 # Kate | Writing documents~ Also can act as an IDE/development environment interestingly!
-RUN echo -ne '[Flatpak Preinstall org.kde.kate]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Kate.preinstall
+RUN echo -ne '[Flatpak Preinstall org.kde.kate]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Kate.preinstall
 
 # Warehouse | Manage your flatpak apps, delete whatever you don't need/use/want! It's YOUR computer.
-RUN echo -ne '[Flatpak Preinstall io.github.flattool.Warehouse]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Warehouse.preinstall
+RUN echo -ne '[Flatpak Preinstall io.github.flattool.Warehouse]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Warehouse.preinstall
 
-# Fedora Media Writer | Burn ISOs to usb sticks! Install linux on ALL the things. (This won't work for Windows ISOs, cuz Microsoft is dumb)
-RUN echo -ne '[Flatpak Preinstall org.fedoraproject.MediaWriter]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/FedoraMediaWriter.preinstall
+# Fedora Media Writer | Burn ISOs to usb sticks! Install linux on ALL the things. (This won't work for Windows ISOs, cuz Microsoft is dumb) >:c
+RUN echo -ne '[Flatpak Preinstall org.fedoraproject.MediaWriter]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/FedoraMediaWriter.preinstall
 
 # Gear Lever | Manage appimages!
-RUN echo -ne '[Flatpak Preinstall it.mijorus.gearlever]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/GearLever.preinstall
+RUN echo -ne '[Flatpak Preinstall it.mijorus.gearlever]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/GearLever.preinstall
 
 # Haruna | Watch video files! I actually personally like this better than VLC Media Player, nicer look/featureset
-RUN echo -ne '[Flatpak Preinstall org.kde.haruna]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Haruna.preinstall
+RUN echo -ne '[Flatpak Preinstall org.kde.haruna]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Haruna.preinstall
 
 # Pinball | It's important. Shakes you. I need you to understand I NEED this and need to put this on your computer.
-RUN echo -ne '[Flatpak Preinstall com.github.k4zmu2a.spacecadetpinball]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Pinball.preinstall
+RUN echo -ne '[Flatpak Preinstall com.github.k4zmu2a.spacecadetpinball]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Pinball.preinstall
 
 # Gwenview | View images!
-RUN echo -ne '[Flatpak Preinstall org.kde.gwenview]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Gwenview.preinstall
+RUN echo -ne '[Flatpak Preinstall org.kde.gwenview]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Gwenview.preinstall
 
 # Audacity | Edit audio! We love Audacity~ Wonderful software.
-RUN echo -ne '[Flatpak Preinstall org.audacityteam.Audacity]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Audacity.preinstall
+RUN echo -ne '[Flatpak Preinstall org.audacityteam.Audacity]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Audacity.preinstall
+
+# Filelight | Check what's taking up space on your drives~
+RUN echo -ne '[Flatpak Preinstall org.kde.filelight]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Filelight.preinstall
+
+# Not Tetris 2 | DEFINITELY not Tetris... 2!!!
+RUN echo -ne '[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/NotTetris2.preinstall
 
 ########################################################################################################################################
-# Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a couple XeniaOS details owo #####################
+# Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo #####################
 ########################################################################################################################################
 
 RUN echo "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
@@ -234,6 +243,8 @@ RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
 # Place XeniaOS logo at plymouth folder location to appear on boot.
 RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
+
+RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 
 # OS Release and Update uwu
 RUN echo -ne 'NAME="XeniaOS"\n\
