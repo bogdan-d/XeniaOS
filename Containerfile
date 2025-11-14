@@ -261,6 +261,32 @@ RUN echo -ne '[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nI
 # Floorp | A very nicely fast and very nicely featured Firefox fork!
 RUN echo -ne '[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Floorp.preinstall
 
+# Systemd flatpak preinstall service, thanks Zirconium
+RUN echo -ne '[Unit]\n\
+Description=Preinstall Flatpaks\n\
+After=network-online.target\n\
+Wants=network-online.target\n\
+ConditionPathExists=/usr/bin/flatpak\n\
+ConditionPathExists=!/var/lib/xeniaos/preinstall-finished\n\
+Documentation=man:flatpak-preinstall(1)\n\
+\n\
+[Service]\n\
+Type=oneshot\n\
+ExecStart=mkdir -p /var/lib/xeniaos\n\
+ExecStart=/usr/bin/flatpak preinstall --noconfirm\n\
+ExecStart=touch /var/lib/xeniaos/preinstall-finished\n\
+RemainAfterExit=true\n\
+Restart=on-failure\n\
+RestartSec=30\n\
+\n\
+StartLimitIntervalSec=600\n\
+StartLimitBurst=3\n\
+\n\
+[Install]\n\
+WantedBy=multi-user.target' > /usr/lib/systemd/system/flatpak-preinstall.service
+
+RUN systemctl enable --global flatpak-preinstall.service
+
 ########################################################################################################################################
 # Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo #####################
 ########################################################################################################################################
