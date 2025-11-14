@@ -182,9 +182,13 @@ RUN mkdir -p /etc/flatpak/remotes.d/ && \
 
 # OS Release and Update uwu
 RUN echo -ne 'NAME="XeniaOS" \n\
-PRETTY_NAME="XeniaOS" \n\
-DEFAULT_HOSTNAME="XeniaOS" \n\
-HOME_URL="https://github.com/XeniaMeraki/XeniaOS\n"' > /etc/os-release
+PRETTY_NAME="XeniaOS"\n\
+ID=arch\n\
+BUILD_ID=rolling\n\
+ANSI_COLOR="38;2;23;147;209"\n\
+HOME_URL="https://github.com/XeniaMeraki/XeniaOS"\n\
+LOGO=archlinux-logo
+DEFAULT_HOSTNAME="XeniaOS" \n\' > /etc/os-release
 
 # Automounter Systemd Service for flash drives and CDs
 RUN echo -ne '[Unit] \n\
