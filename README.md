@@ -18,10 +18,10 @@
 This is an opinionated gaming-oriented bootc image, an "immutable" linux-based operating system. Featuring the CachyOS kernel optimizations, Niri a tiling window manager, [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on gaming performance on bootc at most any other cost. It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc.
 
 
-This image is only compatible and intended for desktop PCs with AMD/Intel graphics, and has optimizations for [V3 cpus](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels) Nvidia graphics is unsupported by this image and will never be supported directly, a custom image fork of this OS would be allowed and called for and would be the only real way of playing games on XeniaOS with Nvidia GPUs.
+This OS is only compatible and intended for desktop PCs with AMD/Intel graphics, and has optimizations for [V3 cpus](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels). Nvidia graphics is unsupported by this image and will never be supported directly, a custom image fork of this OS would be allowed and called for and would be the only real way of playing games on XeniaOS with Nvidia GPUs. Please do not ask us directly for support with Nvidia GPUs.
 
 
-It can be used by first installing [Bluefin](https://projectbluefin.io/) (or any related Bootc image) and rebasing with command:
+This OS can be used by first installing [Bluefin](https://projectbluefin.io/) (or any related Bootc image) and rebasing with command:
 
 
 `sudo bootc switch ghcr.io/xeniameraki/xeniaos`
