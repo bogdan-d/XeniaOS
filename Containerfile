@@ -231,7 +231,7 @@ RUN echo -ne '[preferred] \n\
 default=kde;gtk;gnome; \n\
 org.freedesktop.impl.portal.Access=kde; \n\
 org.freedesktop.impl.portal.Notification=kde; \n\
-org.freedesktop.impl.portal.Secret=gnome-keyring' >> /usr/share/xdg-desktop-portal/niri-portals.conf
+org.freedesktop.impl.portal.Secret=gnome-keyring' > /usr/share/xdg-desktop-portal/niri-portals.conf
 
 # Use Chezmoi to set up config files, visual assets, avatars, and wallpapers
 RUN mkdir -p /usr/share/xeniaos/ && \
