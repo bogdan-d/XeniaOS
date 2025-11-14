@@ -191,7 +191,7 @@ RUN userdel -r build && \
         /tmp/* \
         /var/cache/pacman/pkg/*
 
-#Script credit @KyleGospo @cyrv6737 -Bazzite-Arch
+# AUR build containerfile script credit @KyleGospo @cyrv6737 -Bazzite-Arch
 
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
 
