@@ -161,10 +161,12 @@ RUN systemctl enable greetd
 # Section 4 Flatpaks preinstalls | We love containers, flatpaks, and protecting installs from breaking! ################################
 ########################################################################################################################################
 
+RUN mkdir -p /usr/share/flatpak/preinstall.d/
+# Bazaar
 RUN echo -ne '[Flatpak Preinstall io.github.kolunmi.Bazaar]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/bazaar.preinstall
-
+# Krita
 RUN echo -ne '[Flatpak Preinstall org.kde.krita]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/krita.preinstall
-
+# Pinta
 RUN echo -ne '[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/pinta.preinstall
 
 ########################################################################################################################################
