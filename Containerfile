@@ -111,7 +111,7 @@ RUN pacman -S --noconfirm greetd udiskie xwayland-satellite greetd-tuigreet xdg-
       accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
 
 # User frontend programs/apps
-RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility flatpak
+RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility
 
 # Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
 RUN mkdir -p "/usr/share/fonts/Maple Mono" \
@@ -159,6 +159,39 @@ RUN systemctl enable greetd
 ########################################################################################################################################
 # Section 4 Flatpaks preinstalls | We love containers, flatpaks, and protecting installs from breaking! ################################
 ########################################################################################################################################
+# We will compile flatpak-git from the AUR for now to get flatpak preinstalls working as a feature
+# Remove flatpak-git/AUR compile and return to normal flatpak package when preinstalls become available in the normal package
+# Create build user
+RUN useradd -m --shell=/bin/bash build && usermod -L build && \
+    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Build paru AUR helper
+USER build
+WORKDIR /home/build
+RUN --mount=type=tmpfs,dst=/tmp \
+    git clone https://aur.archlinux.org/paru-bin.git --single-branch /tmp/paru && \
+    cd /tmp/paru && \
+    makepkg -si --noconfirm && \
+    cd .. && \
+    rm -drf paru-bin
+
+RUN paru -S --noconfirm aur/flatpak-git
+
+#Delete build user and return to normal
+USER root
+WORKDIR /
+
+RUN userdel -r build && \
+    rm -drf /home/build && \
+    sed -i '/build ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
+    sed -i '/root ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
+    rm -rf /home/build && \
+    rm -rf \
+        /tmp/* \
+        /var/cache/pacman/pkg/*
+
+#Script credit @KyleGospo @cyrv6737 -Bazzite-Arch
 
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
 
