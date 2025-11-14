@@ -111,7 +111,7 @@ RUN pacman -S --noconfirm greetd udiskie xwayland-satellite greetd-tuigreet xdg-
       accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
 
 # User frontend programs/apps
-RUN pacman -S --noconfirm kate ark gwenview kdenlive okular steam scx-scheds scx-manager audacity gnome-disk-utility haruna flatpak
+RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility flatpak
 
 # Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
 RUN mkdir -p "/usr/share/fonts/Maple Mono" \
@@ -150,9 +150,8 @@ RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/
 RUN pacman -Sy --noconfirm
 
 RUN pacman -S \
-      chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller \
-      chaotic-aur/protonup-qt chaotic-aur/obs-vkcapture-git chaotic-aur/obs-studio-git chaotic-aur/dms-shell-git \
-      chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola \
+      chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop chaotic-aur/sc-controller \
+      chaotic-aur/obs-vkcapture-git chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola \
       --noconfirm
 
 RUN systemctl enable greetd
@@ -162,12 +161,60 @@ RUN systemctl enable greetd
 ########################################################################################################################################
 
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
+
 # Bazaar
-RUN echo -ne '[Flatpak Preinstall io.github.kolunmi.Bazaar]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/bazaar.preinstall
+RUN echo -ne '[Flatpak Preinstall io.github.kolunmi.Bazaar]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Bazaar.preinstall
+
 # Krita
-RUN echo -ne '[Flatpak Preinstall org.kde.krita]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/krita.preinstall
-# Pinta
-RUN echo -ne '[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/pinta.preinstall
+RUN echo -ne '[Flatpak Preinstall org.kde.krita]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Krita.preinstall
+
+# Pinta | Image editing! They set out a bit to match paint.net/paintdotnet
+RUN echo -ne '[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Pinta.preinstall
+
+# OBS | Video recording/streaming!
+RUN echo -ne '[Flatpak Preinstall com.obsproject.Studio]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/OBS.preinstall
+
+# Ark | For unzipping files and file compression! (Imagine a fox whose face you may squish...)
+RUN echo -ne '[Flatpak Preinstall org.kde.ark]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Ark.preinstall
+
+# Cave Story, a free, public domain platformer! It's historically important to videogames and platformers as a genre.
+RUN echo -ne '[Flatpak Preinstall com.gitlab.coringao.cavestory-nx]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/CaveStory.preinstall
+
+# Faugus Launcher | This is fantastic for using windows software on linux, exes and whatnot
+RUN echo -ne '[Flatpak Preinstall io.github.faugus.faugus-launcher]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/FaugusLauncher.preinstall
+
+# ProtonUp-Qt | For installing different versions of proton! Emulation for windows games via Steam/Valve's work
+RUN echo -ne '[Flatpak Preinstall net.davidotek.pupgui2]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/ProtonUp-Qt.preinstall
+
+# Kdenlive | Video editing!
+RUN echo -ne '[Flatpak Preinstall org.kde.kdenlive]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Kdenlive.preinstall
+
+# Okular | Viewing pdfs~
+RUN echo -ne '[Flatpak Preinstall org.kde.okular]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Okular.preinstall
+
+# Kate | Writing documents~ Also can act as an IDE/development environment interestingly!
+RUN echo -ne '[Flatpak Preinstall org.kde.kate]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Kate.preinstall
+
+# Warehouse | Manage your flatpak apps, delete whatever you don't need/use/want! It's YOUR computer.
+RUN echo -ne '[Flatpak Preinstall io.github.flattool.Warehouse]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Warehouse.preinstall
+
+# Fedora Media Writer | Burn ISOs to usb sticks! Install linux on ALL the things. (This won't work for Windows ISOs, cuz Microsoft is dumb)
+RUN echo -ne '[Flatpak Preinstall org.fedoraproject.MediaWriter]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/FedoraMediaWriter.preinstall
+
+# Gear Lever | Manage appimages!
+RUN echo -ne '[Flatpak Preinstall it.mijorus.gearlever]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/GearLever.preinstall
+
+# Haruna | Watch video files! I actually personally like this better than VLC Media Player, nicer look/featureset
+RUN echo -ne '[Flatpak Preinstall org.kde.haruna]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Haruna.preinstall
+
+# Pinball | It's important. Shakes you. I need you to understand I NEED this and need to put this on your computer.
+RUN echo -ne '[Flatpak Preinstall com.github.k4zmu2a.spacecadetpinball]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Pinball.preinstall
+
+# Gwenview | View images!
+RUN echo -ne '[Flatpak Preinstall org.kde.gwenview]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Gwenview.preinstall
+
+# Audacity | Edit audio! We love Audacity~ Wonderful software.
+RUN echo -ne '[Flatpak Preinstall org.audacityteam.Audacity]n\Branch=stablen\IsRuntime=false' >> /usr/share/flatpak/preinstall.d/Audacity.preinstall
 
 ########################################################################################################################################
 # Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a couple XeniaOS details owo #####################
@@ -237,8 +284,9 @@ net.ipv4.tcp_congestion_control=bbr\n' > /etc/sysctl.d/99-bbr3.conf
 # Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
 RUN echo -ne '[preferred] \n\
 default=kde;gtk;gnome; \n\
-org.freedesktop.impl.portal.Access=kde; \n\
-org.freedesktop.impl.portal.Notification=kde; \n\
+org.freedesktop.impl.portal.ScreenCast=gnome;kde;gtk; \n\
+org.freedesktop.impl.portal.Access=kde;gtk;gnome; \n\
+org.freedesktop.impl.portal.Notification=kde;gtk;gnome; \n\
 org.freedesktop.impl.portal.Secret=gnome-keyring' > /usr/share/xdg-desktop-portal/niri-portals.conf
 
 # Use Chezmoi to set up config files, visual assets, avatars, and wallpapers
