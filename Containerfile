@@ -161,6 +161,9 @@ RUN systemctl enable greetd
 # Section 4 - Linux OS stuffs | We set some nice defaults for a regular user + set up a couple XeniaOS details owo #####################
 ########################################################################################################################################
 
+RUN echo "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
+RUN systemctl enable polkit
+
 # Set up zram, this will help users not run out of memory. Fox will fix!
 RUN echo -ne '[zram0]\nzram-size = min(ram, 8192)' >> /usr/lib/systemd/zram-generator.conf
 RUN echo -ne 'enable systemd-resolved.service' >> usr/lib/systemd/system-preset/91-resolved-default.preset
@@ -330,7 +333,7 @@ RUN systemctl enable --global dms.service
 
 RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
 
-RUN echo -ne '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | grep -v -e "wheel" | awk "NF" | awk '\''{print $2}'\'' | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
+RUN echo -ne '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | awk "NF" | awk '\''{print $2}'\'' | grep -v -e "wheel" -e "root" -e "sudo" | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
 RUN chmod +x /usr/libexec/xeniaos-group-fix
 RUN echo -ne '[Unit]\n\
 Description=Fix groups\n\
