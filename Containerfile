@@ -151,7 +151,7 @@ RUN pacman -Sy --noconfirm
 
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop chaotic-aur/sc-controller \
-      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola \
+      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver \
       --noconfirm
 
 RUN systemctl enable greetd
@@ -225,6 +225,9 @@ RUN echo -ne '[Flatpak Preinstall org.kde.filelight]\nBranch=stable\nIsRuntime=f
 # Not Tetris 2 | DEFINITELY not Tetris... 2!!!
 RUN echo -ne '[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/NotTetris2.preinstall
 
+# Floorp | A very nicely fast and very nicely featured Firefox fork!
+RUN echo -ne '[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=false' >> /usr/share/flatpak/preinstall.d/Floorp.preinstall
+
 ########################################################################################################################################
 # Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo #####################
 ########################################################################################################################################
@@ -241,7 +244,7 @@ RUN systemctl preset systemd-resolved.service
 # Enable wifi, firewall, power profiles. Fox will protect!
 RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
-# Place XeniaOS logo at plymouth folder location to appear on boot.
+# Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
 RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
 RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
@@ -272,7 +275,7 @@ WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/udiskie.service
 
 # Secondary HDD/SSD automounter, supports ext4/btrfs, mounts to /media/media-automount by default. Made by @Zeglius
 # Feel free to use your own fstab/mount things your own way if you understand how to do so
-# Disable with "sudo ln -s /dev/null /etc/media-automount.d/_all.conf"
+# Disable with "sudo ln -s /dev/null /etc/media-automount.d/_all.conf" without quotes in a terminal
 RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator && \
       cd /tmp/media-automount-generator && \
       DESTDIR=/usr/local ./install.sh
@@ -399,7 +402,7 @@ RUN systemctl enable --global dms.service
 # Section 8 - Final Bootc Setup. The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #######################
 ########################################################################################################################################
 
-#This fixes a user/groups error with Arch Bootc setup. We are suffering for not using the rechunker, but we persist.
+#This fixes a user/groups error with Arch Bootc setup.
 #Do NOT remove until fixed upstream. Script created by Tulip.
 
 RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
@@ -455,8 +458,8 @@ RUN bootc container lint
 ##################### ..:kXMMx..'....''..kMk..''....'..xMMXkc..
 #####################  dMMMMMMd.....'...xMMMx...''....dMMMMMMx
 #####################    kMMMMWOoc:coOkolllokOoc:coOWMMMMO
-#####################         .MMMMMMMMl...lNMMMMMMM.
-#####################            KMMMMMMXlKMMMMMMX
-#####################               .MMMMMMMMM. 
+#####################          .MMMMMMMMl...lNMMMMMMM.
+#####################             KMMMMMMXlKMMMMMMX
+#####################                .MMMMMMMMM. 
 #####################
 ##################### Art by @bhavyakukkar and @ioletsgo
