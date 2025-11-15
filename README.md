@@ -44,7 +44,7 @@ This is an opinionated gaming-oriented [bootc image](https://github.com/bootc-de
 -AMD/Intel cpu/gpu -V3 cpu possibly -[Secureboot](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/disabling-secure-boot?view=windows-11) must be off -On a Virtual Machine, [opengl acceleration](https://askubuntu.com/a/1389829) is needed
 
 
-This OS can be used by first installing [Aurora]([https://getaurora.dev/en) OR [Bluefin](https://projectbluefin.io/) (or any related Bootc image) and rebasing with terminal command:
+This OS can be used by first installing [Aurora](https://getaurora.dev/en) OR [Bluefin](https://projectbluefin.io/) (or any related Bootc image) and rebasing with terminal command:
 
 
 `sudo bootc switch ghcr.io/xeniameraki/xeniaos:latest`
