@@ -168,70 +168,70 @@ RUN systemctl enable greetd
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
 
 # Bazaar
-RUN echo -ne '[Flatpak Preinstall io.github.kolunmi.Bazaar]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Bazaar.preinstall
+RUN printf "[Flatpak Preinstall io.github.kolunmi.Bazaar]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Bazaar.preinstall
 
 # Krita
-RUN echo -ne '[Flatpak Preinstall org.kde.krita]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Krita.preinstall
+RUN printf "[Flatpak Preinstall org.kde.krita]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Krita.preinstall
 
 # Pinta | Image editing! They set out a bit to match paint.net/paintdotnet
-RUN echo -ne '[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Pinta.preinstall
+RUN printf "[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Pinta.preinstall
 
 # OBS | Video recording/streaming!
-RUN echo -ne '[Flatpak Preinstall com.obsproject.Studio]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/OBS.preinstall
+RUN printf "[Flatpak Preinstall com.obsproject.Studio]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/OBS.preinstall
 
 # OBSVKCapture | Games capture in OBS scenes on linux!
-RUN echo -ne '[Flatpak Preinstall com.obsproject.Studio.Plugin.OBSVkCapture]\nBranch=stable\nIsRuntime=true' > /usr/share/flatpak/preinstall.d/OBSVKCapture.preinstall
+RUN printf "[Flatpak Preinstall com.obsproject.Studio.Plugin.OBSVkCapture]\nBranch=stable\nIsRuntime=true" > /usr/share/flatpak/preinstall.d/OBSVKCapture.preinstall
 
 # Ark | For unzipping files and file compression! (Imagine a fox whose face you may squish...)
-RUN echo -ne '[Flatpak Preinstall org.kde.ark]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Ark.preinstall
+RUN printf "[Flatpak Preinstall org.kde.ark]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Ark.preinstall
 
-# Cave Story, a free, public domain platformer! It's historically important to videogames and platformers as a genre.
-RUN echo -ne '[Flatpak Preinstall com.gitlab.coringao.cavestory-nx]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/CaveStory.preinstall
+# Cave Story, a free, public domain platformer! It"s historically important to videogames and platformers as a genre.
+RUN printf "[Flatpak Preinstall com.gitlab.coringao.cavestory-nx]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/CaveStory.preinstall
 
 # Faugus Launcher | This is fantastic for using windows software on linux, exes and whatnot
-RUN echo -ne '[Flatpak Preinstall io.github.faugus.faugus-launcher]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/FaugusLauncher.preinstall
+RUN printf "[Flatpak Preinstall io.github.faugus.faugus-launcher]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/FaugusLauncher.preinstall
 
 # ProtonUp-Qt | For installing different versions of proton! Emulation for windows games via Steam/Valve's work
-RUN echo -ne '[Flatpak Preinstall net.davidotek.pupgui2]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/ProtonUp-Qt.preinstall
+RUN printf "[Flatpak Preinstall net.davidotek.pupgui2]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/ProtonUp-Qt.preinstall
 
 # Kdenlive | Video editing!
-RUN echo -ne '[Flatpak Preinstall org.kde.kdenlive]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Kdenlive.preinstall
+RUN printf "[Flatpak Preinstall org.kde.kdenlive]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Kdenlive.preinstall
 
 # Okular | Viewing pdfs~
-RUN echo -ne '[Flatpak Preinstall org.kde.okular]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Okular.preinstall
+RUN printf "[Flatpak Preinstall org.kde.okular]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Okular.preinstall
 
 # Kate | Writing documents~ Also can act as an IDE/development environment interestingly!
-RUN echo -ne '[Flatpak Preinstall org.kde.kate]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Kate.preinstall
+RUN printf "[Flatpak Preinstall org.kde.kate]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Kate.preinstall
 
-# Warehouse | Manage your flatpak apps, delete whatever you don't need/use/want! It's YOUR computer.
-RUN echo -ne '[Flatpak Preinstall io.github.flattool.Warehouse]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Warehouse.preinstall
+# Warehouse | Manage your flatpak apps, delete whatever you don"t need/use/want! It's YOUR computer.
+RUN printf "[Flatpak Preinstall io.github.flattool.Warehouse]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Warehouse.preinstall
 
-# Fedora Media Writer | Burn ISOs to usb sticks! Install linux on ALL the things. (This won't work for Windows ISOs, cuz Microsoft is dumb) >:c
-RUN echo -ne '[Flatpak Preinstall org.fedoraproject.MediaWriter]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/FedoraMediaWriter.preinstall
+# Fedora Media Writer | Burn ISOs to usb sticks! Install linux on ALL the things. (This won"t work for Windows ISOs, cuz Microsoft is dumb) >:c
+RUN printf "[Flatpak Preinstall org.fedoraproject.MediaWriter]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/FedoraMediaWriter.preinstall
 
 # Gear Lever | Manage appimages!
-RUN echo -ne '[Flatpak Preinstall it.mijorus.gearlever]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/GearLever.preinstall
+RUN printf "[Flatpak Preinstall it.mijorus.gearlever]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/GearLever.preinstall
 
 # Haruna | Watch video files! I actually personally like this better than VLC Media Player, nicer look/featureset
-RUN echo -ne '[Flatpak Preinstall org.kde.haruna]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Haruna.preinstall
+RUN printf "[Flatpak Preinstall org.kde.haruna]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Haruna.preinstall
 
 # Pinball | It's important. Shakes you. I need you to understand I NEED this and need to put this on your computer.
-RUN echo -ne '[Flatpak Preinstall com.github.k4zmu2a.spacecadetpinball]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Pinball.preinstall
+RUN printf "[Flatpak Preinstall com.github.k4zmu2a.spacecadetpinball]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Pinball.preinstall
 
 # Gwenview | View images!
-RUN echo -ne '[Flatpak Preinstall org.kde.gwenview]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Gwenview.preinstall
+RUN printf "[Flatpak Preinstall org.kde.gwenview]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Gwenview.preinstall
 
 # Audacity | Edit audio! We love Audacity~ Wonderful software.
-RUN echo -ne '[Flatpak Preinstall org.audacityteam.Audacity]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Audacity.preinstall
+RUN printf "[Flatpak Preinstall org.audacityteam.Audacity]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Audacity.preinstall
 
 # Filelight | Check what's taking up space on your drives~
-RUN echo -ne '[Flatpak Preinstall org.kde.filelight]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Filelight.preinstall
+RUN printf "[Flatpak Preinstall org.kde.filelight]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Filelight.preinstall
 
 # Not Tetris 2 | DEFINITELY not Tetris... 2!!!
-RUN echo -ne '[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/NotTetris2.preinstall
+RUN printf "[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/NotTetris2.preinstall
 
 # Floorp | A very nicely fast and very nicely featured Firefox fork!
-RUN echo -ne '[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=false' > /usr/share/flatpak/preinstall.d/Floorp.preinstall
+RUN printf "[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Floorp.preinstall
 
 # Systemd flatpak preinstall service, thanks Zirconium
 RUN echo -ne '[Unit]\n\
