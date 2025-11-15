@@ -18,7 +18,7 @@
 This is an opinionated gaming-oriented bootc image, an "immutable" linux-based operating system. Featuring the CachyOS kernel optimizations, Niri a tiling window manager, [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on gaming performance on bootc at most any other cost. It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc.
 
 
-## Installation requirements
+## Installation requirements and instructions
 -x86 -AMD/Intel cpu/gpu -V3 cpu possibly -[Secureboot](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/disabling-secure-boot?view=windows-11) must be off -On a Virtual Machine, [opengl acceleration](https://askubuntu.com/a/1389829) is needed
 
 
