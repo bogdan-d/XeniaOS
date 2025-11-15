@@ -285,7 +285,7 @@ StartLimitBurst=3\n\
 [Install]\n\
 WantedBy=multi-user.target' > /usr/lib/systemd/system/flatpak-preinstall.service
 
-RUN systemctl enable --global flatpak-preinstall.service
+RUN systemctl enable flatpak-preinstall.service
 
 ########################################################################################################################################
 # Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo #####################
