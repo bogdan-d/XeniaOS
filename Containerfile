@@ -123,6 +123,8 @@ RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubu
 
 RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 
+RUN echo "QT_QPA_PLATFORMTHEME=qt6ct" > /etc/environment
+
 ########################################################################################################################################
 # Section 2 - Set up bootc dracut | I think it sets up the bootc initial image / Compiles Bootc Package :D #############################
 ########################################################################################################################################
