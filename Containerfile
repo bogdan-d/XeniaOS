@@ -118,6 +118,11 @@ RUN mkdir -p "/usr/share/fonts/Maple Mono" \
       && curl -fSsLo "/tmp/maple.zip" "$(curl "https://api.github.com/repos/subframe7536/maple-font/releases/latest" | jq '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url' -rc)" \
       && unzip "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
 
+# Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
+RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
+
+RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
+
 ########################################################################################################################################
 # Section 2 - Set up bootc dracut | I think it sets up the bootc initial image / Compiles Bootc Package :D #############################
 ########################################################################################################################################
@@ -150,7 +155,7 @@ RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/
 RUN pacman -Sy --noconfirm
 
 RUN pacman -S \
-      chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop chaotic-aur/sc-controller \
+      chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop chaotic-aur/sc-controller chaotic-aur/flatpak-git \
       chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver \
       --noconfirm
 
@@ -159,39 +164,6 @@ RUN systemctl enable greetd
 ########################################################################################################################################
 # Section 4 Flatpaks preinstalls | We love containers, flatpaks, and protecting installs from breaking! ################################
 ########################################################################################################################################
-# We will compile flatpak-git from the AUR for now to get flatpak preinstalls working as a feature
-# Remove flatpak-git/AUR compile and return to normal flatpak package when preinstalls become available in the normal package
-# Create build user
-RUN useradd -m --shell=/bin/bash build && usermod -L build && \
-    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-# Build paru AUR helper
-USER build
-WORKDIR /home/build
-RUN --mount=type=tmpfs,dst=/tmp \
-    git clone https://aur.archlinux.org/paru-bin.git --single-branch /tmp/paru && \
-    cd /tmp/paru && \
-    makepkg -si --noconfirm && \
-    cd .. && \
-    rm -drf paru-bin
-
-RUN paru -S --noconfirm aur/flatpak-git
-
-#Delete build user and return to normal
-USER root
-WORKDIR /
-
-RUN userdel -r build && \
-    rm -drf /home/build && \
-    sed -i '/build ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
-    sed -i '/root ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
-    rm -rf /home/build && \
-    rm -rf \
-        /tmp/* \
-        /var/cache/pacman/pkg/*
-
-# AUR build containerfile script credit @KyleGospo @cyrv6737 -Bazzite-Arch
 
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
 
@@ -304,11 +276,6 @@ RUN systemctl preset systemd-resolved.service
 # Enable wifi, firewall, power profiles. Fox will protect!
 RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
-# Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
-RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
-
-RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
-
 # OS Release and Update uwu
 RUN echo -ne 'NAME="XeniaOS"\n\
 PRETTY_NAME="XeniaOS"\n\
@@ -339,6 +306,20 @@ WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/udiskie.service
 RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator && \
       cd /tmp/media-automount-generator && \
       DESTDIR=/usr/local ./install.sh
+
+# Clip history / Cliphist systemd service / Clipboard history for copy and pasting to work properly in Niri~
+RUN echo -ne '[Unit]\n\
+Description=Clipboard History service\n\
+PartOf=graphical-session.target\n\
+After=graphical-session.target\n\
+\n\
+[Service]\n\
+ExecStart=wl-paste --watch cliphist store\n\
+Restart=on-failure\n\
+RestartSec=1\n\
+\n\
+[Install]\n\
+WantedBy=graphical-session.target' > /usr/lib/systemd/user/cliphist.service
 
 ########################################################################################################################################
 # Section 6 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
@@ -407,6 +388,7 @@ RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=udiskie.service/" "/usr/lib/systemd/user/
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=plasma-xdg-desktop-portal-kde.service/" "/usr/lib/systemd/user/niri.service"
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=xwayland-satellite.service/" "/usr/lib/systemd/user/niri.service"
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=dms.service/" "/usr/lib/systemd/user/niri.service"
+RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=cliphist.service/" "/usr/lib/systemd/user/niri.service"
 
 RUN echo -ne '[Unit]\n\
 Description=Initializes Chezmoi if directory is missing\n\
