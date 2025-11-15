@@ -11,6 +11,21 @@
     </picture>
 </p>
 
+<div align="center">
+
+[![XeniaMeraki - XeniaOS](https://img.shields.io/static/v1?label=XeniaMeraki&message=XeniaOS&color=orange&logo=github)](https://github.com/XeniaMeraki/XeniaOS "Go to GitHub repo")
+![Build]
+[![TransRights]][transrights_url]
+[![License](https://img.shields.io/badge/License-GPL3.0-orange)](#license)
+[![stars - XeniaOS](https://img.shields.io/github/stars/XeniaMeraki/XeniaOS?style=social)](https://github.com/XeniaMeraki/XeniaOS)
+
+[transrights_url]: https://en.wikipedia.org/wiki/Transgender_rights_movement
+[Build]: https://github.com/XeniaMeraki/XeniaOS/actions/workflows/build.yaml/badge.svg
+
+[TransRights]: https://pride-badges.pony.workers.dev/static/v1?label=trans%20rights&stripeWidth=6&stripeColors=5BCEFA,F5A9B8,FFFFFF,F5A9B8,5BCEFA
+</div></h1>
+
+
 <h3 align="center">Arch Bootc / Niri / DMS / Xenia / Gaming On Linux</h3>
 
 This is an opinionated gaming-oriented bootc image, an "immutable" linux-based operating system. Featuring the CachyOS kernel optimizations, Niri a tiling window manager, [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on gaming performance on bootc at most any other cost. It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc.
@@ -85,4 +100,3 @@ for Xenia artwork/logos/assets/concepting.
 
 
 <img align="right" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/textlogo_jasper_valery.svg" width="300">
-
