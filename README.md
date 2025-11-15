@@ -40,7 +40,7 @@ This is an opinionated gaming-oriented bootc image, an "immutable" linux-based o
 This OS can be used by first installing [Bluefin](https://projectbluefin.io/) (or any related Bootc image) and rebasing with terminal command:
 
 
-`sudo bootc switch ghcr.io/xeniameraki/xeniaos`
+`sudo bootc switch ghcr.io/xeniameraki/xeniaos:latest`
 
 
 
