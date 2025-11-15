@@ -18,10 +18,11 @@
 This is an opinionated gaming-oriented bootc image, an "immutable" linux-based operating system. Featuring the CachyOS kernel optimizations, Niri a tiling window manager, [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on gaming performance on bootc at most any other cost. It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc.
 
 
-This OS is only compatible and intended for desktop PCs with AMD/Intel graphics, and has optimizations for [V3 cpus](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels). Nvidia graphics is unsupported by this image and will never be supported directly, a custom image fork of this OS would be allowed and called for and would be the only real way of playing games on XeniaOS with Nvidia GPUs. Please do not ask us directly for support with Nvidia GPUs.
+## Installation requirements
+-x86 -AMD/Intel cpu/gpu -V3 cpu possibly -[Secureboot](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/disabling-secure-boot?view=windows-11) must be off -On a Virtual Machine, [opengl acceleration](https://askubuntu.com/a/1389829) is needed
 
 
-This OS can be used by first installing [Bluefin](https://projectbluefin.io/) (or any related Bootc image) and rebasing with command:
+This OS can be used by first installing [Bluefin](https://projectbluefin.io/) (or any related Bootc image) and rebasing with terminal command:
 
 
 `sudo bootc switch ghcr.io/xeniameraki/xeniaos`
@@ -53,18 +54,21 @@ This OS can be used by first installing [Bluefin](https://projectbluefin.io/) (o
 -You are encouraged to use Bazaar for a majority of your software installs, use flatpaks and appimages whenever possible
 
 
+This OS is only compatible and intended for desktop PCs with AMD/Intel graphics, and has optimizations for [V3 cpus](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels). Nvidia graphics is unsupported by this image and will never be supported directly, a custom image fork of this OS would be allowed and called for and would be the only real way of playing games on XeniaOS with Nvidia GPUs. Please do not ask us directly for support with Nvidia GPUs.
+
+
 <p align="center">
 <img alt="Screenshot" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/examplescreenshot.png?sanitize=true"/>
 </p>
 
 
-## Contact and thx
+# Contact and thx
 <img align="right" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/prototypelogo_2025_jasper_valery.svg" width="300">
 
 Developers can currently most easily be reached 
 
 
-in the [Zirconium Discord](https://discord.gg/mmgNQpxwhW) (a sister project)
+in the [Zirconium Discord](https://discord.gg/mmgNQpxwhW) (a sister project) [XeniaOS channel 18+ only](https://discord.gg/gkZWX4E)
 
 
 XeniaOS headed by [Xenia Meraki](https://xeniameraki.com)
