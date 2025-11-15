@@ -16,6 +16,7 @@
 [![XeniaMeraki - XeniaOS](https://img.shields.io/static/v1?label=XeniaMeraki&message=XeniaOS&color=orange&logo=github)](https://github.com/XeniaMeraki/XeniaOS "Go to GitHub repo")
 ![Build]
 [![TransRights]][transrights_url]
+![Sponsored by the Gay Agenda][sponsored]
 [![License](https://img.shields.io/badge/License-GPL3.0-orange)](#license)
 [![stars - XeniaOS](https://img.shields.io/github/stars/XeniaMeraki/XeniaOS?style=social)](https://github.com/XeniaMeraki/XeniaOS)
 
@@ -23,6 +24,7 @@
 [Build]: https://github.com/XeniaMeraki/XeniaOS/actions/workflows/build.yaml/badge.svg
 
 [TransRights]: https://pride-badges.pony.workers.dev/static/v1?label=trans%20rights&stripeWidth=6&stripeColors=5BCEFA,F5A9B8,FFFFFF,F5A9B8,5BCEFA
+[sponsored]: https://pride-badges.pony.workers.dev/static/v1?label=sponsored+by+the+gay+agenda&labelColor=%23555&stripeWidth=6&stripeColors=E40303%2CFF8C00%2CFFED00%2C008026%2C24408E%2C732982
 </div></h1>
 
 
@@ -39,6 +41,7 @@ This OS can be used by first installing [Bluefin](https://projectbluefin.io/) (o
 
 
 `sudo bootc switch ghcr.io/xeniameraki/xeniaos`
+
 
 
 (You may be aware from Bazzite a warning to not rebase between desktop environments. This has to do with KDE -> Gnome, or Gnome -> KDE. Rebasing from KDE or Gnome Bootc to XeniaOS' Niri base is unproblematic.)
