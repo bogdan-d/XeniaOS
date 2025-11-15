@@ -291,6 +291,7 @@ RUN systemctl enable flatpak-preinstall.service
 # Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo #####################
 ########################################################################################################################################
 
+# Add user to sudoers file for sudo, enable polkit
 RUN echo "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
 RUN systemctl enable polkit
 
