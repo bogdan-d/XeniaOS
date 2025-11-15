@@ -77,24 +77,22 @@ RUN pacman -Syu --noconfirm
 RUN pacman -S --noconfirm base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
 
 # Media/Install utilities/Media drivers
-RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid aha clinfo ddcutil dmidecode mesa-utils ntfs-3g nvme-cli \
+RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid ddcutil dmidecode mesa-utils ntfs-3g \
       vulkan-tools wayland-utils playerctl
 
 # Fonts
 RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 # CLI Utilities
-RUN pacman -S --noconfirm sudo bash bash-completion bat busybox duf fastfetch gping htop jq less lsof mcfly nano nvtop openssh powertop \
-      procs ripgrep tldr trash-cli tree usbutils vim wget wl-clipboard ydotool unzip ptyxis glibc-locales tar udev \
-      starship tuned-ppd tuned hyfetch docker podman yt-dlp curl
+RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db \
+      tree usbutils vim wget wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl
 
 # Drivers
-RUN pacman -S --noconfirm amd-ucode intel-ucode edk2-shell efibootmgr shim mesa libva-intel-driver libva-mesa-driver \
+RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa libva-intel-driver libva-mesa-driver \
       vpl-gpu-rt vulkan-icd-loader vulkan-intel vulkan-radeon apparmor
 
 # Network / VPN / SMB
-RUN pacman -S --noconfirm dnsmasq freerdp2 iproute2 iwd libmtp networkmanager-l2tp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp \
-      networkmanager-strongswan networkmanager-vpnc nfs-utils nss-mdns samba smbclient networkmanager firewalld
+RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld
 
 # Accessibility
 RUN pacman -S --noconfirm espeak-ng orca
@@ -103,12 +101,12 @@ RUN pacman -S --noconfirm espeak-ng orca
 RUN pacman -S --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber
 
 # Printer
-RUN pacman -S --noconfirm cups cups-browsed gutenprint ipp-usb hplip splix system-config-printer
+RUN pacman -S --noconfirm cups cups-browsed hplip
 
 # Desktop Environment needs
 RUN pacman -S --noconfirm greetd udiskie xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
-      ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kompare purpose chezmoi matugen \
-      accountsservice quickshell dgop cliphist cava dolphin qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
+      ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
+      qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
 
 # User frontend programs/apps
 RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility
@@ -325,6 +323,9 @@ RestartSec=1\n\
 \n\
 [Install]\n\
 WantedBy=graphical-session.target' > /usr/lib/systemd/user/cliphist.service
+
+# Symlink Vi to Vim / Make it to where a user can use vi in terminal command to use vim automatically | Thanks Tulip
+RUN ln -s ./vim /usr/bin/vi
 
 ########################################################################################################################################
 # Section 6 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
