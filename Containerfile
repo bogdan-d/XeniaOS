@@ -85,7 +85,7 @@ RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 # CLI Utilities
 RUN pacman -S --noconfirm sudo bash bash-completion bat busybox duf fastfetch gping htop jq less lsof mcfly nano nvtop openssh powertop \
-      procs ripgrep tldr trash-cli tree usbutils vim wget wl-clipboard ydotool yay unzip ptyxis glibc-locales tar udev \
+      procs ripgrep tldr trash-cli tree usbutils vim wget wl-clipboard ydotool unzip ptyxis glibc-locales tar udev \
       starship tuned-ppd tuned hyfetch docker podman yt-dlp curl
 
 # Drivers
@@ -156,9 +156,12 @@ RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/
 
 RUN pacman -Sy --noconfirm
 
+# Package list: niri-git | input-remapper-git | vesktop | sc-controller | flatpak-git | dms-shell-git | ttf-twemoji |
+# ttf-symbola | opentabletdriver | yay
+
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop chaotic-aur/sc-controller chaotic-aur/flatpak-git \
-      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver \
+      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/yay \
       --noconfirm
 
 RUN systemctl enable greetd
