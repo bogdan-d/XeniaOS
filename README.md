@@ -22,6 +22,7 @@
 
 [transrights_url]: https://en.wikipedia.org/wiki/Transgender_rights_movement
 [Build]: https://github.com/XeniaMeraki/XeniaOS/actions/workflows/build.yaml/badge.svg
+![Badge](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FXeniaMeraki%2FXeniaOS&label=Views&icon=browser-firefox&color=%23ff7800&message=&style=plastic&tz=US%2FArizona)
 
 [TransRights]: https://pride-badges.pony.workers.dev/static/v1?label=trans%20rights&stripeWidth=6&stripeColors=5BCEFA,F5A9B8,FFFFFF,F5A9B8,5BCEFA
 [sponsored]: https://pride-badges.pony.workers.dev/static/v1?label=sponsored+by+the+gay+agenda&labelColor=%23555&stripeWidth=6&stripeColors=E40303%2CFF8C00%2CFFED00%2C008026%2C24408E%2C732982
@@ -30,14 +31,20 @@
 
 <h3 align="center">Arch Bootc / Niri / DMS / Xenia / Gaming On Linux</h3>
 
-This is an opinionated gaming-oriented bootc image, an "immutable" linux-based operating system. Featuring the CachyOS kernel optimizations, Niri a tiling window manager, [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on gaming performance on bootc at most any other cost. It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc.
+
+# Simple explanation: 
+A free operating system for PCs/laptops that plays games well, ones supported by [Linux](https://www.protondb.com/), that uses a [nifty windowing system](https://github.com/YaLTeR/niri) and has cute fox women in wallpapers.
+
+
+# Linux Technical: 
+This is an opinionated gaming-oriented [bootc image](https://github.com/bootc-dev/bootc), an "immutable" linux-based operating system. Featuring the [CachyOS](https://wiki.cachyos.org/features/kernel/) kernel optimizations, [Niri](https://github.com/YaLTeR/niri) a tiling window manager, [DMS/Quickshell](https://github.com/AvengeMedia/DankMaterialShell), [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on high gaming performance on bootc, and is also suitable for content creation needs (Art/Videos/Audio). It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc. It should end up easier to use and understand for the average user than base Arch/CachyOS, and offers the power of bootc for fearless backups and compatibility with the bootc ecosystem. (You can try out other "operating systems" without reinstalling, [with one simple sentence!](https://docs.bazzite.gg/Installing_and_Managing_Software/Updates_Rollbacks_and_Rebasing/rebase_guide/))
 
 
 ## Installation requirements and instructions
--x86 -AMD/Intel cpu/gpu -V3 cpu possibly -[Secureboot](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/disabling-secure-boot?view=windows-11) must be off -On a Virtual Machine, [opengl acceleration](https://askubuntu.com/a/1389829) is needed
+-AMD/Intel cpu/gpu -V3 cpu possibly -[Secureboot](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/disabling-secure-boot?view=windows-11) must be off -On a Virtual Machine, [opengl acceleration](https://askubuntu.com/a/1389829) is needed
 
 
-This OS can be used by first installing [Bluefin](https://projectbluefin.io/) (or any related Bootc image) and rebasing with terminal command:
+This OS can be used by first installing [Aurora]([https://getaurora.dev/en) OR [Bluefin](https://projectbluefin.io/) (or any related Bootc image) and rebasing with terminal command:
 
 
 `sudo bootc switch ghcr.io/xeniameraki/xeniaos:latest`
@@ -49,25 +56,28 @@ This OS can be used by first installing [Bluefin](https://projectbluefin.io/) (o
 ## Featuressss
 
 
--Linux/Arch Bootc
+- Linux/Arch Bootc
 
 
--Pre-setup Arch/AUR packages and applications, including Steam and Vesktop
+- Ease of use with easy app installs/intended to use less terminal commands and more GUI software
 
 
--Niri, a tiling window manager
+- Pre-setup Arch/AUR packages and applications, including Steam, OBS, and Vesktop
 
 
--DMS/Quickshell
+- Niri, a tiling window manager
 
 
--CachyOS Kernel with cpu optimizations (for V3 cpus)(Bore scheduler)
+- DMS/Quickshell
 
 
--Content creator oriented software preinstalled (Kdenlive, Krita, Audacity, etc)
+- CachyOS Kernel with cpu optimizations (for V3 cpus)(Bore scheduler)
 
 
--You are encouraged to use Bazaar for a majority of your software installs, use flatpaks and appimages whenever possible
+- Content creator software preinstalled (Kdenlive, Krita, Audacity, etc)
+
+
+- You are encouraged to use Bazaar for a majority of your software installs, use flatpaks and appimages whenever possible
 
 
 This OS is only compatible and intended for desktop PCs with AMD/Intel graphics, and has optimizations for [V3 cpus](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels). Nvidia graphics is unsupported by this image and will never be supported directly, a custom image fork of this OS would be allowed and called for and would be the only real way of playing games on XeniaOS with Nvidia GPUs. Please do not ask us directly for support with Nvidia GPUs.
