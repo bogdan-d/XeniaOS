@@ -247,7 +247,7 @@ Documentation=man:flatpak-preinstall(1)\n\
 [Service]\n\
 Type=oneshot\n\
 ExecStart=mkdir -p /var/lib/xeniaos\n\
-ExecStart=/usr/bin/flatpak preinstall --noconfirm\n\
+ExecStart=/usr/bin/flatpak preinstall -y\n\
 ExecStart=touch /var/lib/xeniaos/preinstall-finished\n\
 RemainAfterExit=true\n\
 Restart=on-failure\n\
