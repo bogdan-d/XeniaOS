@@ -86,7 +86,7 @@ RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
 # CLI Utilities
 RUN pacman -S --noconfirm sudo bash bash-completion bat busybox duf fastfetch gping htop jq less lsof mcfly nano nvtop openssh powertop \
       procs ripgrep tldr trash-cli tree usbutils vim wget wl-clipboard ydotool yay unzip ptyxis glibc-locales tar udev \
-      starship tuned-ppd tuned hyfetch docker podman yt-dlp
+      starship tuned-ppd tuned hyfetch docker podman yt-dlp curl
 
 # Drivers
 RUN pacman -S --noconfirm amd-ucode intel-ucode edk2-shell efibootmgr shim mesa libva-intel-driver libva-mesa-driver \
@@ -350,6 +350,12 @@ RUN mkdir -p /usr/share/xeniaos/ && \
 
 RUN mkdir -p /usr/share/xeniaos/ && \
       git clone https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
+
+RUN curl -L \
+    -o /tmp/catppuccin-cursors.zip \
+    https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
+    unzip /tmp/catppuccin-cursors.zip -d /usr/share/icons/catppuccin-mocha-peach && \
+    rm /tmp/catppuccin-cursors.zip
 
 #Starship setup
 RUN echo 'eval "$(starship init bash)"' >> /etc/bash.bashrc
