@@ -116,6 +116,13 @@ RUN mkdir -p "/usr/share/fonts/Maple Mono" \
       && curl -fSsLo "/tmp/maple.zip" "$(curl "https://api.github.com/repos/subframe7536/maple-font/releases/latest" | jq '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url' -rc)" \
       && unzip "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
 
+# Add Catppuccin cursor theme
+RUN curl -L \
+    -o /tmp/catppuccin-cursors.zip \
+    https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
+    unzip /tmp/catppuccin-cursors.zip -d /usr/share/icons/catppuccin-mocha-peach && \
+    rm /tmp/catppuccin-cursors.zip
+
 # Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
 RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
@@ -356,12 +363,6 @@ RUN mkdir -p /usr/share/xeniaos/ && \
 
 RUN mkdir -p /usr/share/xeniaos/ && \
       git clone https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
-
-RUN curl -L \
-    -o /tmp/catppuccin-cursors.zip \
-    https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
-    unzip /tmp/catppuccin-cursors.zip -d /usr/share/icons/catppuccin-mocha-peach && \
-    rm /tmp/catppuccin-cursors.zip
 
 #Starship setup
 RUN echo 'eval "$(starship init bash)"' >> /etc/bash.bashrc
