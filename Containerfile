@@ -105,7 +105,7 @@ RUN pacman -S --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffa
 RUN pacman -S --noconfirm cups cups-browsed hplip
 
 # Desktop Environment needs
-RUN pacman -S --noconfirm greetd xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
+RUN pacman -S --noconfirm greetd xwayland-satellite greetd-regreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
       qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
 
@@ -475,17 +475,43 @@ OnUnitInactiveSec=1d\n\
 [Install]\n\
 WantedBy=timers.target\n' >> /usr/lib/systemd/user/chezmoi-update.timer
 
-# Greetd Setup - Login Manager
-RUN echo 'u     greetd -     "greetd daemon" /var/lib/greetd' > /usr/lib/sysusers.d/greetd.conf
-RUN echo 'Z  /var/lib/greetd -    greetd greetd -   -' > /usr/lib/tmpfiles.d/greetd.conf
+# Create greeter user (required)
+RUN useradd -M -G video,input -s /usr/bin/nologin greeter || true
 
-# Login tui setup
+# Regreeter login shell setup
+RUN mkdir -p /etc/greetd/
+
+RUN echo -ne 'spawn-sh-at-startup "regreet; niri msg action quit --skip-confirmation"\n\
+hotkey-overlay {\n\
+    skip-at-startup\n\
+}\n\
+cursor {\n\
+    xcursor-theme "catppuccin-mocha-peach"\n\
+}' > /etc/greetd/niri.kdl
+
 RUN echo -ne '[terminal]\n\
 vt = 1\n\
 \n\
 [default_session]\n\
-command = "tuigreet --time --user-menu --remember --remember-session --asterisks --power-no-setsid --width 140 --theme border=orange;text=orange;prompt=orange;time=orange;action=orange;button=orange;container=gray;input=orange --cmd niri-session"\n\
-user = "greetd"' > /etc/greetd/config.toml
+command = "niri --config /etc/greetd/niri.kdl"\n\
+user = "greeter"' > /etc/greetd/config.toml
+
+RUN echo -ne '[background]\n\
+path = "/usr/share/xeniaos/wallpapers/3_hypno_chimmie_firefly_videorelaxant6025.png"\n\
+\n\
+fit = "Contain"\n\
+\n\
+cursor_theme_name = "Catppuccin-Mocha-Peach"\n\
+\n\
+cursor_blink = true\n\
+\n\
+greeting_msg = "Welcome to the fox den!"\n\
+\n\
+font_name = "Maple Mono 16"\n\
+\n\
+format = "%a %H:%M"\n\
+\n\
+application_prefer_dark_theme = true' > etc/greetd/regreet.toml
 
 RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
 
