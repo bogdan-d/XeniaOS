@@ -343,6 +343,8 @@ WantedBy=graphical-session.target' > /usr/lib/systemd/user/cliphist.service
 RUN ln -s ./vim /usr/bin/vi
 
 # System-wide default application associations for filetype calls
+RUN mkdir -p /etc/xdg/
+
 RUN echo -ne '[Default Applications]\n\
 text/plain=org.kde.kate.desktop\n\
 application/json=org.kde.kate.desktop\n\
@@ -368,10 +370,6 @@ application/x-rar=org.kde.ark.desktop\n\
 application/x-tar=org.kde.ark.desktop\n\
 \n\
 [Added Associations]' > /etc/xdg/mimeapps.list
-
-# FIXME A different attempt at fixing file associations once again, revisit this
-# https://www.reddit.com/r/kde/comments/1bd313p/dolphin_not_recognizing_file_associations/
-RUN curl -L https://raw.githubusercontent.com/KDE/plasma-workspace/master/menu/desktop/plasma-applications.menu /etc/xdg/menus/applications.menu
 
 # ENV default exports, QT theming 
 # Load shared objects immediately for better first time latency
