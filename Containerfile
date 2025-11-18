@@ -369,6 +369,10 @@ application/x-tar=org.kde.ark.desktop\n\
 \n\
 [Added Associations]' > /etc/xdg/mimeapps.list
 
+# FIXME A different attempt at fixing file associations once again, revisit this
+# https://www.reddit.com/r/kde/comments/1bd313p/dolphin_not_recognizing_file_associations/
+RUN curl -L https://raw.githubusercontent.com/KDE/plasma-workspace/master/menu/desktop/plasma-applications.menu /etc/xdg/menus/applications.menu
+
 # ENV default exports, QT theming 
 # Load shared objects immediately for better first time latency
 # Apply OBS_VK to all vulkan instances for better OBS game capture, some other windows may come along for the ride
@@ -493,8 +497,8 @@ RUN systemctl enable --global dms.service
 # Section 8 - Final Bootc Setup. The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #######################
 ########################################################################################################################################
 
-#This fixes a user/groups error with Arch Bootc setup.
-#Do NOT remove until fixed upstream. Script created by Tulip.
+# This fixes a user/groups error with Arch Bootc setup.
+# FIXME Do NOT remove until fixed upstream. Script created by Tulip.
 
 RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
 
