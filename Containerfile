@@ -63,17 +63,12 @@ Depends = coreutils\n\
 When = PostTransaction\n\
 Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" | tee /usr/share/libalpm/hooks/package-cleanup.hook
 
-# Set up Arch official repos as a backup in case a package isn't in Cachy repos! Fox will plan ahead.
-RUN pacman-key --init 
-
-RUN pacman-key --populate archlinux
-
-# Refresh the package database for fox to retrieve packages!
-RUN pacman -Syu --noconfirm
-
 ########################################################################################################################################
 # Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
 ########################################################################################################################################
+
+# Use the Arch mirrorlist that will be best at the moment for both the containerfile and user too! Fox will help!
+RUN pacman -S --noconfirm reflector
 
 # Base packages \ Linux Foundation \ Foss is love, foss is life! We split up packages by category for readability, debug ease, and less dependency trouble
 RUN pacman -S --noconfirm base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
@@ -257,7 +252,7 @@ RUN printf "[Flatpak Preinstall org.kde.filelight]\nBranch=stable\nIsRuntime=fal
 # Not Tetris 2 | DEFINITELY not Tetris... 2!!!
 RUN printf "[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/NotTetris2.preinstall
 
-# Floorp | A very nicely fast and very nicely featured Firefox fork!
+# Floorp | A very nicely fast and very nicely featured Firefox fork! A fellow fox!!
 RUN printf "[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Floorp.preinstall
 
 # Systemd flatpak preinstall service, thanks Zirconium
