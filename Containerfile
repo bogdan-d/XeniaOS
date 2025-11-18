@@ -374,9 +374,9 @@ application/x-tar=org.kde.ark.desktop\n\
 # ENV default exports, QT theming 
 # Load shared objects immediately for better first time latency
 # Apply OBS_VK to all vulkan instances for better OBS game capture, some other windows may come along for the ride
-RUN echo -ne "QT_QPA_PLATFORMTHEME=qt6ct\n\
-LD_BIND_NOW=1\n\
-OBS_VKCAPTURE=1\n\" > /etc/environment
+ENV QT_QPA_PLATFORMTHEME=qt6ct
+ENV LD_BIND_NOW=1
+ENV OBS_VKCAPTURE=1
 
 # Set vm.max_map_count for stability/improved gaming performance
 # https://wiki.archlinux.org/title/Gaming#Increase_vm.max_map_count
