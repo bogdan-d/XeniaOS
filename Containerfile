@@ -165,8 +165,8 @@ RUN pacman -Sy --noconfirm
 # ttf-symbola | opentabletdriver | yay
 
 RUN pacman -S \
-      chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop chaotic-aur/sc-controller chaotic-aur/flatpak-git \
-      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/yay \
+      chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
+      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver \
       --noconfirm
 
 RUN systemctl enable greetd
@@ -182,6 +182,9 @@ RUN printf "[Flatpak Preinstall io.github.kolunmi.Bazaar]\nBranch=stable\nIsRunt
 
 # Krita
 RUN printf "[Flatpak Preinstall org.kde.krita]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Krita.preinstall
+
+# Elisa
+RUN print "[Flatpak Preinstall org.kde.elisa]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Elisa.preinstall
 
 # Pinta | Image editing! They set out a bit to match paint.net/paintdotnet
 RUN printf "[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Pinta.preinstall
@@ -333,6 +336,33 @@ WantedBy=graphical-session.target' > /usr/lib/systemd/user/cliphist.service
 
 # Symlink Vi to Vim / Make it to where a user can use vi in terminal command to use vim automatically | Thanks Tulip
 RUN ln -s ./vim /usr/bin/vi
+
+# System-wide default application associations for filetype calls
+RUN echo -ne '[Default Applications]\n\
+text/plain=org.kde.kate.desktop\n\
+application/json=org.kde.kate.desktop\n\
+\n\
+text/html=floorp.desktop\n\
+\n\
+video/mp4=haruna.desktop\n\
+video/x-matroska=haruna.desktop\n\
+video/webm=haruna.desktop\n\
+video/quicktime=haruna.desktop\n\
+\n\
+audio/mpeg=org.kde.elisa.desktop\n\
+audio/flac=org.kde.elisa.desktop\n\
+audio/ogg=org.kde.elisa.desktop\n\
+audio/wav=org.kde.elisa.desktop\n\
+\n\
+image/png=pinta.desktop\n\
+image/jpeg=pinta.desktop\n\
+image/gif=org.kde.gwenview.desktop\n\
+\n\
+application/zip=org.kde.ark.desktop\n\
+application/x-rar=org.kde.ark.desktop\n\
+application/x-tar=org.kde.ark.desktop\n\
+\n\
+[Added Associations]' > /etc/xdg/mimeapps.list
 
 ########################################################################################################################################
 # Section 6 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
