@@ -35,6 +35,9 @@
 # Simple explanation: 
 A free operating system for PCs/laptops that plays games well, ones supported by [Linux](https://www.protondb.com/), that uses a [nifty windowing system](https://github.com/YaLTeR/niri) and has cute fox women in wallpapers.
 
+https://github.com/YaLTeR/niri/assets/1794388/bce834b0-f205-434e-a027-b373495f9729
+
+(Video demo of just base Niri functions via [Niri's maker](https://github.com/YaLTeR/niri) )
 
 # Linux Technical: 
 This is an opinionated gaming-oriented [bootc image](https://github.com/bootc-dev/bootc), an "immutable" linux-based operating system. Featuring the [CachyOS](https://wiki.cachyos.org/features/kernel/) kernel optimizations, [Niri](https://github.com/YaLTeR/niri) a tiling window manager, [DMS/Quickshell](https://github.com/AvengeMedia/DankMaterialShell), [Xenia the fox](https://xenia.efi.pages.gay/) in theming, and various other software tweaks and flatpaks that suit my tastes and aesthetics. Its emphasis is on high gaming performance on bootc, and is also suitable for content creation needs (Art/Videos/Audio). It is at least slightly experimental and pioneering new ground with the newness of Arch Bootc vs the well-trod ground of Fedora Bootc. It should end up easier to use and understand for the average user than base Arch/CachyOS, and offers the power of bootc for fearless backups and compatibility with the bootc ecosystem. (You can try out other "operating systems" without reinstalling, [with one simple sentence!](https://docs.bazzite.gg/Installing_and_Managing_Software/Updates_Rollbacks_and_Rebasing/rebase_guide/))
