@@ -294,7 +294,7 @@ BUILD_ID=rolling\n\
 ANSI_COLOR="38;2;23;147;209"\n\
 HOME_URL="https://github.com/XeniaMeraki/XeniaOS"\n\
 LOGO=archlinux-logo\n\
-DEFAULT_HOSTNAME="XeniaOS"\n\' > /etc/os-release
+DEFAULT_HOSTNAME="XeniaOS"' > /etc/os-release
 
 # Automounter Systemd Service for flash drives and CDs
 RUN echo -ne '[Unit] \n\
@@ -367,20 +367,6 @@ RUN mkdir -p /usr/share/xeniaos/ && \
 #Starship setup
 RUN echo 'eval "$(starship init bash)"' >> /etc/bash.bashrc
 
-# XWayland Satellite Systemd Service
-RUN echo -ne '[Unit] \n\
-Description=Xwayland satellite \n\
-PartOf=graphical-session.target \n\
-After=graphical-session.target \n\
- \n\
-[Service] \n\
-ExecStart=xwayland-satellite \n\
-Restart=on-failure \n\
-RestartSec=1 \n\
-\n\
-[Install] \n\
-WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/xwayland-satellite.service
-
 # DMS Service Systemd Service
 RUN echo -ne '[Unit]\n\
 Description=Shell Service\n\
@@ -396,10 +382,8 @@ RestartSec=1\n\
 WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/dms.service
 
 # Starts with Niri Session - Services for User Interaction
-RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=plasma-polkit-agent.service/" "/usr/lib/systemd/user/niri.service"
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=udiskie.service/" "/usr/lib/systemd/user/niri.service"
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=plasma-xdg-desktop-portal-kde.service/" "/usr/lib/systemd/user/niri.service"
-RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=xwayland-satellite.service/" "/usr/lib/systemd/user/niri.service"
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=dms.service/" "/usr/lib/systemd/user/niri.service"
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=cliphist.service/" "/usr/lib/systemd/user/niri.service"
 
