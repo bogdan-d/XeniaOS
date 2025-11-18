@@ -32,8 +32,10 @@ ENV DEV_DEPS="base-devel git rust"
 
 ENV DRACUT_NO_XATTR=1
 
+# ✩₊˚.⋆☾𓃦☽⋆⁺₊✧ Index
 # Section 0 - Pre-setup
 # Section 1 - Package Installs
+# Section 1.5 - Package List
 # Section 2 - Set up bootc dracut
 # Section 3 - Chaotic AUR
 # Section 4 - Flatpaks preinstalls
@@ -88,11 +90,12 @@ RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof 
       tree usbutils vim wget wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl
 
 # Drivers
-RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa libva-intel-driver libva-mesa-driver \
-      vpl-gpu-rt vulkan-icd-loader vulkan-intel vulkan-radeon apparmor
+RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa libva-intel-driver libva-mesa-driver \
+      vpl-gpu-rt vulkan-icd-loader vulkan-intel vulkan-radeon apparmor xf86-video-amdgpu lib32-vulkan-radeon 
 
-# Network / VPN / SMB
-RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld
+# Network / VPN / SMB / storage
+RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld udiskie \
+      udisks2 
 
 # Accessibility
 RUN pacman -S --noconfirm espeak-ng orca
@@ -104,7 +107,7 @@ RUN pacman -S --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffa
 RUN pacman -S --noconfirm cups cups-browsed hplip
 
 # Desktop Environment needs
-RUN pacman -S --noconfirm greetd udiskie xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
+RUN pacman -S --noconfirm greetd xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
       qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
 
@@ -128,7 +131,21 @@ RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubu
 
 RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 
-RUN echo "QT_QPA_PLATFORMTHEME=qt6ct" > /etc/environment
+#######################################################################################################################################################
+# Section 1.5 - Package List | For my info and yours too! No secrets here. | Enjoy your life, and love everyone around you as much as possible ########
+#######################################################################################################################################################
+
+# -Package list- Chaotic-AUR precompiled packages
+# niri-git | input-remapper-git | vesktop | sc-controller | flatpak-git | dms-shell-git | ttf-twemoji |
+# ttf-symbola | opentabletdriver
+
+# Arch apps
+# Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam
+
+# Flatpaks
+# Bazaar | Krita | Elisa | Pinta | OBS | Ark | Cave Story | Faugus Launcher | ProtonUp-QT | Kdenlive |
+# Okular | Kate | Warehouse | Fedora Media Writer | Gear Lever | Haruna | Space Cadet Pinball | Gwenview
+# Audacity | Filelight | Not Tetris 2 | Floorp
 
 ########################################################################################################################################
 # Section 2 - Set up bootc dracut | I think it sets up the bootc initial image / Compiles Bootc Package :D #############################
@@ -160,9 +177,6 @@ RUN pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.
 RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf
 
 RUN pacman -Sy --noconfirm
-
-# Package list: niri-git | input-remapper-git | vesktop | sc-controller | flatpak-git | dms-shell-git | ttf-twemoji |
-# ttf-symbola | opentabletdriver | yay
 
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
@@ -313,13 +327,6 @@ RestartSec=1 \n\
 [Install] \n\
 WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/udiskie.service
 
-# Secondary HDD/SSD automounter, supports ext4/btrfs, mounts to /media/media-automount by default. Made by @Zeglius
-# Feel free to use your own fstab/mount things your own way if you understand how to do so
-# Disable with "sudo ln -s /dev/null /etc/media-automount.d/_all.conf" without quotes in a terminal
-RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator && \
-      cd /tmp/media-automount-generator && \
-      DESTDIR=/usr/local ./install.sh
-
 # Clip history / Cliphist systemd service / Clipboard history for copy and pasting to work properly in Niri~
 RUN echo -ne '[Unit]\n\
 Description=Clipboard History service\n\
@@ -363,6 +370,23 @@ application/x-rar=org.kde.ark.desktop\n\
 application/x-tar=org.kde.ark.desktop\n\
 \n\
 [Added Associations]' > /etc/xdg/mimeapps.list
+
+# ENV default exports, QT theming 
+# Load shared objects immediately for better first time latency
+# Apply OBS_VK to all vulkan instances for better OBS game capture, some other windows may come along for the ride
+RUN echo -ne "QT_QPA_PLATFORMTHEME=qt6ct\n\
+LD_BIND_NOW=1\n\
+OBS_VKCAPTURE=1\n\" > /etc/environment
+
+# Set vm.max_map_count for stability/improved gaming performance
+# https://wiki.archlinux.org/title/Gaming#Increase_vm.max_map_count
+RUN echo -ne "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility.conf
+
+# Automount removable disks to /media/ using udisks2
+# https://wiki.archlinux.org/title/Udisks
+RUN echo -ne 'ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' > /etc/udev/rules.d/99-udisks2.rules
+
+RUN echo -ne 'D /media 0755 root root 0 -' > /etc/tmpfiles.d/media.conf
 
 ########################################################################################################################################
 # Section 6 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
