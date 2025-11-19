@@ -476,7 +476,7 @@ OnUnitInactiveSec=1d\n\
 WantedBy=timers.target\n' >> /usr/lib/systemd/user/chezmoi-update.timer
 
 # Create greeter user (required)
-RUN useradd -M -G video,input -s /usr/bin/nologin greeter || true
+RUN useradd -m -G video,input -s /usr/bin/nologin greeter
 
 # Regreeter login shell setup
 RUN mkdir -p /etc/greetd/
@@ -511,7 +511,7 @@ font_name = "Maple Mono 16"\n\
 \n\
 format = "%a %H:%M"\n\
 \n\
-application_prefer_dark_theme = true' > etc/greetd/regreet.toml
+application_prefer_dark_theme = true' > /etc/greetd/regreet.toml
 
 RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
 
