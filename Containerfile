@@ -13,7 +13,7 @@
 #     ][[[]]][11111111111111111<                                 XeniaOS
 #     ][[[[[]]]]]]]]]]]]]]-111111[        Xenia Meraki the transfem package fox | @tulilirockz saved the distro
 #     ]-[[[[[[;]]]]]]]]]]]]]]]]   1             Artists Jasper Valery | Delphic Melody | Chimmie Firefly
-#     ]][[[[[[[[[[[]]]]]]]]]]]]]      
+#     ]][[[[[[[[[[[]]]]]]]]]]]]]                          videorelaxant6025 |
 #     1]][[[[[[[[[[[[[[<]]]]]]]]]      
 #      11]]][[[[[[[[[[[[[[[]]]]]]]                         
 #       111]]]]'[[[[[[[[[[[[[[]]]]
@@ -87,7 +87,7 @@ RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
 RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db \
       tree usbutils vim wget wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl
 
-# Drivers
+# Drivers \ "Business, business, business! Numbersss."
 RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa libva-intel-driver libva-mesa-driver \
       vpl-gpu-rt vulkan-icd-loader vulkan-intel vulkan-radeon apparmor xf86-video-amdgpu lib32-vulkan-radeon 
 
@@ -105,7 +105,7 @@ RUN pacman -S --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffa
 RUN pacman -S --noconfirm cups cups-browsed hplip
 
 # Desktop Environment needs
-RUN pacman -S --noconfirm greetd xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
+RUN pacman -S --noconfirm greetd xwayland-satellite greetd-regreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
       qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
 
@@ -116,13 +116,6 @@ RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility
 RUN mkdir -p "/usr/share/fonts/Maple Mono" \
       && curl -fSsLo "/tmp/maple.zip" "$(curl "https://api.github.com/repos/subframe7536/maple-font/releases/latest" | jq '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url' -rc)" \
       && unzip "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
-
-# Add Catppuccin cursor theme
-RUN curl -L \
-    -o /tmp/catppuccin-cursors.zip \
-    https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
-    unzip /tmp/catppuccin-cursors.zip -d /usr/share/icons/catppuccin-mocha-peach && \
-    rm /tmp/catppuccin-cursors.zip
 
 # Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
 RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
@@ -135,7 +128,8 @@ RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 
 # -Package list- Chaotic-AUR precompiled packages
 # niri-git | input-remapper-git | vesktop | sc-controller | flatpak-git | dms-shell-git | ttf-twemoji |
-# ttf-symbola | opentabletdriver
+# ttf-symbola | opentabletdriver | colloid-catppuccin-gtk-theme-git | colloid-catppuccin-theme-git
+# catppuccin-cursors-mocha | paru | 
 
 # Arch apps
 # Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam
@@ -146,7 +140,7 @@ RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 # Audacity | Filelight | Not Tetris 2 | Floorp
 
 ########################################################################################################################################
-# Section 2 - Set up bootc dracut | I think it sets up the bootc initial image / Compiles Bootc Package :D #############################
+# Section 2 - Set up bootc dracut | Don't forget. Always, somewhere, someone is fighting for you. ######################################
 ########################################################################################################################################
 
 # Workaround due to dracut version bump, please remove eventually
@@ -178,13 +172,12 @@ RUN pacman -Sy --noconfirm
 
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
-      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver \
+      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/catppuccin-cursors-mocha \
+      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/paru \
       --noconfirm
 
-RUN systemctl enable greetd
-
 ########################################################################################################################################
-# Section 4 Flatpaks preinstalls | We love containers, flatpaks, and protecting installs from breaking! ################################
+# Section 4 - Flatpaks preinstalls | We love containers, flatpaks, and protecting installs from breaking! ##############################
 ########################################################################################################################################
 
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
@@ -258,20 +251,17 @@ RUN printf "[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIsR
 # Floorp | A very nicely fast and very nicely featured Firefox fork! A fellow fox!!
 RUN printf "[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Floorp.preinstall
 
-# Systemd flatpak preinstall service, thanks Zirconium
+# Systemd flatpak preinstall service, thanks Aurora
 RUN echo -ne '[Unit]\n\
 Description=Preinstall Flatpaks\n\
 After=network-online.target\n\
 Wants=network-online.target\n\
 ConditionPathExists=/usr/bin/flatpak\n\
-ConditionPathExists=!/var/lib/xeniaos/preinstall-finished\n\
 Documentation=man:flatpak-preinstall(1)\n\
 \n\
 [Service]\n\
 Type=oneshot\n\
-ExecStart=mkdir -p /var/lib/xeniaos\n\
 ExecStart=/usr/bin/flatpak preinstall -y\n\
-ExecStart=touch /var/lib/xeniaos/preinstall-finished\n\
 RemainAfterExit=true\n\
 Restart=on-failure\n\
 RestartSec=30\n\
@@ -284,8 +274,10 @@ WantedBy=multi-user.target' > /usr/lib/systemd/system/flatpak-preinstall.service
 
 RUN systemctl enable flatpak-preinstall.service
 
+# "A hero does what's right, even if it crushes them inside." - Mao Mao
+
 ########################################################################################################################################
-# Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo #####################
+# Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo ########################
 ########################################################################################################################################
 
 # Add user to sudoers file for sudo, enable polkit
@@ -342,10 +334,16 @@ WantedBy=graphical-session.target' > /usr/lib/systemd/user/cliphist.service
 # Symlink Vi to Vim / Make it to where a user can use vi in terminal command to use vim automatically | Thanks Tulip
 RUN ln -s ./vim /usr/bin/vi
 
+# Symlink GTK to Libadwaita
+RUN mkdir -p /usr/share/gtk-4.0
+
+RUN ln -sf /usr/share/themes/Colloid-Orange-Dark-Catppuccin/gtk-4.0/{assets,gtk.css,gtk-dark.css} \
+       /usr/share/gtk-4.0/
+
 # System-wide default application associations for filetype calls
 RUN mkdir -p /etc/xdg/
 
-RUN echo -ne '[Default Applications]\n\
+RUN printf '[Default Applications]\n\
 text/plain=org.kde.kate.desktop\n\
 application/json=org.kde.kate.desktop\n\
 \n\
@@ -384,6 +382,7 @@ RUN echo -ne "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibilit
 
 # Automount removable disks to /media/ using udisks2
 # https://wiki.archlinux.org/title/Udisks
+# FIXME
 RUN echo -ne 'ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' > /etc/udev/rules.d/99-udisks2.rules
 
 RUN echo -ne 'D /media 0755 root root 0 -' > /etc/tmpfiles.d/media.conf
@@ -475,17 +474,54 @@ OnUnitInactiveSec=1d\n\
 [Install]\n\
 WantedBy=timers.target\n' >> /usr/lib/systemd/user/chezmoi-update.timer
 
-# Greetd Setup - Login Manager
-RUN echo 'u     greetd -     "greetd daemon" /var/lib/greetd' > /usr/lib/sysusers.d/greetd.conf
-RUN echo 'Z  /var/lib/greetd -    greetd greetd -   -' > /usr/lib/tmpfiles.d/greetd.conf
+# ReGreet login shell setup
+RUN systemctl enable greetd
 
-# Login tui setup
+RUN mkdir -p /etc/greetd/
+
+RUN echo -ne 'spawn-sh-at-startup "regreet; niri msg action quit --skip-confirmation"\n\
+hotkey-overlay {\n\
+    skip-at-startup\n\
+}\n\
+cursor {\n\
+    xcursor-theme "catppuccin-mocha-peach-cursors"\n\
+}' > /etc/greetd/niri.kdl
+
 RUN echo -ne '[terminal]\n\
 vt = 1\n\
 \n\
 [default_session]\n\
-command = "tuigreet --time --user-menu --remember --remember-session --asterisks --power-no-setsid --width 140 --theme border=orange;text=orange;prompt=orange;time=orange;action=orange;button=orange;container=gray;input=orange --cmd niri-session"\n\
-user = "greetd"' > /etc/greetd/config.toml
+command = "niri --config /etc/greetd/niri.kdl"\n\
+user = "greeter"' > /etc/greetd/config.toml
+
+RUN echo -ne '[background]\n\
+path = "/usr/share/xeniaos/wallpapers/3_hypno_chimmie_firefly_videorelaxant6025.png"\n\
+\n\
+fit = "fill"\n\
+[GTK]\n\
+application_prefer_dark_theme = true\n\
+\n\
+cursor_theme_name = "catppuccin-mocha-peach-cursors"\n\
+\n\
+cursor_blink = true\n\
+\n\
+font_name = "Maple Mono 16"\n\
+\n\
+icon_theme_name = "Colloid-Orange-Catppuccin-Dark"\n\
+\n\
+theme_name = "Colloid-Orange-Dark-Catppuccin"\n\
+[commands]\n\
+reboot = ["systemctl", "reboot"]\n\
+\n\
+poweroff = ["systemctl", "poweroff"]\n\
+[appearance]\n\
+greeting_msg = "Welcome to the fox den!~"\n\
+[widget.clock]\n\
+format = "%a %H:%M"\n\
+\n\
+resolution = "500ms"\n\
+\n\
+label_width = 150' > /etc/greetd/regreet.toml
 
 RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
 
@@ -537,17 +573,17 @@ RUN bootc container lint
 #####################   .KMMMk....             ....kMMMK.                  ₊˚.⋆⁺₊✧⋆✩
 #####################   .WMMMMMX.....         .....KMMMMMW.                       
 #####################   XMMMMMMM0.....        ....OMMMMMMMN
-#####################  dMMMMMMMMM;.... ..... ....,MMMMMMMMMd
-#####################  WMMMMMMMMMl;okKKKKKKKKKOo;cMMMMMMMMMM
-##################### 'MMMMMMMNXK0KKKKKKKKKKKKKKK0KXNMMMMMMM;
+#####################  dMMMMMMMMM;.... ..... ....,MMMMMMMMMd          Who's gonna take you home tonight?
+#####################  WMMMMMMMMMl;okKKKKKKKKKOo;cMMMMMMMMMM             Does God bless your transsexual heart,
+##################### 'MMMMMMMNXK0KKKKKKKKKKKKKKK0KXNMMMMMMM;                  True Trans Soul Rebel?
 ##################### oMMMMMMMOxoKKKKKKKKKKKKKKKKKoxOMMMMMMMd
 ##################### dMMMMMMMdxxxKKKKKKKKKKKKKKKxxxdNMMMMMMk
-##################### :MMMMX0xxxxxx0KKKKKKKK0KK0xxxxxx0XMMMMc
-#####################  MMMOxxxxxxxxdxkdd0x0ddkxdxxxxxxxxOMMM
-##################### ;xxkxddxxxxdodxxxxdxdxxxxdodxxxxddxkxx;
-#####################dxdKMMMWXo'.....'cdxxxdc'.....'lXWMMMXdxd
-##################### cxdXMMMN,..........dxd'.........'XMMMNdxl
-#####################  .xxWMMl...''....'.;k:.'....''...lMMWxx.
+##################### :MMMMX0xxxxxx0KKKKKKKK0KK0xxxxxx0XMMMMc                     Well, you should've been a mother
+#####################  MMMOxxxxxxxxdxkdd0x0ddkxdxxxxxxxxOMMM                         You should've been a wife
+##################### ;xxkxddxxxxdodxxxxdxdxxxxdodxxxxddxkxx;                          You should've been gone from here years ago
+#####################dxdKMMMWXo'.....'cdxxxdc'.....'lXWMMMXdxd                             You should be living a different life
+##################### cxdXMMMN,..........dxd'.........'XMMMNdxl 
+#####################  .xxWMMl...''....'.;k:.'....''...lMMWxx.                                  - Against Me!
 ##################### ..:kXMMx..'....''..kMk..''....'..xMMXkc..
 #####################  dMMMMMMd.....'...xMMMx...''....dMMMMMMx
 #####################    kMMMMWOoc:coOkolllokOoc:coOWMMMMO
