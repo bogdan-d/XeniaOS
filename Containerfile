@@ -107,7 +107,7 @@ RUN pacman -S --noconfirm cups cups-browsed hplip
 # Desktop Environment needs
 RUN pacman -S --noconfirm greetd xwayland-satellite greetd-regreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
-      qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
+      qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu
 
 # User frontend programs/apps
 RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility
