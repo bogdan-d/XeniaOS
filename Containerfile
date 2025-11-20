@@ -91,11 +91,6 @@ RUN pacman -S --noconfirm greetd xwayland-satellite greetd-regreet xdg-desktop-p
 # User frontend programs/apps
 RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility
 
-# Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
-RUN mkdir -p "/usr/share/fonts/Maple Mono" \
-      && curl --retry 5 -fSsLo "/tmp/maple.zip" "$(curl "https://api.github.com/repos/subframe7536/maple-font/releases/latest" | jq '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url' -rc)" \
-      && unzip "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
-
 RUN pacman -S --clean
 
 RUN mkdir -p /etc/plymouth \
@@ -139,6 +134,39 @@ RUN pacman -S \
       chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/catppuccin-cursors-mocha \
       chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/wget2 chaotic-aur/paru \
       --noconfirm
+
+# Create build user
+RUN useradd -m --shell=/bin/bash build && usermod -L build && \
+    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Install AUR packages
+USER build
+WORKDIR /home/build
+RUN --mount=type=tmpfs,dst=/tmp \
+    git clone https://aur.archlinux.org/paru-bin.git --single-branch /tmp/paru && \
+    cd /tmp/paru && \
+    makepkg -si --noconfirm && \
+    cd .. && \
+    rm -drf paru-bin
+
+# These are example AUR packages, replace as you like. Multi-line or all one line both work for package install.
+RUN paru -S --noconfirm \
+        aur/maplemono-ttf
+
+USER root
+WORKDIR /
+# Cleanup and delete build user
+RUN userdel -r build && \
+    rm -drf /home/build && \
+    sed -i '/build ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
+    sed -i '/root ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
+    rm -rf /home/build && \
+    rm -rf \
+        /tmp/* \
+        /var/cache/pacman/pkg/*
+
+#Script credit @KyleGospo @cyrv6737
 
 ########################################################################################################################################
 # Section 4 - Flatpaks preinstalls | Don't forget. Always, somewhere, someone is fighting for you. You are not alone. ##################
