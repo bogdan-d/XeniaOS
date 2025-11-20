@@ -47,7 +47,7 @@ ENV DRACUT_NO_XATTR=1
 ########################################################################################################################################
 
 # Initialize the database
-RUN pacman -Syu --noconfirm --clean
+RUN pacman -Syu --noconfirm
 
 # Use the Arch mirrorlist that will be best at the moment for both the containerfile and user too! Fox will help!
 RUN pacman -S --noconfirm reflector --clean
