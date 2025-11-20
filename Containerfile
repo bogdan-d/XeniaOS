@@ -143,10 +143,6 @@ RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 # Section 2 - Set up bootc dracut | Don't forget. Always, somewhere, someone is fighting for you. ######################################
 ########################################################################################################################################
 
-# Workaround due to dracut version bump, please remove eventually
-# FIXME: remove
-RUN printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/lib/systemd/system\n" | tee /etc/dracut.conf.d/fix-bootc.conf
-
 RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
     pacman -S --noconfirm base-devel git rust && \
     git clone https://github.com/bootc-dev/bootc.git /tmp/bootc && \
