@@ -140,12 +140,14 @@ RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 # Audacity | Filelight | Not Tetris 2 | Floorp
 
 ########################################################################################################################################
-# Section 2 - Set up bootc dracut | Don't forget. Always, somewhere, someone is fighting for you. ######################################
+# Section 2 - Set up bootc dracut | Don't forget. Always, somewhere, someone is fighting for you. You are not alone. ###################
 ########################################################################################################################################
 
 RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
     pacman -S --noconfirm base-devel git rust && \
     git clone https://github.com/bootc-dev/bootc.git /tmp/bootc && \
+    cd /tmp/bootc && \
+    make bin install-all && \
     sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
     dracut --force --no-hostonly --reproducible --zstd --verbose --add ostree --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
 
@@ -245,6 +247,9 @@ RUN printf "[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIsR
 
 # Floorp | A very nicely fast and very nicely featured Firefox fork! A fellow fox!!
 RUN printf "[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Floorp.preinstall
+
+# Rclone Shuttle | Files storage and transfer, at your service, my quing!
+RUN printf "[Flatpak Preinstall io.github.pieterdd.RcloneShuttle]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/RcloneShuttle.preinstall
 
 # Systemd flatpak preinstall service, thanks Aurora
 RUN echo -ne '[Unit]\n\
