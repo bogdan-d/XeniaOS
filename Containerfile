@@ -92,7 +92,7 @@ RUN pacman -S --noconfirm --clean greetd xwayland-satellite greetd-regreet xdg-d
 RUN pacman -S --noconfirm --clean steam scx-scheds scx-manager gnome-disk-utility
 
 # Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
-RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
+RUN wget -O --tries=5 /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
 RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 
@@ -104,6 +104,9 @@ RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 # niri-git | input-remapper-git | vesktop | sc-controller | flatpak-git | dms-shell-git | ttf-twemoji |
 # ttf-symbola | opentabletdriver | colloid-catppuccin-gtk-theme-git | colloid-catppuccin-theme-git
 # catppuccin-cursors-mocha | paru | 
+
+# AUR
+# Maple Mono
 
 # Arch apps
 # Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam
