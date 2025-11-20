@@ -33,7 +33,6 @@ ENV DEV_DEPS="base-devel git rust"
 ENV DRACUT_NO_XATTR=1
 
 # ✩₊˚.⋆☾𓃦☽⋆⁺₊✧ Index
-# Section 0 - Pre-setup
 # Section 1 - Package Installs
 # Section 2 - Package List
 # Section 3 - Chaotic AUR
@@ -44,72 +43,53 @@ ENV DRACUT_NO_XATTR=1
 # Section 8 - Final Bootc Setup
 
 ########################################################################################################################################
-# Section 0 - Pre-setup | We do some system maintenance tasks + Set up some things for the rest of the containerfile to go smooothly! ##
-########################################################################################################################################
-
-# Set it up such that pacman will automatically clean package cache after each install
-# So that we don't run out of memory in image generation and don't need to append --clean after everything
-# ALSO DO NOT APPEND --CLEAN TO ANYTHING :D
-RUN echo -e "[Trigger]\n\
-Operation = Install\n\
-Operation = Upgrade\n\
-Type = Package\n\
-Target = *\n\
-\n\
-[Action]\n\
-Description = Cleaning up package cache...\n\
-Depends = coreutils\n\
-When = PostTransaction\n\
-Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" | tee /usr/share/libalpm/hooks/package-cleanup.hook
-
-########################################################################################################################################
 # Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
 ########################################################################################################################################
 
 # Initialize the database
-RUN pacman -Syu --noconfirm
+RUN pacman -Syu --noconfirm --clean
 
 # Use the Arch mirrorlist that will be best at the moment for both the containerfile and user too! Fox will help!
-RUN pacman -S --noconfirm reflector
+RUN pacman -S --noconfirm reflector --clean
 
 # Base packages \ Linux Foundation \ Foss is love, foss is life! We split up packages by category for readability, debug ease, and less dependency trouble
-RUN pacman -S --noconfirm base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
+RUN pacman -S --noconfirm --clean base dracut linux-cachyos-bore linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
 
 # Media/Install utilities/Media drivers
-RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid ddcutil dmidecode mesa-utils ntfs-3g \
+RUN pacman -S --noconfirm --clean librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid ddcutil dmidecode mesa-utils ntfs-3g \
       vulkan-tools wayland-utils playerctl
 
 # Fonts
-RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
+RUN pacman -S --noconfirm --clean noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 # CLI Utilities
-RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db \
+RUN pacman -S --noconfirm --clean sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db \
       tree usbutils vim wget wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl
 
 # Drivers \ "Business, business, business! Numbersss."
-RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa libva-intel-driver libva-mesa-driver \
+RUN pacman -S --noconfirm --clean amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa libva-intel-driver libva-mesa-driver \
       vpl-gpu-rt vulkan-icd-loader vulkan-intel vulkan-radeon apparmor xf86-video-amdgpu lib32-vulkan-radeon 
 
 # Network / VPN / SMB / storage
-RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld udiskie \
+RUN pacman -S --noconfirm --clean libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld udiskie \
       udisks2 
 
 # Accessibility
-RUN pacman -S --noconfirm espeak-ng orca
+RUN pacman -S --noconfirm --clean espeak-ng orca
 
 # Pipewire
-RUN pacman -S --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber
+RUN pacman -S --noconfirm --clean pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber
 
 # Printer
-RUN pacman -S --noconfirm cups cups-browsed hplip
+RUN pacman -S --noconfirm --clean cups cups-browsed hplip
 
 # Desktop Environment needs
-RUN pacman -S --noconfirm greetd xwayland-satellite greetd-regreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
+RUN pacman -S --noconfirm --clean greetd xwayland-satellite greetd-regreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
       qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio rofi glycin
 
 # User frontend programs/apps
-RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility
+RUN pacman -S --noconfirm --clean steam scx-scheds scx-manager gnome-disk-utility
 
 # Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
 RUN mkdir -p "/usr/share/fonts/Maple Mono" \
@@ -158,7 +138,7 @@ RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
       chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/catppuccin-cursors-mocha \
       chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/paru \
-      --noconfirm
+      --noconfirm --clean
 
 ########################################################################################################################################
 # Section 4 - Flatpaks preinstalls | Don't forget. Always, somewhere, someone is fighting for you. You are not alone. ##################
@@ -528,7 +508,8 @@ RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
     make -C /tmp/bootc bin install-all && \
     sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
     dracut --force --no-hostonly --reproducible --zstd --verbose --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"' && \
-    pacman -Rns --noconfirm base-devel git rust
+    pacman -Rns --noconfirm base-devel git rust && \
+    pacman -S --clean --noconfirm
 
 # This fixes a user/groups error with Arch Bootc setup.
 # FIXME Do NOT remove until fixed upstream. Script created by Tulip.
