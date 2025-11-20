@@ -35,8 +35,7 @@ ENV DRACUT_NO_XATTR=1
 # ✩₊˚.⋆☾𓃦☽⋆⁺₊✧ Index
 # Section 0 - Pre-setup
 # Section 1 - Package Installs
-# Section 1.5 - Package List
-# Section 2 - Set up bootc dracut
+# Section 2 - Package List
 # Section 3 - Chaotic AUR
 # Section 4 - Flatpaks preinstalls
 # Section 5 - Linux OS Stuffs
@@ -123,7 +122,7 @@ RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubu
 RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 
 #######################################################################################################################################################
-# Section 1.5 - Package List | For my info and yours too! No secrets here. | Enjoy your life, and love everyone around you as much as possible ########
+# Section 2 - Package List | For my info and yours too! No secrets here. | Enjoy your life, and love everyone around you as much as possible ########
 #######################################################################################################################################################
 
 # -Package list- Chaotic-AUR precompiled packages
@@ -138,21 +137,6 @@ RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 # Bazaar | Krita | Elisa | Pinta | OBS | Ark | Cave Story | Faugus Launcher | ProtonUp-QT | Kdenlive |
 # Okular | Kate | Warehouse | Fedora Media Writer | Gear Lever | Haruna | Space Cadet Pinball | Gwenview
 # Audacity | Filelight | Not Tetris 2 | Floorp
-
-########################################################################################################################################
-# Section 2 - Set up bootc dracut | Don't forget. Always, somewhere, someone is fighting for you. You are not alone. ###################
-########################################################################################################################################
-
-# Regression with newer dracut broke this
-RUN mkdir -p /etc/dracut.conf.d && \
-    printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/lib/systemd/system\n" | tee /etc/dracut.conf.d/fix-bootc.conf
-
-RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
-    pacman -S --noconfirm base-devel git rust && \
-    git clone "https://github.com/bootc-dev/bootc.git" /tmp/bootc && \
-    make -C /tmp/bootc bin install-all && \
-    sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
-    dracut --force --no-hostonly --reproducible --zstd --verbose --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
 
 ########################################################################################################################################
 # Section 3 - Chaotic AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
@@ -177,7 +161,7 @@ RUN pacman -S \
       --noconfirm
 
 ########################################################################################################################################
-# Section 4 - Flatpaks preinstalls | We love containers, flatpaks, and protecting installs from breaking! ##############################
+# Section 4 - Flatpaks preinstalls | Don't forget. Always, somewhere, someone is fighting for you. You are not alone. ##################
 ########################################################################################################################################
 
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
@@ -533,6 +517,18 @@ RUN systemctl enable --global dms.service
 ########################################################################################################################################
 # Section 8 - Final Bootc Setup. The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #######################
 ########################################################################################################################################
+
+# Regression with newer dracut broke this
+RUN mkdir -p /etc/dracut.conf.d && \
+    printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/lib/systemd/system\n" | tee /etc/dracut.conf.d/fix-bootc.conf
+
+RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
+    pacman -S --noconfirm base-devel git rust && \
+    git clone "https://github.com/bootc-dev/bootc.git" /tmp/bootc && \
+    make -C /tmp/bootc bin install-all && \
+    sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
+    dracut --force --no-hostonly --reproducible --zstd --verbose --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"' && \
+    pacman -Rns --noconfirm base-devel git rust
 
 # This fixes a user/groups error with Arch Bootc setup.
 # FIXME Do NOT remove until fixed upstream. Script created by Tulip.
