@@ -91,11 +91,6 @@ RUN pacman -S --noconfirm --clean greetd xwayland-satellite greetd-regreet xdg-d
 # User frontend programs/apps
 RUN pacman -S --noconfirm --clean steam scx-scheds scx-manager gnome-disk-utility
 
-# Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
-RUN mkdir -p "/usr/share/fonts/Maple Mono" \
-      && curl --retry 5 -fSsLo "/tmp/maple.zip" "$(curl "https://api.github.com/repos/subframe7536/maple-font/releases/latest" | jq '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url' -rc)" \
-      && unzip "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
-
 # Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
 RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
@@ -122,6 +117,38 @@ RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 # Section 3 - Chaotic AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
 ########################################################################################################################################
 
+# Create build user
+RUN useradd -m --shell=/bin/bash build && usermod -L build && \
+    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Install AUR packages
+USER build
+WORKDIR /home/build
+RUN --mount=type=tmpfs,dst=/tmp \
+    git clone https://aur.archlinux.org/paru-bin.git --single-branch /tmp/paru && \
+    cd /tmp/paru && \
+    makepkg -si --noconfirm && \
+    cd .. && \
+    rm -drf paru-bin
+
+RUN paru -S --noconfirm --clean \
+        aur/maplemono-ttf
+
+USER root
+WORKDIR /
+# Cleanup and delete build user
+RUN userdel -r build && \
+    rm -drf /home/build && \
+    sed -i '/build ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
+    sed -i '/root ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
+    rm -rf /home/build && \
+    rm -rf \
+        /tmp/* \
+        /var/cache/pacman/pkg/*
+
+#Script credit @KyleGospo @cyrv6737
+
 RUN pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 
 RUN pacman-key --init && pacman-key --lsign-key 3056513887B78AEB
@@ -137,7 +164,7 @@ RUN pacman -Sy --noconfirm
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
       chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/catppuccin-cursors-mocha \
-      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/paru \
+      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git \
       --noconfirm --clean
 
 ########################################################################################################################################
