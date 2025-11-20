@@ -379,7 +379,7 @@ ENV OBS_VKCAPTURE=1
 RUN echo -e "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility.conf
 
 # Autoclean pacman package cache after each update, install, and uninstall
-RUN mkdir -p /etc/pacmacman.d/hooks/
+RUN mkdir -p /etc/pacman.d/hooks/
 
 RUN echo -e '[Trigger]\n\
 Operation = Upgrade\n\
