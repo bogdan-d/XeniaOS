@@ -91,7 +91,7 @@ RUN pacman -S --noconfirm --clean greetd xwayland-satellite greetd-regreet xdg-d
 # User frontend programs/apps
 RUN pacman -S --noconfirm --clean steam scx-scheds scx-manager gnome-disk-utility
 
-RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
+RUN printf '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 
 #######################################################################################################################################################
 # Section 2 - Package List | For my info and yours too! No secrets here. | Enjoy your life, and love everyone around you as much as possible ########
@@ -119,8 +119,8 @@ RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 
 # Create build user
 RUN useradd -m --shell=/bin/bash build && usermod -L build && \
-    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+    printf "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    printf "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Install AUR packages
 USER build
@@ -157,7 +157,7 @@ RUN pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar
 
 RUN pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm
 
-RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf
+RUN printf '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf
 
 RUN pacman -Sy --noconfirm
 
@@ -246,7 +246,7 @@ RUN printf "[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=fal
 RUN printf "[Flatpak Preinstall io.github.pieterdd.RcloneShuttle]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/RcloneShuttle.preinstall
 
 # Systemd flatpak preinstall service, thanks Aurora
-RUN echo -ne '[Unit]\n\
+RUN printf '[Unit]\n\
 Description=Preinstall Flatpaks\n\
 After=network-online.target\n\
 Wants=network-online.target\n\
@@ -278,20 +278,20 @@ RUN systemctl enable flatpak-preinstall.service
 RUN wget2 -O --tries=5 /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
 # Add user to sudoers file for sudo, enable polkit
-RUN echo "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
+RUN printf "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
 RUN systemctl enable polkit
 
 # Set up zram, this will help users not run out of memory. Fox will fix!
-RUN echo -ne '[zram0]\nzram-size = min(ram, 8192)' >> /usr/lib/systemd/zram-generator.conf
-RUN echo -ne 'enable systemd-resolved.service' >> usr/lib/systemd/system-preset/91-resolved-default.preset
-RUN echo -ne 'L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf' >> /usr/lib/tmpfiles.d/resolved-default.conf
+RUN printf '[zram0]\nzram-size = min(ram, 8192)' >> /usr/lib/systemd/zram-generator.conf
+RUN printf 'enable systemd-resolved.service' >> usr/lib/systemd/system-preset/91-resolved-default.preset
+RUN printf 'L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf' >> /usr/lib/tmpfiles.d/resolved-default.conf
 RUN systemctl preset systemd-resolved.service
 
 # Enable wifi, firewall, power profiles. Fox will protect!
 RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
 # OS Release and Update uwu
-RUN echo -ne 'NAME="XeniaOS"\n\
+RUN printf 'NAME="XeniaOS"\n\
 PRETTY_NAME="XeniaOS"\n\
 ID=arch\n\
 BUILD_ID=rolling\n\
@@ -301,7 +301,7 @@ LOGO=archlinux-logo\n\
 DEFAULT_HOSTNAME="XeniaOS"' > /etc/os-release
 
 # Automounter Systemd Service for flash drives and CDs
-RUN echo -ne '[Unit] \n\
+RUN printf '[Unit] \n\
 Description=Udiskie automount \n\
 PartOf=graphical-session.target \n\
 After=graphical-session.target \n\
@@ -315,7 +315,7 @@ RestartSec=1 \n\
 WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/udiskie.service
 
 # Clip history / Cliphist systemd service / Clipboard history for copy and pasting to work properly in Niri~
-RUN echo -ne '[Unit]\n\
+RUN printf '[Unit]\n\
 Description=Clipboard History service\n\
 PartOf=graphical-session.target\n\
 After=graphical-session.target\n\
@@ -375,24 +375,24 @@ ENV OBS_VKCAPTURE=1
 
 # Set vm.max_map_count for stability/improved gaming performance
 # https://wiki.archlinux.org/title/Gaming#Increase_vm.max_map_count
-RUN echo -ne "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility.conf
+RUN printf "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility.conf
 
 # Automount removable disks to /media/ using udisks2
 # https://wiki.archlinux.org/title/Udisks
 # FIXME
-RUN echo -ne 'ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' > /etc/udev/rules.d/99-udisks2.rules
+RUN printf 'ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' > /etc/udev/rules.d/99-udisks2.rules
 
-RUN echo -ne 'D /media 0755 root root 0 -' > /etc/tmpfiles.d/media.conf
+RUN printf 'D /media 0755 root root 0 -' > /etc/tmpfiles.d/media.conf
 
 ########################################################################################################################################
 # Section 6 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
 ########################################################################################################################################
 
 # Activate NTSync, wags my tail in your general direction
-RUN echo 'ntsync' > /etc/modules-load.d/ntsync.conf
+RUN printf 'ntsync' > /etc/modules-load.d/ntsync.conf
 
 # CachyOS bbr3 Config Option
-RUN echo -ne 'net.core.default_qdisc=fq \n\
+RUN printf 'net.core.default_qdisc=fq \n\
 net.ipv4.tcp_congestion_control=bbr\n' > /etc/sysctl.d/99-bbr3.conf
 
 ########################################################################################################################################
@@ -400,7 +400,7 @@ net.ipv4.tcp_congestion_control=bbr\n' > /etc/sysctl.d/99-bbr3.conf
 ########################################################################################################################################
 
 # Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
-RUN echo -ne '[preferred] \n\
+RUN printf '[preferred] \n\
 default=kde;gtk;gnome; \n\
 org.freedesktop.impl.portal.ScreenCast=gnome;kde;gtk; \n\
 org.freedesktop.impl.portal.Access=kde;gtk;gnome; \n\
@@ -415,10 +415,10 @@ RUN mkdir -p /usr/share/xeniaos/ && \
       git clone https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
 
 #Starship setup
-RUN echo 'eval "$(starship init bash)"' >> /etc/bash.bashrc
+RUN printf 'eval "$(starship init bash)"' >> /etc/bash.bashrc
 
 # DMS Service Systemd Service
-RUN echo -ne '[Unit]\n\
+RUN printf '[Unit]\n\
 Description=Shell Service\n\
 PartOf=graphical-session.target\n\
 After=graphical-session.target\n\
@@ -437,7 +437,7 @@ RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=plasma-xdg-desktop-portal-kde.service/" "
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=dms.service/" "/usr/lib/systemd/user/niri.service"
 RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=cliphist.service/" "/usr/lib/systemd/user/niri.service"
 
-RUN echo -ne '[Unit]\n\
+RUN printf '[Unit]\n\
 Description=Initializes Chezmoi if directory is missing\n\
 ConditionPathExists=!%h/.config/xeniaos/chezmoi\n\
 \n\
@@ -450,7 +450,7 @@ Type=oneshot\n\
 [Install]\n\
 WantedBy=default.target\n' >> /usr/lib/systemd/user/chezmoi-init.service
 
-RUN echo -ne "[Unit]\n\
+RUN printf "[Unit]\n\
 Description=Chezmoi Update\n\
 \n\
 [Service]\n\
@@ -459,7 +459,7 @@ ExecStart=touch %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
 ExecStart=sh -c 'yes s | chezmoi apply --no-tty --keep-going -S /usr/share/xeniaos/zdots --verbose --config %h/.config/xeniaos/chezmoi/chezmoi.toml'\n\
 Type=oneshot\n" >> /usr/lib/systemd/user/chezmoi-update.service
 
-RUN echo -ne '[Unit]\n\
+RUN printf '[Unit]\n\
 Description=Timer for Chezmoi Update\n\
 # This service will only execute for a user with an existing chezmoi directory\n\
 ConditionPathExists=%h/.config/xeniaos/chezmoi\n\
@@ -476,7 +476,7 @@ RUN systemctl enable greetd
 
 RUN mkdir -p /etc/greetd/
 
-RUN echo -ne 'spawn-sh-at-startup "regreet; niri msg action quit --skip-confirmation"\n\
+RUN printf 'spawn-sh-at-startup "regreet; niri msg action quit --skip-confirmation"\n\
 hotkey-overlay {\n\
     skip-at-startup\n\
 }\n\
@@ -484,14 +484,14 @@ cursor {\n\
     xcursor-theme "catppuccin-mocha-peach-cursors"\n\
 }' > /etc/greetd/niri.kdl
 
-RUN echo -ne '[terminal]\n\
+RUN printf '[terminal]\n\
 vt = 1\n\
 \n\
 [default_session]\n\
 command = "niri --config /etc/greetd/niri.kdl"\n\
 user = "greeter"' > /etc/greetd/config.toml
 
-RUN echo -ne '[background]\n\
+RUN printf '[background]\n\
 path = "/usr/share/xeniaos/wallpapers/3_hypno_chimmie_firefly_videorelaxant6025.png"\n\
 \n\
 fit = "fill"\n\
@@ -546,9 +546,9 @@ RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
 
 RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
 
-RUN echo -ne '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | awk "NF" | awk '\''{print $2}'\'' | grep -v -e "wheel" -e "root" -e "sudo" | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
+RUN printf '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | awk "NF" | awk '\''{print $2}'\'' | grep -v -e "wheel" -e "root" -e "sudo" | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
 RUN chmod +x /usr/libexec/xeniaos-group-fix
-RUN echo -ne '[Unit]\n\
+RUN printf '[Unit]\n\
 Description=Fix groups\n\
 Wants=local-fs.target\n\
 After=local-fs.target\n\
@@ -560,7 +560,7 @@ ExecStart=systemd-sysusers\n\
 [Install]\n\
 WantedBy=default.target multi-user.target\n' > /usr/lib/systemd/system/xeniaos-group-fix.service
 
-RUN echo "enable xeniaos-group-fix.service" > /usr/lib/systemd/system-preset/01-xeniaos-group-fix.preset
+RUN printf "enable xeniaos-group-fix.service" > /usr/lib/systemd/system-preset/01-xeniaos-group-fix.preset
 RUN systemctl enable xeniaos-group-fix.service
 
 # Necessary for general behavior expected by image-based systems
@@ -571,9 +571,9 @@ RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
     ln -s var/roothome /root && \
     ln -s var/home /home && \
     ln -s sysroot/ostree /ostree && \
-    echo "$(for dir in opt usrlocal home srv mnt ; do echo "d /var/$dir 0755 root root -" ; done)" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
-    echo "d /var/roothome 0700 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
-    echo "d /run/media 0755 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
+    printf "$(for dir in opt usrlocal home srv mnt ; do printf "d /var/$dir 0755 root root -" ; done)" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
+    printf "d /var/roothome 0700 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
+    printf "d /run/media 0755 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
     printf "[composefs]\nenabled = yes\n[sysroot]\nreadonly = true\n" | tee "/usr/lib/ostree/prepare-root.conf"
 
 RUN bootc container lint
