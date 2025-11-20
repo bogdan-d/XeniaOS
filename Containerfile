@@ -64,7 +64,7 @@ RUN pacman -S --noconfirm --clean noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 # CLI Utilities
 RUN pacman -S --noconfirm --clean sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db \
-      tree usbutils vim wget wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl
+      tree usbutils vim wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl
 
 # Drivers \ "Business, business, business! Numbersss."
 RUN pacman -S --noconfirm --clean amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa libva-intel-driver libva-mesa-driver \
@@ -90,9 +90,6 @@ RUN pacman -S --noconfirm --clean greetd xwayland-satellite greetd-regreet xdg-d
 
 # User frontend programs/apps
 RUN pacman -S --noconfirm --clean steam scx-scheds scx-manager gnome-disk-utility
-
-# Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
-RUN wget -O --tries=5 /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
 RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 
@@ -167,7 +164,7 @@ RUN pacman -Sy --noconfirm
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
       chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/catppuccin-cursors-mocha \
-      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git \
+      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/wget2 \
       --noconfirm --clean
 
 ########################################################################################################################################
@@ -276,6 +273,9 @@ RUN systemctl enable flatpak-preinstall.service
 ########################################################################################################################################
 # Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo ########################
 ########################################################################################################################################
+
+# Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
+RUN wget2 -O --tries=5 /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
 # Add user to sudoers file for sudo, enable polkit
 RUN echo "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
