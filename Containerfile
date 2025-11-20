@@ -64,7 +64,7 @@ RUN pacman -S --noconfirm --clean noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 # CLI Utilities
 RUN pacman -S --noconfirm --clean sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db \
-      tree usbutils vim wget wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl jq
+      tree usbutils vim wget wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl
 
 # Drivers \ "Business, business, business! Numbersss."
 RUN pacman -S --noconfirm --clean amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa libva-intel-driver libva-mesa-driver \
