@@ -91,7 +91,8 @@ RUN pacman -S --noconfirm --clean greetd xwayland-satellite greetd-regreet xdg-d
 # User frontend programs/apps
 RUN pacman -S --noconfirm --clean steam scx-scheds scx-manager gnome-disk-utility
 
-RUN printf '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
+RUN mkdir -p /etc/plymouth \
+ && printf '[Daemon]\nTheme=spinner\n' | tee /etc/plymouth/plymouthd.conf
 
 #######################################################################################################################################################
 # Section 2 - Package List | For my info and yours too! No secrets here. | Enjoy your life, and love everyone around you as much as possible ########
