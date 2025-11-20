@@ -107,7 +107,7 @@ RUN pacman -S --noconfirm cups cups-browsed hplip
 # Desktop Environment needs
 RUN pacman -S --noconfirm greetd xwayland-satellite greetd-regreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
-      qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu
+      qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio rofi
 
 # User frontend programs/apps
 RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility
@@ -367,9 +367,6 @@ application/x-rar=org.kde.ark.desktop\n\
 application/x-tar=org.kde.ark.desktop\n\
 \n\
 [Added Associations]' > /etc/xdg/mimeapps.list
-
-# Symlink to further help file associations
-RUN ln -fs /etc/xdg/menus/*applications.menu ~/.config/menus/applications.menu
 
 # ENV default exports, QT theming 
 # Load shared objects immediately for better first time latency
