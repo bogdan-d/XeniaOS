@@ -369,6 +369,9 @@ application/x-tar=org.kde.ark.desktop\n\
 \n\
 [Added Associations]' > /etc/xdg/mimeapps.list
 
+# Symlink to further help file associations
+RUN ln -fs /etc/xdg/menus/*applications.menu ~/.config/menus/applications.menu
+
 # ENV default exports, QT theming 
 # Load shared objects immediately for better first time latency
 # Apply OBS_VK to all vulkan instances for better OBS game capture, some other windows may come along for the ride
