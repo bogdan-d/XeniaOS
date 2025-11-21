@@ -86,15 +86,10 @@ RUN pacman -S --noconfirm cups cups-browsed hplip
 # Desktop Environment needs
 RUN pacman -S --noconfirm greetd xwayland-satellite greetd-regreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
-      qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio rofi glycin
+      qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio glycin
 
 # User frontend programs/apps
 RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility
-
-# Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
-RUN mkdir -p "/usr/share/fonts/Maple Mono" \
-      && curl -fSsLo "/tmp/maple.zip" "$(curl "https://api.github.com/repos/subframe7536/maple-font/releases/latest" | jq '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url' -rc)" \
-      && unzip "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
 
 RUN mkdir -p /etc/plymouth \
  && echo -e '[Daemon]\nTheme=spinner' | tee /etc/plymouth/plymouthd.conf
@@ -108,7 +103,7 @@ RUN pacman -S --clean
 # -Package list- Chaotic-AUR precompiled packages
 # niri-git | input-remapper-git | vesktop | sc-controller | flatpak-git | dms-shell-git | ttf-twemoji |
 # ttf-symbola | opentabletdriver | colloid-catppuccin-gtk-theme-git | colloid-catppuccin-theme-git
-# catppuccin-cursors-mocha | paru | 
+# paru | 
 
 # Arch apps
 # Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam
@@ -136,8 +131,8 @@ RUN pacman -Sy --noconfirm
 
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
-      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/catppuccin-cursors-mocha \
-      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/wget2 \
+      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver \
+      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/wget2 chaotic-aur/paru \
       --noconfirm
 
 ########################################################################################################################################
@@ -385,6 +380,19 @@ net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
 ########################################################################################################################################
 # Section 7 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
 ########################################################################################################################################
+
+# Catppuccin style cursor, in a lovely orange, much like my furrrrr~
+RUN mkdir -p /usr/share/icons && \
+    curl --retry 5 --retry-all-errors -LOsS https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
+    unzip -q catppuccin-mocha-peach-cursors.zip -d /usr/share/icons && \
+    rm catppuccin-mocha-peach-cursors.zip
+
+RUN ln -s /usr/share/icons/Catppuccin-Mocha-Peach-Cursors /usr/share/icons/default
+
+# Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
+RUN mkdir -p "/usr/share/fonts/Maple Mono" && \
+    curl --retry 5 --retry-all-errors -fSsLo "/tmp/maple.zip" "$(curl -s https://api.github.com/repos/subframe7536/maple-font/releases/latest | jq -r -c '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url')" && \
+    unzip -q "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
 
 # Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
 RUN echo -e '[preferred] \n\
