@@ -241,7 +241,8 @@ RUN systemctl enable flatpak-preinstall.service
 # Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
 RUN mkdir -p /etc/plymouth && \
       echo -e '[Daemon]\nTheme=spinner' | tee /etc/plymouth/plymouthd.conf && \
-      wget -O --tries=5 /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
+      wget --tries=5 -O /usr/share/plymouth/themes/spinner/watermark.png \
+      https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
 # Add all users to sudoers file for sudo ability, enable polkit
 RUN echo -e "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
