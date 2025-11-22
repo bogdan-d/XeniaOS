@@ -65,7 +65,10 @@ RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emo
 
 # CLI Utilities
 RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
-      tree usbutils vim wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl
+      tree usbutils vim wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch curl
+
+# Virtualization
+RUN pacman -S --noconfirm distrobox docker podman toolbox 
 
 # Drivers \ "Business, business, business! Numbersss."
 RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa libva-intel-driver libva-mesa-driver \
@@ -89,7 +92,7 @@ RUN pacman -S --noconfirm greetd xwayland-satellite greetd-regreet xdg-desktop-p
       qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio glycin
 
 # User frontend programs/apps
-RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility
+RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility mangohud
 
 RUN pacman -S --clean
 
@@ -103,7 +106,7 @@ RUN pacman -S --clean
 # paru | 
 
 # Arch apps
-# Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam
+# Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam | Mangohud
 
 # Flatpaks
 # Bazaar | Krita | Elisa | Pinta | OBS | Ark | Cave Story | Faugus Launcher | ProtonUp-QT | Kdenlive |
@@ -128,7 +131,7 @@ RUN pacman -Sy --noconfirm
 
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
-      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver \
+      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
       chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/paru \
       --noconfirm
 
@@ -533,7 +536,7 @@ RUN echo -e "[Install]\nWantedBy=sysinit.target" | tee -a /usr/lib/systemd/syste
 
 RUN pacman -Sy --noconfirm
 
-RUN pacman -S --noconfirm bootc/bootc bootc/bootupd
+RUN pacman -S --noconfirm bootc/bootc bootc/bootupd bootc/bcvk
 
 RUN sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
   dracut --force --no-hostonly --reproducible --zstd --verbose --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
