@@ -538,8 +538,12 @@ RUN pacman -Sy --noconfirm
 
 RUN pacman -S --noconfirm bootc/bootc bootc/bootupd bootc/bcvk
 
-RUN sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
-  dracut --force --no-hostonly --reproducible --zstd --verbose --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
+RUN printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/lib/systemd/system\n" | tee /usr/lib/dracut/dracut.conf.d/30-bootcrew-fix-bootc-module.conf && \
+      printf 'hostonly=no\nadd_dracutmodules+=" ostree bootc "' | tee /usr/lib/dracut/dracut.conf.d/30-bootcrew-bootc-modules.conf && \
+      sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
+      dracut --force --no-hostonly --reproducible --zstd --verbose --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
+
+RUN pacman -S --clean --noconfirm
 
 # Necessary for general behavior expected by image-based systems
 RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
@@ -554,7 +558,7 @@ RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
     echo -e "d /run/media 0755 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
     echo -e "[composefs]\nenabled = yes\n[sysroot]\nreadonly = true" | tee "/usr/lib/ostree/prepare-root.conf"
 
-RUN bootc container lint --no-truncate
+RUN bootc container lint
 
 #####################                                                       ✧⋆✩₊⋆⁺₊˚.
 #####################     ,c.                       .c;                    ✩₊˚.⋆☾⋆⁺₊✧
