@@ -363,8 +363,7 @@ Exec = /usr/bin/paccache -r' > /etc/pacman.d/hooks/clean_package_cache.hook
 RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator && \
     cd /tmp/media-automount-generator && \
     ./install_udev.sh && \
-    rm -rf /tmp/media-automount-generator && \
-    udevadm control --reload
+    rm -rf /tmp/media-automount-generator
 
 ########################################################################################################################################
 # Section 6 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
