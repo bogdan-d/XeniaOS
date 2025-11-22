@@ -60,10 +60,10 @@ RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid 
       vulkan-tools wayland-utils playerctl
 
 # Fonts
-RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji
+RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emoji
 
 # CLI Utilities
-RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db \
+RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget \
       tree usbutils vim wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl
 
 # Drivers \ "Business, business, business! Numbersss."
@@ -71,8 +71,7 @@ RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa 
       vpl-gpu-rt vulkan-icd-loader vulkan-intel vulkan-radeon apparmor xf86-video-amdgpu lib32-vulkan-radeon 
 
 # Network / VPN / SMB / storage
-RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld udiskie \
-      udisks2 
+RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld udiskie
 
 # Accessibility
 RUN pacman -S --noconfirm espeak-ng orca
@@ -89,10 +88,7 @@ RUN pacman -S --noconfirm greetd xwayland-satellite greetd-regreet xdg-desktop-p
       qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio glycin
 
 # User frontend programs/apps
-RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility
-
-RUN mkdir -p /etc/plymouth \
- && echo -e '[Daemon]\nTheme=spinner' | tee /etc/plymouth/plymouthd.conf
+RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility
 
 RUN pacman -S --clean
 
@@ -132,7 +128,7 @@ RUN pacman -Sy --noconfirm
 RUN pacman -S \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
       chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver \
-      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/wget2 chaotic-aur/paru \
+      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/paru \
       --noconfirm
 
 ########################################################################################################################################
@@ -243,9 +239,11 @@ RUN systemctl enable flatpak-preinstall.service
 ########################################################################################################################################
 
 # Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
-RUN wget2 -O --tries=5 /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
+RUN mkdir -p /etc/plymouth && \
+      echo -e '[Daemon]\nTheme=spinner' | tee /etc/plymouth/plymouthd.conf && \
+      wget -O --tries=5 /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
-# Add user to sudoers file for sudo, enable polkit
+# Add all users to sudoers file for sudo ability, enable polkit
 RUN echo -e "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
 RUN systemctl enable polkit
 
@@ -359,12 +357,13 @@ Description = Cleaning pacman cache...\n\
 When = PostTransaction\n\
 Exec = /usr/bin/paccache -r' > /etc/pacman.d/hooks/clean_package_cache.hook
 
-# Automount removable disks to /media/ using udisks2
-# https://wiki.archlinux.org/title/Udisks
-# FIXME
-RUN echo -e 'ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"' > /etc/udev/rules.d/99-udisks2.rules
-
-RUN echo -e 'D /media 0755 root root 0 -' > /etc/tmpfiles.d/media.conf
+# Automount ext4/btrfs drives, feel free to mount your own in fstab if you understand how to do so
+# To turn off, run sudo ln -s /dev/null /etc/media-automount.d/_all.conf
+RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator && \
+    cd /tmp/media-automount-generator && \
+    ./install_udev.sh && \
+    rm -rf /tmp/media-automount-generator && \
+    udevadm control --reload
 
 ########################################################################################################################################
 # Section 6 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
@@ -383,11 +382,10 @@ net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
 
 # Catppuccin style cursor, in a lovely orange, much like my furrrrr~
 RUN mkdir -p /usr/share/icons && \
-    curl --retry 5 --retry-all-errors -LOsS https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
-    unzip -q catppuccin-mocha-peach-cursors.zip -d /usr/share/icons && \
-    rm catppuccin-mocha-peach-cursors.zip
-
-RUN ln -s /usr/share/icons/Catppuccin-Mocha-Peach-Cursors /usr/share/icons/default
+      curl --retry 5 --retry-all-errors -LOsS https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
+      unzip -q catppuccin-mocha-peach-cursors.zip -d /usr/share/icons && \
+      rm catppuccin-mocha-peach-cursors.zip && \
+      ln -s /usr/share/icons/Catppuccin-Mocha-Peach-Cursors /usr/share/icons/default
 
 # Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
 RUN mkdir -p "/usr/share/fonts/Maple Mono" && \
@@ -403,11 +401,11 @@ org.freedesktop.impl.portal.Notification=kde;gtk;gnome; \n\
 org.freedesktop.impl.portal.Secret=gnome-keyring' > /usr/share/xdg-desktop-portal/niri-portals.conf
 
 # Use Chezmoi to set up config files, visual assets, avatars, and wallpapers
-RUN mkdir -p /usr/share/xeniaos/ && \
-      git clone https://github.com/XeniaMeraki/XeniaOS-HRT /usr/share/xeniaos/zdots
+RUN rm -rf /usr/share/xeniaos/zdots/ && \
+      git clone --depth=1 https://github.com/XeniaMeraki/XeniaOS-HRT /usr/share/xeniaos/zdots/
 
-RUN mkdir -p /usr/share/xeniaos/ && \
-      git clone https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
+RUN rm -rf /usr/share/xeniaos/wallpapers/ && \
+      git clone --depth=1 https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
 
 #Starship setup
 RUN echo -e 'eval "$(starship init bash)"' >> /etc/bash.bashrc
