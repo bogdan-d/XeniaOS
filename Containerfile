@@ -60,10 +60,11 @@ RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid 
       vulkan-tools wayland-utils playerctl
 
 # Fonts
-RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emoji
+RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emoji noto-fonts-extra ttf-fira-code ttf-firacode-nerd \
+      ttf-ibm-plex ttf-jetbrains-mono-nerd otf-font-awesome ttf-jetbrains-mono
 
 # CLI Utilities
-RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget \
+RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
       tree usbutils vim wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch docker podman curl
 
 # Drivers \ "Business, business, business! Numbersss."
@@ -521,37 +522,21 @@ RUN systemctl enable --global dms.service
 # Section 8 - Final Bootc Setup. The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #######################
 ########################################################################################################################################
 
-RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
-    pacman -S --noconfirm base-devel git rust && \
-    git clone "https://github.com/bootc-dev/bootc.git" /tmp/bootc && \
-    make -C /tmp/bootc bin install-all && \
-    printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/lib/systemd/system\n" | tee /usr/lib/dracut/dracut.conf.d/30-bootcrew-fix-bootc-module.conf && \
-    printf 'hostonly=no\nadd_dracutmodules+=" ostree bootc "' | tee /usr/lib/dracut/dracut.conf.d/30-bootcrew-bootc-modules.conf && \
-    sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
-    dracut --force --no-hostonly --reproducible --zstd --verbose --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"' && \
-    pacman -S --clean --noconfirm
+# Add 3rd party bootc package repo via Hecknt FIXME Eventually remove this with Arch/Chaotic AUR proper host | https://github.com/hecknt/arch-bootc-pkgs
+RUN pacman-key --recv-key 5DE6BF3EBC86402E7A5C5D241FA48C960F9604CB --keyserver keyserver.ubuntu.com
+RUN pacman-key --lsign-key 5DE6BF3EBC86402E7A5C5D241FA48C960F9604CB
+RUN echo -e '[bootc]\nSigLevel = Required\nServer=https://github.com/hecknt/arch-bootc-pkgs/releases/download/$repo' >> /etc/pacman.conf
 
-# This fixes a user/groups error with Arch Bootc setup.
-# FIXME Do NOT remove until fixed upstream. Script created by Tulip.
+# Groups fix | Truncated down by Hecknt
+RUN echo -e "[Install]\nWantedBy=sysinit.target" | tee -a /usr/lib/systemd/system/systemd-sysusers.service && \
+      systemctl enable systemd-sysusers.service
 
-RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
+RUN pacman -Sy --noconfirm
 
-RUN echo -e '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | awk "NF" | awk '\''{print $2}'\'' | grep -v -e "wheel" -e "root" -e "sudo" | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
-RUN chmod +x /usr/libexec/xeniaos-group-fix
-RUN echo -e '[Unit]\n\
-Description=Fix groups\n\
-Wants=local-fs.target\n\
-After=local-fs.target\n\
-[Service]\n\
-Type=oneshot\n\
-ExecStart=/usr/libexec/xeniaos-group-fix /etc/group\n\
-ExecStart=/usr/libexec/xeniaos-group-fix /etc/gshadow\n\
-ExecStart=systemd-sysusers\n\
-[Install]\n\
-WantedBy=default.target multi-user.target' > /usr/lib/systemd/system/xeniaos-group-fix.service
+RUN pacman -S --noconfirm bootc/bootc bootc/bootupd
 
-RUN echo -e "enable xeniaos-group-fix.service" > /usr/lib/systemd/system-preset/01-xeniaos-group-fix.preset
-RUN systemctl enable xeniaos-group-fix.service
+RUN sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
+  dracut --force --no-hostonly --reproducible --zstd --verbose --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
 
 # Necessary for general behavior expected by image-based systems
 RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
@@ -566,7 +551,7 @@ RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
     echo -e "d /run/media 0755 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
     echo -e "[composefs]\nenabled = yes\n[sysroot]\nreadonly = true" | tee "/usr/lib/ostree/prepare-root.conf"
 
-RUN bootc container lint
+RUN bootc container lint --no-truncate
 
 #####################                                                       ✧⋆✩₊⋆⁺₊˚.
 #####################     ,c.                       .c;                    ✩₊˚.⋆☾⋆⁺₊✧
@@ -574,16 +559,16 @@ RUN bootc container lint
 #####################   .WMMMMMX.....         .....KMMMMMW.                       
 #####################   XMMMMMMM0.....        ....OMMMMMMMN
 #####################  dMMMMMMMMM;.... ..... ....,MMMMMMMMMd          Who's gonna take you home tonight?
-#####################  WMMMMMMMMMl;okKKKKKKKKKOo;cMMMMMMMMMM             Does God bless your transsexual heart,
-##################### 'MMMMMMMNXK0KKKKKKKKKKKKKKK0KXNMMMMMMM;                  True Trans Soul Rebel?
+#####################  WMMMMMMMMMl;okKKKKKKKKKOo;cMMMMMMMMMM        Does God bless your transsexual heart,
+##################### 'MMMMMMMNXK0KKKKKKKKKKKKKKK0KXNMMMMMMM;             True Trans Soul Rebel?
 ##################### oMMMMMMMOxoKKKKKKKKKKKKKKKKKoxOMMMMMMMd
 ##################### dMMMMMMMdxxxKKKKKKKKKKKKKKKxxxdNMMMMMMk
-##################### :MMMMX0xxxxxx0KKKKKKKK0KK0xxxxxx0XMMMMc                     Well, you should've been a mother
-#####################  MMMOxxxxxxxxdxkdd0x0ddkxdxxxxxxxxOMMM                         You should've been a wife
-##################### ;xxkxddxxxxdodxxxxdxdxxxxdodxxxxddxkxx;                          You should've been gone from here years ago
-#####################dxdKMMMWXo'.....'cdxxxdc'.....'lXWMMMXdxd                             You should be living a different life
+##################### :MMMMX0xxxxxx0KKKKKKKK0KK0xxxxxx0XMMMMc         Well, you should've been a mother
+#####################  MMMOxxxxxxxxdxkdd0x0ddkxdxxxxxxxxOMMM              You should've been a wife
+##################### ;xxkxddxxxxdodxxxxdxdxxxxdodxxxxddxkxx;       You should've been gone from here years ago
+#####################dxdKMMMWXo'.....'cdxxxdc'.....'lXWMMMXdxd        You should be living a different life
 ##################### cxdXMMMN,..........dxd'.........'XMMMNdxl 
-#####################  .xxWMMl...''....'.;k:.'....''...lMMWxx.                                  - Against Me!
+#####################  .xxWMMl...''....'.;k:.'....''...lMMWxx.                 - Against Me!
 ##################### ..:kXMMx..'....''..kMk..''....'..xMMXkc..
 #####################  dMMMMMMd.....'...xMMMx...''....dMMMMMMx
 #####################    kMMMMWOoc:coOkolllokOoc:coOWMMMMO
