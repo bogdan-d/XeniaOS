@@ -563,9 +563,6 @@ RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
     echo -e "d /run/media 0755 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
     echo -e "[composefs]\nenabled = yes\n[sysroot]\nreadonly = true" | tee "/usr/lib/ostree/prepare-root.conf"
 
-# Cleanup pacman directories after installation
-RUN du -h /var/cache/pacman/pkg
-
 RUN bootc container lint
 
 #####################                                                       ✧⋆✩₊⋆⁺₊˚.
