@@ -14,14 +14,12 @@
 <div align="center">
 
 [![XeniaMeraki - XeniaOS](https://img.shields.io/static/v1?label=XeniaMeraki&message=XeniaOS&color=orange&logo=github)](https://github.com/XeniaMeraki/XeniaOS "Go to GitHub repo")
-![Build]
 [![TransRights]][transrights_url]
 ![Sponsored by the Gay Agenda][sponsored]
 [![License](https://img.shields.io/badge/License-GPL3.0-orange)](#license)
 [![stars - XeniaOS](https://img.shields.io/github/stars/XeniaMeraki/XeniaOS?style=social)](https://github.com/XeniaMeraki/XeniaOS)
 
 [transrights_url]: https://en.wikipedia.org/wiki/Transgender_rights_movement
-[Build]: https://github.com/XeniaMeraki/XeniaOS/actions/workflows/build.yaml/badge.svg
 ![Badge](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FXeniaMeraki%2FXeniaOS&label=Views&icon=browser-firefox&color=%23ff7800&message=&style=plastic&tz=US%2FArizona)
 
 [TransRights]: https://pride-badges.pony.workers.dev/static/v1?label=trans%20rights&stripeWidth=6&stripeColors=5BCEFA,F5A9B8,FFFFFF,F5A9B8,5BCEFA
