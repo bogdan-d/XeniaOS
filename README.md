@@ -104,13 +104,10 @@ XeniaOS headed by [Xenia Meraki](https://xeniameraki.com)
 the transfem package fox
 
 
-Special thank yous to [Tulip](https://github.com/tulilirockz) for general help
+Special thank yous to [Tulip](https://github.com/tulilirockz) and [Hecknt](https://github.com/hecknt) for general help
 
 
 [Chimmie Firefly](https://github.com/GamePlayer-8/xenia.chimmie.k.vu) [Jasper Valery](https://www.artstation.com/jasperjvalery) [Delphic Melody](https://github.com/delphicmelody) 
 
 
 for Xenia artwork/logos/assets/concepting.
-
-
-<img align="right" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/textlogo_jasper_valery.svg" width="300">
