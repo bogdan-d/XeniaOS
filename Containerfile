@@ -11,13 +11,13 @@
 #      rj].           . r
 #      [[]]11111111111111111]                                   
 #     ][[[]]][11111111111111111<                                 XeniaOS
-#     ][[[[[]]]]]]]]]]]]]]-111111[        Xenia Meraki the transfem package fox | @tulilirockz saved the distro
-#     ]-[[[[[[;]]]]]]]]]]]]]]]]   1             Artists Jasper Valery | Delphic Melody | Chimmie Firefly
-#     ]][[[[[[[[[[[]]]]]]]]]]]]]                          videorelaxant6025 |
-#     1]][[[[[[[[[[[[[[<]]]]]]]]]      
+#     ][[[[[]]]]]]]]]]]]]]-111111[                  Xenia Meraki the transfem package fox
+#     ]-[[[[[[;]]]]]]]]]]]]]]]]   1                         @tulilirockz @hecknt
+#     ]][[[[[[[[[[[]]]]]]]]]]]]]                Artists Jasper Valery | Delphic Melody | Chimmie Firefly
+#     1]][[[[[[[[[[[[[[<]]]]]]]]]                            videorelaxant6025
 #      11]]][[[[[[[[[[[[[[[]]]]]]]                         
 #       111]]]]'[[[[[[[[[[[[[[]]]]
-#         111-]]]]][[[[[[[[[[[[[]]  Software that makes this OS possible - Distros for inspiration and whose members helped in some way
+#         111-]]]]][[[[[[[[[[[[[]]  Software that makes this OS possible - Distros/software for inspiration and whose members helped in some way
 #           11111]]]]]_[[[[[[[[[[]                   Arch | Bootc | Aurora | Bazzite | Ublue | Zirconium | Bluefin
 #               11111]]]i[[[[[[[[                          Docker | Podman | Fedora | Proton | Wine | Ubuntu
 #                  1111]]+[[[[[[^                                @kylegospo @valerie-tar-gz @cyrv6737
@@ -26,21 +26,21 @@
 #                    1   ][[
 #                       `            Credit art: Cathodegaytube for original art, @catumin for ascii-ification
 
-FROM docker.io/cachyos/cachyos-v3:latest
-
-ENV DEV_DEPS="base-devel git rust"
+FROM docker.io/cachyos/cachyos-v3:latest AS final
 
 ENV DRACUT_NO_XATTR=1
 
 # ✩₊˚.⋆☾𓃦☽⋆⁺₊✧ Index
 # Section 1 - Package Installs
 # Section 2 - Package List
-# Section 3 - Chaotic AUR
+# Section 3 - Chaotic AUR / AUR
 # Section 4 - Flatpaks preinstalls
 # Section 5 - Linux OS Stuffs
-# Section 6 - CachyOS Settings
-# Section 7 - Niri/Chezmoi/DMS
-# Section 8 - Final Bootc Setup
+# Section 6 - Set up Brew
+# Section 7 - Systemd n Services
+# Section 8 - CachyOS Settings
+# Section 9 - Niri/Chezmoi/DMS
+# Section 10 - Final Bootc Setup
 
 ########################################################################################################################################
 # Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
@@ -49,6 +49,19 @@ ENV DRACUT_NO_XATTR=1
 # Move everything from `/var` to `/usr/lib/sysimage` so behavior around pacman remains the same on `bootc usroverlay`'d systems
 RUN grep "= */var" /etc/pacman.conf | sed "/= *\/var/s/.*=// ; s/ //" | xargs -n1 sh -c 'mkdir -p "/usr/lib/sysimage/$(dirname $(echo $1 | sed "s@/var/@@"))" && mv -v "$1" "/usr/lib/sysimage/$(echo "$1" | sed "s@/var/@@")"' '' && \
     sed -i -e "/= *\/var/ s/^#//" -e "s@= */var@= /usr/lib/sysimage@g" -e "/DownloadUser/d" /etc/pacman.conf
+
+# Set it up such that pacman is always cleaned after installs
+RUN echo -e "[Trigger]\n\
+Operation = Install\n\
+Operation = Upgrade\n\
+Type = Package\n\
+Target = *\n\
+\n\
+[Action]\n\
+Description = Cleaning up package cache...\n\
+Depends = coreutils\n\
+When = PostTransaction\n\
+Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" | tee /usr/share/libalpm/hooks/package-cleanup.hook
 
 # Initialize the database
 RUN pacman -Syu --noconfirm
@@ -68,10 +81,10 @@ RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emo
       ttf-ibm-plex ttf-jetbrains-mono-nerd otf-font-awesome ttf-jetbrains-mono
 
 # CLI Utilities
-RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
-      tree usbutils vim wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch curl
+RUN pacman -S --noconfirm sudo sudo-rs bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
+      tree usbutils vim wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch curl patchelf base-devel
 
-# Virtualization
+# Virtualization \ Containerization
 RUN pacman -S --noconfirm distrobox docker podman
 
 # Drivers \ "Business, business, business! Numbersss."
@@ -79,26 +92,26 @@ RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa 
       vpl-gpu-rt vulkan-icd-loader vulkan-intel vulkan-radeon apparmor xf86-video-amdgpu lib32-vulkan-radeon 
 
 # Network / VPN / SMB / storage
-RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld udiskie
+RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld udiskie \
+      udisks2
 
 # Accessibility
 RUN pacman -S --noconfirm espeak-ng orca
 
 # Pipewire
-RUN pacman -S --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber
+RUN pacman -S --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber \
+    alsa-firmware lib32-pipewire pipewire-audio linux-firmware-intel
 
 # Printer
 RUN pacman -S --noconfirm cups cups-browsed hplip
 
 # Desktop Environment needs
-RUN pacman -S --noconfirm greetd xwayland-satellite greetd-regreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
+RUN pacman -S --noconfirm greetd xwayland-satellite xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
-      breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio glycin
+      breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio glycin greetd-regreet
 
 # User frontend programs/apps
-RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility mangohud
-
-RUN pacman -S --clean
+RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility mangohud lib32-mangohud
 
 #######################################################################################################################################################
 # Section 2 - Package List | For my info and yours too! No secrets here. | Enjoy your life, and love everyone around you as much as possible ########
@@ -107,7 +120,6 @@ RUN pacman -S --clean
 # -Package list- Chaotic-AUR precompiled packages
 # niri-git | input-remapper-git | vesktop | sc-controller | flatpak-git | dms-shell-git | ttf-twemoji |
 # ttf-symbola | opentabletdriver | colloid-catppuccin-gtk-theme-git | colloid-catppuccin-theme-git
-# paru | 
 
 # Arch apps
 # Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam | Mangohud
@@ -117,9 +129,9 @@ RUN pacman -S --clean
 # Okular | Kate | Warehouse | Fedora Media Writer | Gear Lever | Haruna | Space Cadet Pinball | Gwenview
 # Audacity | Filelight | Not Tetris 2 | Floorp
 
-########################################################################################################################################
-# Section 3 - Chaotic AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
-########################################################################################################################################
+##############################################################################################################################################
+# Section 3 - Chaotic AUR / AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
+##############################################################################################################################################
 
 RUN pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 
@@ -133,15 +145,48 @@ RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/
 
 RUN pacman -Sy --noconfirm
 
-RUN pacman -S \
+RUN pacman -S --noconfirm \
       chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
       chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
-      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/paru \
-      --noconfirm
+      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git
 
-########################################################################################################################################
-# Section 4 - Flatpaks preinstalls | Don't forget. Always, somewhere, someone is fighting for you. You are not alone. ##################
-########################################################################################################################################
+# Regular AUR Build Section
+# Create build user
+RUN useradd -m --shell=/bin/bash build && usermod -L build && \
+    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Install AUR packages
+USER build
+WORKDIR /home/build
+RUN --mount=type=tmpfs,dst=/tmp \
+    git clone https://aur.archlinux.org/paru-bin.git --single-branch /tmp/paru && \
+    cd /tmp/paru && \
+    makepkg -si --noconfirm && \
+    cd .. && \
+    rm -drf paru-bin
+
+# AUR packages
+RUN paru -S --noconfirm \
+        aur/uupd
+
+USER root
+WORKDIR /
+# Cleanup and delete build user
+RUN userdel -r build && \
+    rm -drf /home/build && \
+    sed -i '/build ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
+    sed -i '/root ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
+    rm -rf /home/build && \
+    rm -rf \
+        /tmp/* \
+        /var/cache/pacman/pkg/*
+
+#AUR script credit @KyleGospo @cyrv6737
+
+#######################################################################################################################################################
+# Section 4 - Flatpaks preinstalls | Don't forget. Always, somewhere, someone is fighting for you. You are not alone. -Madoka Magica ##################
+#######################################################################################################################################################
 
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
 
@@ -217,33 +262,8 @@ RUN echo -e "[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=fa
 # Rclone Shuttle | Files storage and transfer, at your service, my quing!
 RUN echo -e "[Flatpak Preinstall io.github.pieterdd.RcloneShuttle]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/RcloneShuttle.preinstall
 
-# Systemd flatpak preinstall service, thanks Aurora
-RUN echo -e '[Unit]\n\
-Description=Preinstall Flatpaks\n\
-After=network-online.target\n\
-Wants=network-online.target\n\
-ConditionPathExists=/usr/bin/flatpak\n\
-Documentation=man:flatpak-preinstall(1)\n\
-\n\
-[Service]\n\
-Type=oneshot\n\
-ExecStart=/usr/bin/flatpak preinstall -y\n\
-RemainAfterExit=true\n\
-Restart=on-failure\n\
-RestartSec=30\n\
-\n\
-StartLimitIntervalSec=600\n\
-StartLimitBurst=3\n\
-\n\
-[Install]\n\
-WantedBy=multi-user.target' > /usr/lib/systemd/system/flatpak-preinstall.service
-
-RUN systemctl enable flatpak-preinstall.service
-
-# "A hero does what's right, even if it crushes them inside." - Mao Mao
-
 ########################################################################################################################################
-# Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo ########################
+# Section 5 - Linux OS stuffs | "I'd decide for myself whether his teachings are right or wrong." Near, Death Note #####################
 ########################################################################################################################################
 
 # Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
@@ -252,18 +272,22 @@ RUN mkdir -p /etc/plymouth && \
       wget --tries=5 -O /usr/share/plymouth/themes/spinner/watermark.png \
       https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
-# Add all users to sudoers file for sudo ability, enable polkit
-RUN echo -e "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
-RUN systemctl enable polkit
+# All kindsa Sudo changes for ease and flavor
+RUN echo -e '%wheel ALL=(ALL:ALL) ALL\n\
+%sudo  ALL=(ALL:ALL) ALL\n\
+\n\
+Defaults insults,pwfeedback\n\
+Defaults secure_path=\"/usr/local/bin:/usr/bin:/bin:/home/linuxbrew/.linuxbrew/bin\"\n\
+Defaults env_keep += \"EDITOR VISUAL PATH\"\n\
+Defaults timestamp_type=tty\n\
+Defaults timestamp_timeout=0' > /etc/sudoers.d/xenias-sudo-quiver && \
+    chmod 440 /etc/sudoers.d/xenias-sudo-quiver
 
 # Set up zram, this will help users not run out of memory. Fox will fix!
 RUN echo -e '[zram0]\nzram-size = min(ram, 8192)' >> /usr/lib/systemd/zram-generator.conf
 RUN echo -e 'enable systemd-resolved.service' >> usr/lib/systemd/system-preset/91-resolved-default.preset
 RUN echo -e 'L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf' >> /usr/lib/tmpfiles.d/resolved-default.conf
 RUN systemctl preset systemd-resolved.service
-
-# Enable wifi, firewall, power profiles. Fox will protect!
-RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
 # OS Release and Update uwu
 RUN echo -e 'NAME="XeniaOS"\n\
@@ -275,42 +299,26 @@ HOME_URL="https://github.com/XeniaMeraki/XeniaOS"\n\
 LOGO=archlinux-logo\n\
 DEFAULT_HOSTNAME="XeniaOS"' > /etc/os-release
 
-# Automounter Systemd Service for flash drives and CDs
-RUN echo -e '[Unit] \n\
-Description=Udiskie automount \n\
-PartOf=graphical-session.target \n\
-After=graphical-session.target \n\
- \n\
-[Service] \n\
-ExecStart=udiskie \n\
-Restart=on-failure \n\
-RestartSec=1 \n\
-\n\
-[Install] \n\
-WantedBy=graphical-session.target' > /usr/lib/systemd/user/udiskie.service
-
-# Clip history / Cliphist systemd service / Clipboard history for copy and pasting to work properly in Niri~
-RUN echo -e '[Unit]\n\
-Description=Clipboard History service\n\
-PartOf=graphical-session.target\n\
-After=graphical-session.target\n\
-\n\
-[Service]\n\
-ExecStart=wl-paste --watch cliphist store\n\
-Restart=on-failure\n\
-RestartSec=1\n\
-\n\
-[Install]\n\
-WantedBy=graphical-session.target' > /usr/lib/systemd/user/cliphist.service
-
 # Symlink Vi to Vim / Make it to where a user can use vi in terminal command to use vim automatically | Thanks Tulip
 RUN ln -s ./vim /usr/bin/vi
+
+# Redirect neofetch & fastfetch -> hyfetch | Feel free to undo this as a user 
+# Just to avoid confusion on admin side/make things aesthetic across the board
+RUN ln -s /usr/bin/hyfetch /usr/bin/neofetch && \
+    echo -e 'alias fastfetch="hyfetch"' > /etc/profile.d/aliases.sh
+
+# Symlink sudo-rs to sudo, memory safe https://github.com/trifectatechfoundation/sudo-rs#differences-from-original-sudo
+RUN ln -s su-rs /usr/bin/su && ln -s sudo-rs /usr/bin/sudo
 
 # Symlink GTK to Libadwaita
 RUN mkdir -p /usr/share/gtk-4.0
 
 RUN ln -sf /usr/share/themes/Colloid-Orange-Dark-Catppuccin/gtk-4.0/{assets,gtk.css,gtk-dark.css} \
        /usr/share/gtk-4.0/
+
+# Use Chezmoi to set up config files, visual assets, avatars, and wallpapers
+RUN git clone https://github.com/XeniaMeraki/XeniaOS-HRT /usr/share/xeniaos/zdots/ && \
+    git clone https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
 
 # System-wide default application associations for filetype calls
 RUN mkdir -p /etc/xdg/
@@ -352,71 +360,69 @@ ENV OBS_VKCAPTURE=1
 # https://wiki.archlinux.org/title/Gaming#Increase_vm.max_map_count
 RUN echo -e "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility.conf
 
-# Autoclean pacman package cache after each update, install, and uninstall
-RUN mkdir -p /etc/pacman.d/hooks/
-
-RUN echo -e '[Trigger]\n\
-Operation = Upgrade\n\
-Operation = Install\n\
-Operation = Remove\n\
-Type = Package\n\
-Target = *\n\
-[Action]\n\
-Description = Cleaning pacman cache...\n\
-When = PostTransaction\n\
-Exec = /usr/bin/paccache -r' > /etc/pacman.d/hooks/clean_package_cache.hook
-
 # Automount ext4/btrfs drives, feel free to mount your own in fstab if you understand how to do so
 # To turn off, run sudo ln -s /dev/null /etc/media-automount.d/_all.conf
 RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator && \
     cd /tmp/media-automount-generator && \
-    ./install_udev.sh && \
+    DESTDIR=/usr/local ./install_udev.sh && \
     rm -rf /tmp/media-automount-generator
 
 ########################################################################################################################################
-# Section 6 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
+# Section 6 - Set up brew | terminal packages manager utility | https://brew.sh/ | Foxy witch will mix up a brew for you! ##############
 ########################################################################################################################################
 
-# Activate NTSync, wags my tail in your general direction
-RUN echo -e 'ntsync' > /etc/modules-load.d/ntsync.conf
+RUN curl -s https://api.github.com/repos/ublue-os/packages/releases/latest \
+    | jq -r '.assets[] | select(.name | test("homebrew-x86_64.*\\.tar\\.zst")) | .browser_download_url' \
+    | xargs -I {} wget -O /usr/share/homebrew.tar.zst {}
 
-# CachyOS bbr3 Config Option
-RUN echo -e 'net.core.default_qdisc=fq \n\
-net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
+RUN echo '[[ -d /home/linuxbrew/.linuxbrew && $- == *i* ]] && \
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' > /etc/profile.d/brew.sh
 
-########################################################################################################################################
-# Section 7 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
-########################################################################################################################################
+RUN echo -e "[Unit]\n\
+Description=Setup Homebrew from tarball\n\
+After=local-fs.target\n\
+ConditionPathExists=!/var/home/linuxbrew/.linuxbrew\n\
+ConditionPathExists=/usr/share/homebrew.tar.zst\n\
+\n\
+[Service]\n\
+Type=oneshot\n\
+ExecStart=/usr/bin/mkdir -p /tmp/homebrew\n\
+ExecStart=/usr/bin/mkdir -p /var/home/linuxbrew\n\
+ExecStart=/usr/bin/tar --zstd -xf /usr/share/homebrew.tar.zst -C /tmp/homebrew\n\
+ExecStart=/usr/bin/cp -R -n /tmp/homebrew/linuxbrew/.linuxbrew /var/home/linuxbrew\n\
+ExecStart=/usr/bin/chown -R 1000:1000 /var/home/linuxbrew\n\
+ExecStart=/usr/bin/rm -rf /tmp/homebrew\n\
+ExecStart=/usr/bin/touch /etc/.linuxbrew\n\
+\n\
+[Install]\n\
+WantedBy=multi-user.target" > /usr/lib/systemd/system/brew-setup.service
 
-# Catppuccin style cursor, in a lovely orange, much like my furrrrr~
-RUN mkdir -p /usr/share/icons && \
-      curl --retry 5 --retry-all-errors -LOsS https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
-      unzip -q catppuccin-mocha-peach-cursors.zip -d /usr/share/icons && \
-      rm catppuccin-mocha-peach-cursors.zip && \
-      ln -s /usr/share/icons/Catppuccin-Mocha-Peach-Cursors /usr/share/icons/default
+RUN systemctl enable brew-setup.service
 
-# Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
-RUN mkdir -p "/usr/share/fonts/Maple Mono" && \
-    curl --retry 5 --retry-all-errors -fSsLo "/tmp/maple.zip" "$(curl -s https://api.github.com/repos/subframe7536/maple-font/releases/latest | jq -r -c '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url')" && \
-    unzip -q "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
+##############################################################################################################################################################################
+# Section 7 - Systemd n Services | Hope is just like every other kind of work you do on your body, it's cyclical, and needs to be refreshed every day -Harpy #################
+##############################################################################################################################################################################
 
-# Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
-RUN echo -e '[preferred] \n\
-default=kde;gtk;gnome; \n\
-org.freedesktop.impl.portal.ScreenCast=gnome;kde;gtk; \n\
-org.freedesktop.impl.portal.Access=kde;gtk;gnome; \n\
-org.freedesktop.impl.portal.Notification=kde;gtk;gnome; \n\
-org.freedesktop.impl.portal.Secret=gnome-keyring' > /usr/share/xdg-desktop-portal/niri-portals.conf
-
-# Use Chezmoi to set up config files, visual assets, avatars, and wallpapers
-RUN rm -rf /usr/share/xeniaos/zdots/ && \
-      git clone --depth=1 https://github.com/XeniaMeraki/XeniaOS-HRT /usr/share/xeniaos/zdots/
-
-RUN rm -rf /usr/share/xeniaos/wallpapers/ && \
-      git clone --depth=1 https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
-
-#Starship setup
-RUN echo -e 'eval "$(starship init bash)"' >> /etc/bash.bashrc
+# Systemd flatpak preinstall service, thanks Aurora
+RUN echo -e '[Unit]\n\
+Description=Preinstall Flatpaks\n\
+After=network-online.target\n\
+Wants=network-online.target\n\
+ConditionPathExists=/usr/bin/flatpak\n\
+Documentation=man:flatpak-preinstall(1)\n\
+\n\
+[Service]\n\
+Type=oneshot\n\
+ExecStart=/usr/bin/flatpak preinstall -y\n\
+RemainAfterExit=true\n\
+Restart=on-failure\n\
+RestartSec=30\n\
+\n\
+StartLimitIntervalSec=600\n\
+StartLimitBurst=3\n\
+\n\
+[Install]\n\
+WantedBy=multi-user.target' > /usr/lib/systemd/system/flatpak-preinstall.service
 
 # DMS Service Systemd Service
 RUN echo -e '[Unit]\n\
@@ -432,11 +438,14 @@ RestartSec=1\n\
 [Install]\n\
 WantedBy=graphical-session.target' > /usr/lib/systemd/user/dms.service
 
-# Starts with Niri Session - Services for User Interaction
-RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=udiskie.service/" "/usr/lib/systemd/user/niri.service"
-RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=plasma-xdg-desktop-portal-kde.service/" "/usr/lib/systemd/user/niri.service"
-RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=dms.service/" "/usr/lib/systemd/user/niri.service"
-RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=cliphist.service/" "/usr/lib/systemd/user/niri.service"
+RUN echo -e '[Unit]\n\
+Description=udiskie automounter\n\
+\n\
+[Service]\n\
+ExecStart=/usr/bin/udiskie\n\
+\n\
+[Install]\n\
+WantedBy=default.target' > /usr/lib/systemd/user/udiskie.service
 
 RUN echo -e '[Unit]\n\
 Description=Initializes Chezmoi if directory is missing\n\
@@ -451,15 +460,6 @@ Type=oneshot\n\
 [Install]\n\
 WantedBy=default.target' >> /usr/lib/systemd/user/chezmoi-init.service
 
-RUN echo -e "[Unit]\n\
-Description=Chezmoi Update\n\
-\n\
-[Service]\n\
-ExecStart=mkdir -p %h/.config/xeniaos/chezmoi\n\
-ExecStart=touch %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
-ExecStart=sh -c 'yes s | chezmoi apply --no-tty --keep-going -S /usr/share/xeniaos/zdots --verbose --config %h/.config/xeniaos/chezmoi/chezmoi.toml'\n\
-Type=oneshot\n" >> /usr/lib/systemd/user/chezmoi-update.service
-
 RUN echo -e '[Unit]\n\
 Description=Timer for Chezmoi Update\n\
 # This service will only execute for a user with an existing chezmoi directory\n\
@@ -472,12 +472,98 @@ OnUnitInactiveSec=1d\n\
 [Install]\n\
 WantedBy=timers.target' >> /usr/lib/systemd/user/chezmoi-update.timer
 
-# ReGreet login shell setup
-RUN systemctl enable greetd
+RUN echo -e "[Unit]\n\
+Description=Chezmoi Update\n\
+\n\
+[Service]\n\
+ExecStart=mkdir -p %h/.config/xeniaos/chezmoi\n\
+ExecStart=touch %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
+ExecStart=sh -c 'yes s | chezmoi apply --no-tty --keep-going -S /usr/share/xeniaos/zdots --verbose --config %h/.config/xeniaos/chezmoi/chezmoi.toml'\n\
+Type=oneshot" >> /usr/lib/systemd/user/chezmoi-update.service
 
+# This fixes a user/groups error with rebasing from other problematic images.
+# FIXME Do NOT remove until fixed upstream or fixed universally. Updating with new fix also fine. Script created by Tulip.
+RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
+
+RUN echo -e '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | awk "NF" | awk '\''{print $2}'\'' | grep -v -e "wheel" -e "root" -e "sudo" | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
+RUN chmod +x /usr/libexec/xeniaos-group-fix
+RUN echo -e '[Unit]\n\
+Description=Fix groups\n\
+Wants=local-fs.target\n\
+After=local-fs.target\n\
+[Service]\n\
+Type=oneshot\n\
+ExecStart=/usr/libexec/xeniaos-group-fix /etc/group\n\
+ExecStart=/usr/libexec/xeniaos-group-fix /etc/gshadow\n\
+ExecStart=systemd-sysusers\n\
+[Install]\n\
+WantedBy=default.target multi-user.target' > /usr/lib/systemd/system/xeniaos-group-fix.service
+
+RUN echo -e "enable xeniaos-group-fix.service" > /usr/lib/systemd/system-preset/01-xeniaos-group-fix.preset
+
+# System services (Machine Boot level)
+RUN systemctl enable polkit.service \
+    NetworkManager.service \
+    tuned.service \
+    tuned-ppd.service \
+    firewalld.service \
+    greetd.service \
+    flatpak-preinstall.service \
+    xeniaos-group-fix.service \
+    uupd.timer
+
+# User services (Niri/user session level)
+RUN systemctl --global enable \
+    niri.service \
+    dms.service \
+    udiskie.service \
+    chezmoi-init.service \
+    chezmoi-update.service \
+    chezmoi-update.timer
+
+########################################################################################################################################
+# Section 8 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
+########################################################################################################################################
+
+# Activate NTSync, wags my tail in your general direction
+RUN echo -e 'ntsync' > /etc/modules-load.d/ntsync.conf
+
+# CachyOS bbr3 Config Option
+RUN echo -e 'net.core.default_qdisc=fq \n\
+net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
+
+########################################################################################################################################
+# Section 9 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
+########################################################################################################################################
+
+# Catppuccin style cursor, in a lovely orange, much like my furrrrr~
+RUN mkdir -p /usr/share/icons && \
+    curl -fsSLO https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
+    unzip -q catppuccin-mocha-peach-cursors.zip -d /usr/share/icons && \
+    rm catppuccin-mocha-peach-cursors.zip && \
+    rm -rf /usr/share/icons/default && \
+    ln -s /usr/share/icons/Catppuccin-Mocha-Peach-Cursors /usr/share/icons/default
+
+# Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
+RUN mkdir -p "/usr/share/fonts/Maple Mono" && \
+    curl --retry 5 --retry-all-errors -fSsLo "/tmp/maple.zip" "$(curl -s https://api.github.com/repos/subframe7536/maple-font/releases/latest | jq -r -c '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url')" && \
+    unzip -q "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono" && \
+    fc-cache -f
+
+# Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
+RUN echo -e '[preferred] \n\
+default=kde;gtk;gnome; \n\
+org.freedesktop.impl.portal.ScreenCast=gnome;kde;gtk; \n\
+org.freedesktop.impl.portal.Access=kde;gtk;gnome; \n\
+org.freedesktop.impl.portal.Notification=kde;gtk;gnome' > /usr/share/xdg-desktop-portal/niri-portals.conf
+
+#Starship setup
+RUN echo -e 'eval "$(starship init bash)"' >> /etc/bash.bashrc
+
+# ReGreet login shell setup
 RUN mkdir -p /etc/greetd/
 
-RUN echo -e 'spawn-sh-at-startup "regreet; niri msg action quit --skip-confirmation"\n\
+RUN echo -e 'spawn-sh-at-startup "regreet >/dev/null 2>&1; niri msg action quit --skip-confirmation"\n\
 hotkey-overlay {\n\
     skip-at-startup\n\
 }\n\
@@ -489,13 +575,13 @@ RUN echo -e '[terminal]\n\
 vt = 1\n\
 \n\
 [default_session]\n\
-command = "niri --config /etc/greetd/niri.kdl"\n\
+command = "/usr/bin/dbus-run-session /usr/bin/niri --config /etc/greetd/niri.kdl >/dev/null 2>&1"\n\
 user = "greeter"' > /etc/greetd/config.toml
 
 RUN echo -e '[background]\n\
 path = "/usr/share/xeniaos/wallpapers/3_hypno_chimmie_firefly_videorelaxant6025.png"\n\
 \n\
-fit = "fill"\n\
+fit = "Fill"\n\
 [GTK]\n\
 application_prefer_dark_theme = true\n\
 \n\
@@ -514,6 +600,7 @@ reboot = ["systemctl", "reboot"]\n\
 poweroff = ["systemctl", "poweroff"]\n\
 [appearance]\n\
 greeting_msg = "Welcome to the fox den!~"\n\
+\n\
 [widget.clock]\n\
 format = "%a %H:%M"\n\
 \n\
@@ -521,22 +608,14 @@ resolution = "500ms"\n\
 \n\
 label_width = 150' > /etc/greetd/regreet.toml
 
-RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
-
-RUN systemctl enable --global dms.service
-
 ########################################################################################################################################
-# Section 8 - Final Bootc Setup. The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #######################
+# Section 10 - Final Bootc Setup | The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew ######################
 ########################################################################################################################################
 
 # Add 3rd party bootc package repo via Hecknt FIXME Eventually remove this with Arch/Chaotic AUR proper host | https://github.com/hecknt/arch-bootc-pkgs
 RUN pacman-key --recv-key 5DE6BF3EBC86402E7A5C5D241FA48C960F9604CB --keyserver keyserver.ubuntu.com
 RUN pacman-key --lsign-key 5DE6BF3EBC86402E7A5C5D241FA48C960F9604CB
 RUN echo -e '[bootc]\nSigLevel = Required\nServer=https://github.com/hecknt/arch-bootc-pkgs/releases/download/$repo' >> /etc/pacman.conf
-
-# Groups fix | Truncated down by Hecknt
-RUN echo -e "[Install]\nWantedBy=sysinit.target" | tee -a /usr/lib/systemd/system/systemd-sysusers.service && \
-      systemctl enable systemd-sysusers.service
 
 RUN pacman -Sy --noconfirm
 
@@ -547,21 +626,20 @@ RUN printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/
       sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
       dracut --force --no-hostonly --reproducible --zstd --verbose --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
 
-RUN pacman -S --clean --noconfirm
+RUN rm -rf /home/build/.cache/* && \
+    rm -rf \
+        /tmp/* \
+        /var/cache/pacman/pkg/* && \
+    pacman -Rns --noconfirm paru-bin git base-devel make
 
 # Necessary for general behavior expected by image-based systems
 RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
     rm -rf /boot /home /root /usr/local /srv /var /usr/lib/sysimage/log /usr/lib/sysimage/cache/pacman/pkg && \
-    mkdir -p /var /sysroot /boot /usr/lib/ostree /var && \
-    ln -s var/opt /opt && \
-    ln -s var/roothome /root && \
-    ln -s var/home /home && \
-    ln -s sysroot/ostree /ostree && \
-    ln -s var/srv /srv && \
-    echo -e "$(for dir in opt usrlocal home srv mnt ; do echo -e "d /var/$dir 0755 root root -" ; done)" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
-    echo -e "d /var/roothome 0700 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
-    echo -e "d /run/media 0755 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
-    echo -e "[composefs]\nenabled = yes\n[sysroot]\nreadonly = true" | tee "/usr/lib/ostree/prepare-root.conf"
+    mkdir -p /sysroot /boot /usr/lib/ostree /var && \
+    ln -s sysroot/ostree /ostree && ln -s var/roothome /root && ln -s var/srv /srv && ln -s var/opt /opt && ln -s var/mnt /mnt && ln -s var/home /home && \
+    echo "$(for dir in opt home srv mnt usrlocal ; do echo "d /var/$dir 0755 root root -" ; done)" | tee -a "/usr/lib/tmpfiles.d/bootc-base-dirs.conf" && \
+    printf "d /var/roothome 0700 root root -\nd /run/media 0755 root root -" | tee -a "/usr/lib/tmpfiles.d/bootc-base-dirs.conf" && \
+    printf '[composefs]\nenabled = yes\n[sysroot]\nreadonly = true\n' | tee "/usr/lib/ostree/prepare-root.conf"
 
 RUN bootc container lint
 
