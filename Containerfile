@@ -284,7 +284,14 @@ Defaults timestamp_timeout=0' > /etc/sudoers.d/xenias-sudo-quiver && \
     chmod 440 /etc/sudoers.d/xenias-sudo-quiver
 
 # Symlink sudo-rs to sudo, rust-made memory safe~ https://github.com/trifectatechfoundation/sudo-rs#differences-from-original-sudo
-RUN ln -s /usr/bin/su-rs /usr/bin/su && ln -s usr/bin/sudo-rs /usr/bin/sudo
+RUN ln -sf /usr/bin/su-rs /usr/bin/su && \
+    ln -sf /usr/bin/sudo-rs /usr/bin/sudo
+
+RUN echo -e '#%PAM-1.0\n\
+auth      include   system-auth\n\
+account   include   system-auth\n\
+password  include   system-auth\n\
+session   include   system-auth' > /etc/pam.d/sudo-rs
 
 # Set up zram, this will help users not run out of memory. Fox will fix!
 RUN echo -e '[zram0]\nzram-size = min(ram, 8192)' >> /usr/lib/systemd/zram-generator.conf
