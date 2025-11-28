@@ -274,7 +274,7 @@ RUN mkdir -p /etc/plymouth && \
 
 # All kindsa Sudo changes for ease and flavor
 RUN echo -e '%wheel ALL=(ALL:ALL) ALL\n\
-%sudo  ALL=(ALL:ALL) ALL\n\
+%sudo ALL=(ALL:ALL) ALL\n\
 \n\
 Defaults insults,pwfeedback\n\
 Defaults secure_path=\"/usr/local/bin:/usr/bin:/bin:/home/linuxbrew/.linuxbrew/bin\"\n\
@@ -364,7 +364,7 @@ RUN echo -e "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility
 # To turn off, run sudo ln -s /dev/null /etc/media-automount.d/_all.conf
 RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator && \
     cd /tmp/media-automount-generator && \
-    DESTDIR=/usr/local ./install_udev.sh && \
+    ./install_udev.sh && \
     rm -rf /tmp/media-automount-generator
 
 ########################################################################################################################################
