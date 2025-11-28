@@ -120,22 +120,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push To GHCR (with retry)
-        uses: Wandalen/wretry.action@e68c23e6309f2871ca8ae4763e7629b9c258e1ea
-        with:
-          attempt_limit: 5
-          attempt_delay: 10000
-          action: |
-            {
-              "uses": "redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c",
-              "with": {
-                "registry": "${{ env.IMAGE_REGISTRY }}",
-                "image": "${{ env.IMAGE_NAME }}",
-                "tags": "${{ steps.metadata.outputs.tags }}",
-                "username": "${{ github.actor }}",
-                "password": "${{ github.token }}"
-              }
-            }
+      - name: Push To GHCR
+        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        run: |
+          for i in {1..5}; do
+            echo "Attempt $i to push..."
+            npx @redhat-actions/push-to-registry \
+              --registry "${{ env.IMAGE_REGISTRY }}" \
+              --image "${{ env.IMAGE_NAME }}" \
+              --tags "${{ steps.metadata.outputs.tags }}" \
+              --username "${{ github.actor }}" \
+              --password "${{ github.token }}" && break
+
+            echo "Push failed. Retrying in 10s..."
+            sleep 10
+          done
+
+          if [ "$i" -eq 5 ]; then
+            echo "Push failed after 5 attempts"
+            exit 1
+          fi
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159 # v3.9.2
