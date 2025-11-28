@@ -12,13 +12,13 @@
 #      [[]]11111111111111111]                                   
 #     ][[[]]][11111111111111111<                                 XeniaOS
 #     ][[[[[]]]]]]]]]]]]]]-111111[                  Xenia Meraki the transfem package fox
-#     ]-[[[[[[;]]]]]]]]]]]]]]]]   1                         @tulilirockz @hecknt
+#     ]-[[[[[[;]]]]]]]]]]]]]]]]   1                    Programmers @tulilirockz @hecknt
 #     ]][[[[[[[[[[[]]]]]]]]]]]]]                Artists Jasper Valery | Delphic Melody | Chimmie Firefly
 #     1]][[[[[[[[[[[[[[<]]]]]]]]]                            videorelaxant6025
 #      11]]][[[[[[[[[[[[[[[]]]]]]]                         
 #       111]]]]'[[[[[[[[[[[[[[]]]]
 #         111-]]]]][[[[[[[[[[[[[]]  Software that makes this OS possible - Distros/software for inspiration and whose members helped in some way
-#           11111]]]]]_[[[[[[[[[[]                   Arch | Bootc | Aurora | Bazzite | Ublue | Zirconium | Bluefin
+#           11111]]]]]_[[[[[[[[[[]                   Arch | Bootc | Aurora | Bazzite | Bluebuild | Zirconium | Bluefin
 #               11111]]]i[[[[[[[[                          Docker | Podman | Fedora | Proton | Wine | Ubuntu
 #                  1111]]+[[[[[[^                                @kylegospo @valerie-tar-gz @cyrv6737
 #                    11 ]][[[[[[
@@ -108,7 +108,7 @@ RUN pacman -S --noconfirm cups cups-browsed hplip
 # Desktop Environment needs
 RUN pacman -S --noconfirm greetd xwayland-satellite xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
       ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
-      breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio glycin greetd-regreet
+      breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio glycin greetd-regreet gnome-themes-extra
 
 # User frontend programs/apps
 RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility mangohud lib32-mangohud
@@ -127,7 +127,7 @@ RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-util
 # Flatpaks
 # Bazaar | Krita | Elisa | Pinta | OBS | Ark | Cave Story | Faugus Launcher | ProtonUp-QT | Kdenlive |
 # Okular | Kate | Warehouse | Fedora Media Writer | Gear Lever | Haruna | Space Cadet Pinball | Gwenview
-# Audacity | Filelight | Not Tetris 2 | Floorp
+# Audacity | Not Tetris 2 | Floorp
 
 ##############################################################################################################################################
 # Section 3 - Chaotic AUR / AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
@@ -146,9 +146,10 @@ RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/
 RUN pacman -Sy --noconfirm
 
 RUN pacman -S --noconfirm \
-      chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
-      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
-      chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git
+    chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
+    chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
+    chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/adwaita-qt5-git \
+    chaotic-aur/adwaita-qt6-git
 
 # Regular AUR Build Section
 # Create build user
@@ -168,7 +169,7 @@ RUN --mount=type=tmpfs,dst=/tmp \
 
 # AUR packages
 RUN paru -S --noconfirm \
-        aur/uupd
+        aur/uupd aur/gnome-themes-extra-gtk2
 
 USER root
 WORKDIR /
@@ -190,16 +191,16 @@ RUN userdel -r build && \
 
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
 
-# Bazaar
+# Bazaar | Get most of your software here, flatpaks that are easy to install and use~
 RUN echo -e "[Flatpak Preinstall io.github.kolunmi.Bazaar]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Bazaar.preinstall
 
-# Krita
+# Krita | Image editing + arting!
 RUN echo -e "[Flatpak Preinstall org.kde.krita]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Krita.preinstall
 
-# Elisa
+# Elisa | Music player~
 RUN echo -e "[Flatpak Preinstall org.kde.elisa]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Elisa.preinstall
 
-# Pinta | Image editing! They set out a bit to match paint.net/paintdotnet
+# Pinta | Image editing! They set out a bit to match paint.net/paintdotnet, it does okay at that.
 RUN echo -e "[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Pinta.preinstall
 
 # OBS | Video recording/streaming!
@@ -211,10 +212,10 @@ RUN echo -e "[Flatpak Preinstall com.obsproject.Studio.Plugin.OBSVkCapture]\nBra
 # Ark | For unzipping files and file compression! (Imagine a fox whose face you may squish...)
 RUN echo -e "[Flatpak Preinstall org.kde.ark]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Ark.preinstall
 
-# Cave Story, a free, public domain platformer! It"s historically important to videogames and platformers as a genre.
+# Cave Story, a free, public domain platformer! It's historically important to videogames and platformers as a genre.
 RUN echo -e "[Flatpak Preinstall com.gitlab.coringao.cavestory-nx]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/CaveStory.preinstall
 
-# Faugus Launcher | This is fantastic for using windows software on linux, exes and whatnot
+# Faugus Launcher | This is fantastic for using windows software on linux, throwing exes at it and whatnot
 RUN echo -e "[Flatpak Preinstall io.github.faugus.faugus-launcher]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/FaugusLauncher.preinstall
 
 # ProtonUp-Qt | For installing different versions of proton! Emulation for windows games via Steam/Valve's work
@@ -249,9 +250,6 @@ RUN echo -e "[Flatpak Preinstall org.kde.gwenview]\nBranch=stable\nIsRuntime=fal
 
 # Audacity | Edit audio! We love Audacity~ Wonderful software.
 RUN echo -e "[Flatpak Preinstall org.audacityteam.Audacity]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Audacity.preinstall
-
-# Filelight | Check what's taking up space on your drives~
-RUN echo -e "[Flatpak Preinstall org.kde.filelight]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Filelight.preinstall
 
 # Not Tetris 2 | DEFINITELY not Tetris... 2!!!
 RUN echo -e "[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/NotTetris2.preinstall
@@ -359,9 +357,13 @@ application/x-tar=org.kde.ark.desktop\n\
 # ENV default exports, QT theming 
 # Load shared objects immediately for better first time latency
 # Apply OBS_VK to all vulkan instances for better OBS game capture, some other windows may come along for the ride
+# Auto dark mode everywhere
 ENV QT_QPA_PLATFORMTHEME=qt6ct
 ENV LD_BIND_NOW=1
 ENV OBS_VKCAPTURE=1
+ENV GTK_THEME=Colloid-Orange-Dark-Catppuccin
+ENV GTK2_RC_FILES=/usr/share/themes/Colloid-Orange-Dark-Catppuccin/gtk-2.0/gtkrc
+ENV QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin
 
 # Set vm.max_map_count for stability/improved gaming performance
 # https://wiki.archlinux.org/title/Gaming#Increase_vm.max_map_count
