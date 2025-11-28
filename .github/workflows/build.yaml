@@ -125,7 +125,7 @@ jobs:
         run: |
           for i in {1..5}; do
             echo "Attempt $i to push..."
-            npx @redhat-actions/push-to-registry \
+            npx @redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c #v2 \
               --registry "${{ env.IMAGE_REGISTRY }}" \
               --image "${{ env.IMAGE_NAME }}" \
               --tags "${{ steps.metadata.outputs.tags }}" \
