@@ -283,6 +283,9 @@ Defaults timestamp_type=tty\n\
 Defaults timestamp_timeout=0' > /etc/sudoers.d/xenias-sudo-quiver && \
     chmod 440 /etc/sudoers.d/xenias-sudo-quiver
 
+# Symlink sudo-rs to sudo, rust-made memory safe~ https://github.com/trifectatechfoundation/sudo-rs#differences-from-original-sudo
+RUN ln -s /usr/bin/su-rs /usr/bin/su && ln -s usr/bin/sudo-rs /usr/bin/sudo
+
 # Set up zram, this will help users not run out of memory. Fox will fix!
 RUN echo -e '[zram0]\nzram-size = min(ram, 8192)' >> /usr/lib/systemd/zram-generator.conf
 RUN echo -e 'enable systemd-resolved.service' >> usr/lib/systemd/system-preset/91-resolved-default.preset
@@ -306,9 +309,6 @@ RUN ln -s ./vim /usr/bin/vi
 # Just to avoid confusion on admin side/make things aesthetic across the board
 RUN ln -s /usr/bin/hyfetch /usr/bin/neofetch && \
     echo -e 'alias fastfetch="hyfetch"' > /etc/profile.d/aliases.sh
-
-# Symlink sudo-rs to sudo, memory safe https://github.com/trifectatechfoundation/sudo-rs#differences-from-original-sudo
-RUN ln -s su-rs /usr/bin/su && ln -s sudo-rs /usr/bin/sudo
 
 # Symlink GTK to Libadwaita
 RUN mkdir -p /usr/share/gtk-4.0
