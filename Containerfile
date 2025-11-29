@@ -93,7 +93,7 @@ RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa 
 
 # Network / VPN / SMB / storage
 RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld udiskie \
-      udisks2
+      udisks2 iwd
 
 # Accessibility
 RUN pacman -S --noconfirm espeak-ng orca
@@ -369,12 +369,8 @@ ENV QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin
 # https://wiki.archlinux.org/title/Gaming#Increase_vm.max_map_count
 RUN echo -e "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility.conf
 
-# Automount ext4/btrfs drives, feel free to mount your own in fstab if you understand how to do so
-# To turn off, run sudo ln -s /dev/null /etc/media-automount.d/_all.conf
-RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator && \
-    cd /tmp/media-automount-generator && \
-    ./install_udev.sh && \
-    rm -rf /tmp/media-automount-generator
+# iwd / Wifi backend setup for networkmanager / Expanded support for more wifi devices
+RUN echo -e '[device]\nwifi.backend=iwd' > /etc/NetworkManager/conf.d/wifi_backend.conf
 
 ########################################################################################################################################
 # Section 6 - Set up brew | terminal packages manager utility | https://brew.sh/ | Foxy witch will mix up a brew for you! ##############
