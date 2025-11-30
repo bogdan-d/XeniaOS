@@ -81,7 +81,7 @@ RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emo
       ttf-ibm-plex ttf-jetbrains-mono-nerd otf-font-awesome ttf-jetbrains-mono wqy-microhei
 
 # CLI Utilities
-RUN pacman -S --noconfirm sudo sudo-rs bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
+RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
       tree usbutils vim wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch curl patchelf
 
 # Virtualization \ Containerization
@@ -272,24 +272,13 @@ RUN mkdir -p /etc/plymouth && \
 
 # All kindsa Sudo changes for ease and flavor
 RUN echo -e '%wheel ALL=(ALL:ALL) ALL\n\
-%sudo ALL=(ALL:ALL) ALL\n\
 \n\
-Defaults insults,pwfeedback\n\
-Defaults secure_path=\"/usr/local/bin:/usr/bin:/bin:/home/linuxbrew/.linuxbrew/bin\"\n\
-Defaults env_keep += \"EDITOR VISUAL PATH\"\n\
-Defaults timestamp_type=tty\n\
+Defaults insults\n\
+Defaults pwfeedback\n\
+Defaults secure_path="/usr/local/bin:/usr/bin:/bin:/home/linuxbrew/.linuxbrew/bin"\n\
+Defaults env_keep += "EDITOR VISUAL PATH"\n\
 Defaults timestamp_timeout=0' > /etc/sudoers.d/xenias-sudo-quiver && \
     chmod 440 /etc/sudoers.d/xenias-sudo-quiver
-
-# Symlink sudo-rs to sudo, rust-made memory safe~ https://github.com/trifectatechfoundation/sudo-rs#differences-from-original-sudo
-RUN ln -sf /usr/bin/su-rs /usr/bin/su && \
-    ln -sf /usr/bin/sudo-rs /usr/bin/sudo
-
-RUN echo -e '#%PAM-1.0\n\
-auth      include   system-auth\n\
-account   include   system-auth\n\
-password  include   system-auth\n\
-session   include   system-auth' > /etc/pam.d/sudo-rs
 
 # Set up zram, this will help users not run out of memory. Fox will fix!
 RUN echo -e '[zram0]\nzram-size = min(ram, 8192)' >> /usr/lib/systemd/zram-generator.conf
