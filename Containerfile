@@ -82,7 +82,7 @@ RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emo
 
 # CLI Utilities
 RUN pacman -S --noconfirm sudo sudo-rs bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
-      tree usbutils vim wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch curl patchelf base-devel
+      tree usbutils vim wl-clipboard unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch curl patchelf
 
 # Virtualization \ Containerization
 RUN pacman -S --noconfirm distrobox docker podman
@@ -149,7 +149,7 @@ RUN pacman -S --noconfirm \
     chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
     chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
     chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/adwaita-qt5-git \
-    chaotic-aur/adwaita-qt6-git
+    chaotic-aur/adwaita-qt6-git chaotic-aur/paru
 
 # Regular AUR Build Section
 # Create build user
@@ -160,12 +160,6 @@ RUN useradd -m --shell=/bin/bash build && usermod -L build && \
 # Install AUR packages
 USER build
 WORKDIR /home/build
-RUN --mount=type=tmpfs,dst=/tmp \
-    git clone https://aur.archlinux.org/paru-bin.git --single-branch /tmp/paru && \
-    cd /tmp/paru && \
-    makepkg -si --noconfirm && \
-    cd .. && \
-    rm -drf paru-bin
 
 # AUR packages
 RUN paru -S --noconfirm \
@@ -628,9 +622,7 @@ RUN pacman-key --recv-key 5DE6BF3EBC86402E7A5C5D241FA48C960F9604CB --keyserver k
 RUN pacman-key --lsign-key 5DE6BF3EBC86402E7A5C5D241FA48C960F9604CB
 RUN echo -e '[bootc]\nSigLevel = Required\nServer=https://github.com/hecknt/arch-bootc-pkgs/releases/download/$repo' >> /etc/pacman.conf
 
-RUN pacman -Sy --noconfirm
-
-RUN pacman -S --noconfirm bootc/bootc bootc/bootupd bootc/bcvk
+RUN pacman -Sy --noconfirm bootc/bootc
 
 RUN printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/lib/systemd/system\n" | tee /usr/lib/dracut/dracut.conf.d/30-bootcrew-fix-bootc-module.conf && \
       printf 'hostonly=no\nadd_dracutmodules+=" ostree bootc "' | tee /usr/lib/dracut/dracut.conf.d/30-bootcrew-bootc-modules.conf && \
@@ -641,7 +633,7 @@ RUN rm -rf /home/build/.cache/* && \
     rm -rf \
         /tmp/* \
         /var/cache/pacman/pkg/* && \
-    pacman -Rns --noconfirm paru-bin git base-devel make
+    pacman -Rns --noconfirm git make
 
 # Necessary for general behavior expected by image-based systems
 RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
