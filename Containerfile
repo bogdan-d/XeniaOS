@@ -149,7 +149,7 @@ RUN pacman -S --noconfirm \
     chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
     chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
     chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/adwaita-qt5-git \
-    chaotic-aur/adwaita-qt6-git chaotic-aur/bootc
+    chaotic-aur/adwaita-qt6-git chaotic-aur/bootc chaotic-aur/obs-studio-stable chaotic-aur/obs-vkcapture-git
 
 # Regular AUR Build Section
 # Create build user
@@ -202,12 +202,6 @@ RUN echo -e "[Flatpak Preinstall org.kde.elisa]\nBranch=stable\nIsRuntime=false"
 
 # Pinta | Image editing! They set out a bit to match paint.net/paintdotnet, it does okay at that.
 RUN echo -e "[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Pinta.preinstall
-
-# OBS | Video recording/streaming!
-RUN echo -e "[Flatpak Preinstall com.obsproject.Studio]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/OBS.preinstall
-
-# OBSVKCapture | Games capture in OBS scenes on linux!
-RUN echo -e "[Flatpak Preinstall com.obsproject.Studio.Plugin.OBSVkCapture]\nBranch=stable\nIsRuntime=true" > /usr/share/flatpak/preinstall.d/OBSVKCapture.preinstall
 
 # Ark | For unzipping files and file compression! (Imagine a fox whose face you may squish...)
 RUN echo -e "[Flatpak Preinstall org.kde.ark]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Ark.preinstall
