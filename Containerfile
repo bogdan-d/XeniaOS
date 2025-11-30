@@ -111,7 +111,7 @@ RUN pacman -S --noconfirm greetd xwayland-satellite xdg-desktop-portal-kde xdg-d
       breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio glycin greetd-regreet gnome-themes-extra
 
 # User frontend programs/apps
-RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility mangohud lib32-mangohud
+RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility mangohud lib32-mangohud electron
 
 #######################################################################################################################################################
 # Section 2 - Package List | For my info and yours too! No secrets here. | Enjoy your life, and love everyone around you as much as possible ########
@@ -347,6 +347,7 @@ ENV OBS_VKCAPTURE=1
 ENV GTK_THEME=Colloid-Orange-Dark-Catppuccin
 ENV GTK2_RC_FILES=/usr/share/themes/Colloid-Orange-Dark-Catppuccin/gtk-2.0/gtkrc
 ENV QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin
+ENV XDG_MENU_PREFIX,arch-
 
 # Set vm.max_map_count for stability/improved gaming performance
 # https://wiki.archlinux.org/title/Gaming#Increase_vm.max_map_count
