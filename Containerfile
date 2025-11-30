@@ -149,7 +149,7 @@ RUN pacman -S --noconfirm \
     chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
     chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
     chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/adwaita-qt5-git \
-    chaotic-aur/adwaita-qt6-git chaotic-aur/paru
+    chaotic-aur/adwaita-qt6-git
 
 # Regular AUR Build Section
 # Create build user
@@ -160,6 +160,12 @@ RUN useradd -m --shell=/bin/bash build && usermod -L build && \
 # Install AUR packages
 USER build
 WORKDIR /home/build
+RUN --mount=type=tmpfs,dst=/tmp \
+    git clone https://aur.archlinux.org/paru-bin.git --single-branch /tmp/paru && \
+    cd /tmp/paru && \
+    makepkg -si --noconfirm && \
+    cd .. && \
+    rm -drf paru-bin
 
 # AUR packages
 RUN paru -S --noconfirm \
@@ -525,7 +531,8 @@ RUN systemctl --global enable \
     udiskie.service \
     chezmoi-init.service \
     chezmoi-update.service \
-    chezmoi-update.timer
+    chezmoi-update.timer \
+    opentabletdriver.service
 
 ########################################################################################################################################
 # Section 8 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
@@ -633,7 +640,7 @@ RUN rm -rf /home/build/.cache/* && \
     rm -rf \
         /tmp/* \
         /var/cache/pacman/pkg/* && \
-    pacman -Rns --noconfirm git make
+    pacman -Rns --noconfirm git make paru-bin
 
 # Necessary for general behavior expected by image-based systems
 RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
