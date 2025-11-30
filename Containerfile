@@ -347,7 +347,9 @@ ENV OBS_VKCAPTURE=1
 ENV GTK_THEME=Colloid-Orange-Dark-Catppuccin
 ENV GTK2_RC_FILES=/usr/share/themes/Colloid-Orange-Dark-Catppuccin/gtk-2.0/gtkrc
 ENV QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin
-ENV XDG_MENU_PREFIX,arch-
+ENV XDG_MENU_PREFIX=arch-
+ENV XDG_MENU_PREFIX=plasma-
+RUN kbuildsycoca6
 
 # Set vm.max_map_count for stability/improved gaming performance
 # https://wiki.archlinux.org/title/Gaming#Increase_vm.max_map_count
