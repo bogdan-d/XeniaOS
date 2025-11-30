@@ -296,7 +296,7 @@ RUN ln -s ./vim /usr/bin/vi
 # Redirect neofetch & fastfetch -> hyfetch | Feel free to undo this as a user 
 # Just to avoid confusion on admin side/make things aesthetic across the board
 RUN ln -s /usr/bin/hyfetch /usr/bin/neofetch && \
-    echo -e 'alias fastfetch="hyfetch"' > /etc/profile.d/aliases.sh
+    echo -e 'alias fastfetch=hyfetch' > /etc/profile.d/aliases.sh
 
 # Symlink GTK to Libadwaita
 RUN mkdir -p /usr/share/gtk-4.0
@@ -418,20 +418,6 @@ StartLimitBurst=3\n\
 \n\
 [Install]\n\
 WantedBy=multi-user.target' > /usr/lib/systemd/system/flatpak-preinstall.service
-
-# DMS Service Systemd Service
-RUN echo -e '[Unit]\n\
-Description=Shell Service\n\
-PartOf=graphical-session.target\n\
-After=graphical-session.target\n\
-\n\
-[Service]\n\
-ExecStart=dms run\n\
-Restart=on-failure\n\
-RestartSec=1\n\
-\n\
-[Install]\n\
-WantedBy=graphical-session.target' > /usr/lib/systemd/user/dms.service
 
 RUN echo -e '[Unit]\n\
 Description=udiskie automounter\n\
