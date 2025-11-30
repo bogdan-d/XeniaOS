@@ -61,7 +61,7 @@ Target = *\n\
 Description = Cleaning up package cache...\n\
 Depends = coreutils\n\
 When = PostTransaction\n\
-Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" | tee /usr/share/libalpm/hooks/package-cleanup.hook
+Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" > /usr/share/libalpm/hooks/package-cleanup.hook
 
 # Initialize the database
 RUN pacman -Syu --noconfirm
