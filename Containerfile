@@ -372,6 +372,13 @@ RUN echo -e "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility
 # iwd / Wifi backend setup for networkmanager / Expanded support for more wifi devices
 RUN echo -e '[device]\nwifi.backend=iwd' > /etc/NetworkManager/conf.d/wifi_backend.conf
 
+# Automount ext4/btrfs drives, feel free to mount your own in fstab if you understand how to do so
+# To turn off, run sudo ln -s /dev/null /etc/media-automount.d/_all.conf
+RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tmp/media-automount-generator && \
+    cd /tmp/media-automount-generator && \
+    ./install.sh && \
+    rm -rf /tmp/media-automount-generator
+
 ########################################################################################################################################
 # Section 6 - Set up brew | terminal packages manager utility | https://brew.sh/ | Foxy witch will mix up a brew for you! ##############
 ########################################################################################################################################
@@ -552,8 +559,7 @@ RUN mkdir -p /usr/share/icons && \
 # Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
 RUN mkdir -p "/usr/share/fonts/Maple Mono" && \
     curl --retry 5 --retry-all-errors -fSsLo "/tmp/maple.zip" "$(curl -s https://api.github.com/repos/subframe7536/maple-font/releases/latest | jq -r -c '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url')" && \
-    unzip -q "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono" && \
-    fc-cache -f
+    unzip -q "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
 
 # Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
 RUN echo -e '[preferred] \n\
