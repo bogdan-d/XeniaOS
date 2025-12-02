@@ -14,7 +14,7 @@
 #     ][[[[[]]]]]]]]]]]]]]-111111[                  Xenia Meraki the transfem package fox
 #     ]-[[[[[[;]]]]]]]]]]]]]]]]   1                    Programmers @tulilirockz @hecknt
 #     ]][[[[[[[[[[[]]]]]]]]]]]]]                Artists Jasper Valery | Delphic Melody | Chimmie Firefly
-#     1]][[[[[[[[[[[[[[<]]]]]]]]]                            videorelaxant6025
+#     1]][[[[[[[[[[[[[[<]]]]]]]]]                           videorelaxant6025 | @b-
 #      11]]][[[[[[[[[[[[[[[]]]]]]]                         
 #       111]]]]'[[[[[[[[[[[[[[]]]]
 #         111-]]]]][[[[[[[[[[[[[]]  Software that makes this OS possible - Distros/software for inspiration and whose members helped in some way
@@ -94,7 +94,7 @@ RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa 
 
 # Network / VPN / SMB / storage
 RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld udiskie \
-      udisks2 iwd
+      udisks2
 
 # Accessibility
 RUN pacman -S --noconfirm espeak-ng orca
@@ -358,9 +358,6 @@ RUN kbuildsycoca6
 # Set vm.max_map_count for stability/improved gaming performance
 # https://wiki.archlinux.org/title/Gaming#Increase_vm.max_map_count
 RUN echo -e "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility.conf
-
-# iwd / Wifi backend setup for networkmanager / Expanded support for more wifi devices
-RUN echo -e '[device]\nwifi.backend=iwd' > /etc/NetworkManager/conf.d/wifi_backend.conf
 
 # Automount ext4/btrfs drives, feel free to mount your own in fstab if you understand how to do so
 # To turn off, run sudo ln -s /dev/null /etc/media-automount.d/_all.conf
