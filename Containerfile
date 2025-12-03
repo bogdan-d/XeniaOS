@@ -112,7 +112,7 @@ RUN pacman -S --noconfirm greetd xwayland-satellite xdg-desktop-portal-kde xdg-d
       breeze brightnessctl wlsunset ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio glycin greetd-regreet gnome-themes-extra
 
 # User frontend programs/apps
-RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility mangohud lib32-mangohud electron
+RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility mangohud lib32-mangohud electron flatpak
 
 #######################################################################################################################################################
 # Section 2 - Package List | For my info and yours too! No secrets here. | Enjoy your life, and love everyone around you as much as possible ########
@@ -147,7 +147,7 @@ RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/
 RUN pacman -Sy --noconfirm
 
 RUN pacman -S --noconfirm \
-    chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
+    chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/sc-controller \
     chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
     chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/adwaita-qt5-git \
     chaotic-aur/adwaita-qt6-git chaotic-aur/bootc chaotic-aur/obs-studio-stable chaotic-aur/obs-vkcapture-git
