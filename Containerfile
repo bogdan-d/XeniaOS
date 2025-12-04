@@ -507,7 +507,6 @@ RUN systemctl --global enable \
     chezmoi-update.service \
     chezmoi-update.timer \
     opentabletdriver.service \
-    wl-clip-persist.service \
     clipboard-sync.service \
 
 ########################################################################################################################################
