@@ -151,7 +151,7 @@ RUN pacman -S --noconfirm \
     chaotic-aur/niri-git chaotic-aur/flatpak-git chaotic-aur/obs-studio-stable chaotic-aur/obs-vkcapture-git \
     chaotic-aur/dms-shell-git chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
     chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/adwaita-qt5-git \
-    chaotic-aur/adwaita-qt6-git chaotic-aur/bootc chaotic-aur/clipboard-sync
+    chaotic-aur/adwaita-qt6-git chaotic-aur/bootc
 
 # Regular AUR Build Section
 # Create build user
@@ -506,8 +506,7 @@ RUN systemctl --global enable \
     chezmoi-init.service \
     chezmoi-update.service \
     chezmoi-update.timer \
-    opentabletdriver.service \
-    clipboard-sync.service
+    opentabletdriver.service
 
 ########################################################################################################################################
 # Section 8 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
