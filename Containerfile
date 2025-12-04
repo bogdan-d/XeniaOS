@@ -434,6 +434,15 @@ ExecStart=/usr/bin/udiskie\n\
 WantedBy=default.target' > /usr/lib/systemd/user/udiskie.service
 
 RUN echo -e '[Unit]\n\
+Description=Persistent wayland clipboard\n\
+\n\
+[Service]\n\
+ExecStart=/usr/bin/wl-clip-persist --clipboard regular\n\
+\n\
+[Install]\n\
+WantedBy=default.target' > /usr/lib/systemd/user/wl-clip-persist.service
+
+RUN echo -e '[Unit]\n\
 Description=Initializes Chezmoi if directory is missing\n\
 ConditionPathExists=!%h/.config/xeniaos/chezmoi\n\
 \n\
