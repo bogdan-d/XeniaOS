@@ -507,7 +507,7 @@ RUN systemctl --global enable \
     chezmoi-update.service \
     chezmoi-update.timer \
     opentabletdriver.service \
-    clipboard-sync.service \
+    clipboard-sync.service
 
 ########################################################################################################################################
 # Section 8 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
