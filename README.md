@@ -7,17 +7,15 @@
 
 <p align="center">
     <picture>
-<img alt="XeniaOS logo" src="https://github.com/XeniaMeraki/XeniaOS-G-Euphoria/blob/main/xeniaos_text_logo_delphic_melody.svg"width="700">
+<img alt="XeniaOS logo" src="https://github.com/delphicmelody/vector-art/blob/main/logos/xeniaos/text/smoke/xeniaos-text-smoke.svg"width="700">
     </picture>
 </p>
 
 <div align="center">
 
-[![XeniaMeraki - XeniaOS](https://img.shields.io/static/v1?label=XeniaMeraki&message=XeniaOS&color=orange&logo=github)](https://github.com/XeniaMeraki/XeniaOS "Go to GitHub repo")
 [![TransRights]][transrights_url]
 ![Sponsored by the Gay Agenda][sponsored]
 [![License](https://img.shields.io/badge/License-GPL3.0-orange)](#license)
-[![stars - XeniaOS](https://img.shields.io/github/stars/XeniaMeraki/XeniaOS?style=social)](https://github.com/XeniaMeraki/XeniaOS)
 
 [transrights_url]: https://en.wikipedia.org/wiki/Transgender_rights_movement
 ![Badge](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FXeniaMeraki%2FXeniaOS&label=Views&icon=browser-firefox&color=%23ff7800&message=&style=plastic&tz=US%2FArizona)
@@ -31,7 +29,7 @@
 
 
 # Simple explanation: 
-A free operating system for PCs/laptops that plays games well, ones supported by [Linux](https://www.protondb.com/), that uses a [nifty windowing system](https://github.com/YaLTeR/niri) and has cute fox women in wallpapers.
+A free operating system for modern PCs/laptops that plays games well, ones supported by [Linux](https://www.protondb.com/), that uses a [nifty windowing system](https://github.com/YaLTeR/niri) and has cute fox women in wallpapers.
 
 https://github.com/YaLTeR/niri/assets/1794388/bce834b0-f205-434e-a027-b373495f9729
 
@@ -107,7 +105,7 @@ the transfem package fox
 Special thank yous to [Tulip](https://github.com/tulilirockz) and [Hecknt](https://github.com/hecknt) for general help
 
 
-[Chimmie Firefly](https://github.com/GamePlayer-8/xenia.chimmie.k.vu) [Jasper Valery](https://www.artstation.com/jasperjvalery) [Delphic Melody](https://github.com/delphicmelody) 
+[Chimmie Firefly](https://github.com/GamePlayer-8/xenia.chimmie.k.vu) [Jasper Valery](https://www.artstation.com/jasperjvalery) [Delphic Melody](https://github.com/delphicmelody) [bri](https://github.com/b-)
 
 
 for Xenia artwork/logos/assets/concepting.
