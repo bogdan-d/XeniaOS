@@ -506,7 +506,8 @@ RUN systemctl enable polkit.service \
     flatpak-preinstall.service \
     xeniaos-group-fix.service \
     uupd.timer \
-    cups.socket
+    cups.socket \
+    cups-browsed.service
 
 # User services (Niri/user session level)
 RUN systemctl --global enable \
