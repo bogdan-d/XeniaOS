@@ -170,7 +170,7 @@ RUN --mount=type=tmpfs,dst=/tmp \
 
 # AUR packages
 RUN paru -S --noconfirm \
-        aur/uupd aur/gnome-themes-extra-gtk2 aur/vesktop-bin
+        aur/uupd aur/gnome-themes-extra-gtk2 aur/vesktop-bin aur/ttf-twemoji
 
 USER root
 WORKDIR /
