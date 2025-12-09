@@ -345,14 +345,14 @@ application/x-tar=org.kde.ark.desktop\n\
 # Load shared objects immediately for better first time latency
 # Apply OBS_VK to all vulkan instances for better OBS game capture, some other windows may come along for the ride
 # Auto dark mode everywhere
-RUN echo -e 'QT_QPA_PLATFORMTHEME=qt6ct/n/
-LD_BIND_NOW=1/n/
-OBS_VKCAPTURE=1/n/
-GTK_THEME=Colloid-Orange-Dark-Catppuccin/n/
-GTK2_RC_FILES=/usr/share/themes/Colloid-Orange-Dark-Catppuccin/gtk-2.0/gtkrc/n/
-QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin/n/
-XDG_MENU_PREFIX=arch-/n/
-XDG_MENU_PREFIX=plasma-' >> /etc/environment
+RUN echo -e 'QT_QPA_PLATFORMTHEME=qt6ct\n\
+LD_BIND_NOW=1\n\
+OBS_VKCAPTURE=1\n\
+GTK_THEME=Colloid-Orange-Dark-Catppuccin\n\
+GTK2_RC_FILES=/usr/share/themes/Colloid-Orange-Dark-Catppuccin/gtk-2.0/gtkrc\n\
+QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin\n\
+XDG_MENU_PREFIX=arch-\n\
+XDG_MENU_PREFIX=plasma-' > /etc/environment
 
 RUN kbuildsycoca6
 
