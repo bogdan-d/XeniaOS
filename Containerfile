@@ -345,14 +345,15 @@ application/x-tar=org.kde.ark.desktop\n\
 # Load shared objects immediately for better first time latency
 # Apply OBS_VK to all vulkan instances for better OBS game capture, some other windows may come along for the ride
 # Auto dark mode everywhere
-ENV QT_QPA_PLATFORMTHEME=qt6ct
-ENV LD_BIND_NOW=1
-ENV OBS_VKCAPTURE=1
-ENV GTK_THEME=Colloid-Orange-Dark-Catppuccin
-ENV GTK2_RC_FILES=/usr/share/themes/Colloid-Orange-Dark-Catppuccin/gtk-2.0/gtkrc
-ENV QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin
-ENV XDG_MENU_PREFIX=arch-
-ENV XDG_MENU_PREFIX=plasma-
+RUN echo -e 'QT_QPA_PLATFORMTHEME=qt6ct/n/
+LD_BIND_NOW=1/n/
+OBS_VKCAPTURE=1/n/
+GTK_THEME=Colloid-Orange-Dark-Catppuccin/n/
+GTK2_RC_FILES=/usr/share/themes/Colloid-Orange-Dark-Catppuccin/gtk-2.0/gtkrc/n/
+QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin/n/
+XDG_MENU_PREFIX=arch-/n/
+XDG_MENU_PREFIX=plasma-' >> /etc/environment
+
 RUN kbuildsycoca6
 
 # Set vm.max_map_count for stability/improved gaming performance
