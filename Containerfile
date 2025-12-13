@@ -78,9 +78,10 @@ RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid 
       vulkan-tools wayland-utils playerctl
 
 # Fonts
-RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emoji noto-fonts-extra ttf-fira-code ttf-firacode-nerd \
-    ttf-ibm-plex ttf-jetbrains-mono-nerd otf-font-awesome ttf-jetbrains-mono wqy-microhei ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-common \
-    ttf-nerd-fonts-symbols-mono ttf-fira-code ttf-firacode-nerd
+RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emoji noto-fonts-extra ttf-fira-code \
+    ttf-ibm-plex otf-font-awesome ttf-jetbrains-mono wqy-microhei ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-common \
+    ttf-nerd-fonts-symbols-mono ttf-fira-code ttf-firacode-nerd ttf-croscore ttf-dejavu ttf-droid gsfonts ttf-roboto ttf-arphic-uming ttf-baekmuk \
+    gnu-free-fonts
 
 # CLI Utilities
 RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
