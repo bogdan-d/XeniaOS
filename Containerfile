@@ -117,13 +117,13 @@ RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-util
 
 # -Package list- Chaotic-AUR precompiled packages
 # niri-git | vesktop | flatpak-git | dms-shell-git |
-# ttf-symbola | opentabletdriver |
+# ttf-symbola | opentabletdriver | bootc | OBS
 
 # Arch apps
 # Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam | Mangohud
 
 # Flatpaks
-# Bazaar | Krita | Elisa | Pinta | OBS | Ark | Faugus Launcher | ProtonPlus | Kdenlive |
+# Bazaar | Firefox | Krita | Elisa | Pinta | OBS | Ark | Faugus Launcher | ProtonPlus | Kdenlive |
 # Okular | Kate | Warehouse | Fedora Media Writer | Gear Lever | Haruna | Gwenview
 # Audacity | Not Tetris 2 | Resources
 
@@ -158,11 +158,11 @@ RUN useradd -m --shell=/bin/bash build && usermod -L build && \
 USER build
 WORKDIR /home/build
 RUN --mount=type=tmpfs,dst=/tmp \
-    git clone https://aur.archlinux.org/paru-bin.git --single-branch /tmp/paru && \
+    git clone https://aur.archlinux.org/paru.git --single-branch /tmp/paru && \
     cd /tmp/paru && \
     makepkg -si --noconfirm && \
     cd .. && \
-    rm -drf paru-bin
+    rm -drf paru
 
 # AUR packages
 RUN paru -S --noconfirm \
