@@ -433,7 +433,7 @@ ExecStart=chezmoi apply -S /usr/share/xeniaos/zdots --config %h/.config/xeniaos/
 Type=oneshot\n\
 \n\
 [Install]\n\
-WantedBy=default.target' >> /usr/lib/systemd/user/chezmoi-init.service
+WantedBy=graphical-session-pre.target' >> /usr/lib/systemd/user/chezmoi-init.service
 
 RUN echo -e '[Unit]\n\
 Description=Timer for Chezmoi Update\n\
@@ -516,7 +516,7 @@ net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
 
 # Catppuccin style cursor, in a lovely orange, much like my furrrrr~
 RUN mkdir -p /usr/share/icons && \
-    curl -fsSLO --variable '%AUTH_HEADER' --expand-header '{{AUTH_HEADER}}' https://github.com/catppuccin/cursors/releases/latest/download/catppuccin-mocha-peach-cursors.zip && \
+    curl -fsSLO --variable '%AUTH_HEADER' --expand-header '{{AUTH_HEADER}}' https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
     unzip -q catppuccin-mocha-peach-cursors.zip -d /usr/share/icons && \
     rm catppuccin-mocha-peach-cursors.zip && \
     rm -rf /usr/share/icons/default && \
