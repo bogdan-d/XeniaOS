@@ -241,7 +241,6 @@ RUN git clone --depth=1 https://github.com/vinceliuice/Colloid-icon-theme /tmp/c
     ./install.sh \
       -s catppuccin \
       -t orange \
-      -c dark \
       -d /usr/share/icons && \
     rm -rf /tmp/colloid-icons
 
