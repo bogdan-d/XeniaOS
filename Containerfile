@@ -549,6 +549,7 @@ org.freedesktop.impl.portal.Notification=kde;gtk;gnome' > /usr/share/xdg-desktop
 RUN echo -e 'eval "$(starship init bash)"' >> /etc/bash.bashrc
 
 # ReGreet login shell setup
+ENV NIRI_CONFIG=$XDG_CONFIG_HOME/niri/xeniaos/config.kdl
 RUN mkdir -p /etc/greetd/
 
 RUN echo -e 'spawn-sh-at-startup "regreet >/dev/null 2>&1; niri msg action quit --skip-confirmation"\n\
