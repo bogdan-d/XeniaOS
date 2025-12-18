@@ -516,7 +516,7 @@ net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
 
 # Catppuccin style cursor, in a lovely orange, much like my furrrrr~
 RUN mkdir -p /usr/share/icons && \
-    curl -fsSLO --variable '%AUTH_HEADER' --expand-header '{{AUTH_HEADER}}' https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
+    curl -fsSLO --variable '%AUTH_HEADER' --expand-header '{{AUTH_HEADER}}' https://api.github.com/repos/catppuccin/cursors/releases/latest/download/catppuccin-mocha-peach-cursors.zip && \
     unzip -q catppuccin-mocha-peach-cursors.zip -d /usr/share/icons && \
     rm catppuccin-mocha-peach-cursors.zip && \
     rm -rf /usr/share/icons/default && \
@@ -524,7 +524,7 @@ RUN mkdir -p /usr/share/icons && \
 
 # Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
 RUN mkdir -p "/usr/share/fonts/Maple Mono" && \
-    curl --retry 5 --retry-all-errors -fSsLo --variable '%AUTH_HEADER' --expand-header '{{AUTH_HEADER}}' "/tmp/maple.zip" "$(curl -s https://github.com/subframe7536/maple-font/releases/latest/download/MapleMono-Variable.zip | jq -r -c '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url')" && \
+    curl --retry 5 --retry-all-errors -fSsLo --variable '%AUTH_HEADER' --expand-header '{{AUTH_HEADER}}' "/tmp/maple.zip" "$(curl -s https://api.github.com/repos/subframe7536/maple-font/releases/latest/download/MapleMono-Variable.zip | jq -r -c '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url')" && \
     unzip -q "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
 
 # Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
@@ -598,7 +598,7 @@ RUN rm -rf /home/build/.cache/* && \
     rm -rf \
         /tmp/* \
         /var/cache/pacman/pkg/* && \
-    pacman -Rns --noconfirm git paru-bin
+    pacman -Rns --noconfirm git
 
 # Necessary for general behavior expected by image-based systems
 RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
@@ -611,22 +611,22 @@ RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
 
 RUN bootc container lint
 
-#####################                                                       ✧⋆✩₊⋆⁺₊˚.
-#####################     ,c.                       .c;                    ✩₊˚.⋆☾⋆⁺₊✧
-#####################   .KMMMk....             ....kMMMK.                  ₊˚.⋆⁺₊✧⋆✩
+#####################
+#####################     ,c.                       .c;
+#####################   .KMMMk....             ....kMMMK.
 #####################   .WMMMMMX.....         .....KMMMMMW.                       
 #####################   XMMMMMMM0.....        ....OMMMMMMMN
-#####################  dMMMMMMMMM;.... ..... ....,MMMMMMMMMd          Who's gonna take you home tonight?
-#####################  WMMMMMMMMMl;okKKKKKKKKKOo;cMMMMMMMMMM        Does God bless your transsexual heart,
-##################### 'MMMMMMMNXK0KKKKKKKKKKKKKKK0KXNMMMMMMM;             True Trans Soul Rebel?
-##################### oMMMMMMMOxoKKKKKKKKKKKKKKKKKoxOMMMMMMMd
-##################### dMMMMMMMdxxxKKKKKKKKKKKKKKKxxxdNMMMMMMk
-##################### :MMMMX0xxxxxx0KKKKKKKK0KK0xxxxxx0XMMMMc         Well, you should've been a mother
-#####################  MMMOxxxxxxxxdxkdd0x0ddkxdxxxxxxxxOMMM              You should've been a wife
-##################### ;xxkxddxxxxdodxxxxdxdxxxxdodxxxxddxkxx;       You should've been gone from here years ago
-#####################dxdKMMMWXo'.....'cdxxxdc'.....'lXWMMMXdxd        You should be living a different life
+#####################  dMMMMMMMMM;.... ..... ....,MMMMMMMMMd
+#####################  WMMMMMMMMMl;okKKKKKKKKKOo;cMMMMMMMMMM
+##################### 'MMMMMMMNXK0KKKKKKKKKKKKKKK0KXNMMMMMMM;
+##################### oMMMMMMMOxoKKKKKKKKKKKKKKKKKoxOMMMMMMMd                    
+##################### dMMMMMMMdxxxKKKKKKKKKKKKKKKxxxdNMMMMMMk                  
+##################### :MMMMX0xxxxxx0KKKKKKKK0KK0xxxxxx0XMMMMc
+#####################  MMMOxxxxxxxxdxkdd0x0ddkxdxxxxxxxxOMMM 
+##################### ;xxkxddxxxxdodxxxxdxdxxxxdodxxxxddxkxx;
+#####################dxdKMMMWXo'.....'cdxxxdc'.....'lXWMMMXdxd
 ##################### cxdXMMMN,..........dxd'.........'XMMMNdxl 
-#####################  .xxWMMl...''....'.;k:.'....''...lMMWxx.                 - Against Me!
+#####################  .xxWMMl...''....'.;k:.'....''...lMMWxx.       
 ##################### ..:kXMMx..'....''..kMk..''....'..xMMXkc..
 #####################  dMMMMMMd.....'...xMMMx...''....dMMMMMMx
 #####################    kMMMMWOoc:coOkolllokOoc:coOWMMMMO
