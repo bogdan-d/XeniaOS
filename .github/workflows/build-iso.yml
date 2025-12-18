@@ -1,0 +1,16 @@
+name: Build The ISO
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository where this action is defined
+        uses: actions/checkout@v4
+
+      - name: Build ISO using cuckoo-iso-builder
+        uses: zeglius/cuckoo-iso-builder@main # Remember to pin by commit hash
+        with:
+          container-image: 'ghcr.io/xeniameraki/xeniaos:latest'
+          iso-path: './iso/xeniaos.iso'
