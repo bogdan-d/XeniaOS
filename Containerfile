@@ -78,10 +78,9 @@ RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid 
       vulkan-tools wayland-utils playerctl
 
 # Fonts
-RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emoji noto-fonts-extra ttf-fira-code \
+RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emoji noto-fonts-extra \
     ttf-ibm-plex otf-font-awesome ttf-jetbrains-mono wqy-microhei ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-common \
-    ttf-nerd-fonts-symbols-mono ttf-fira-code ttf-firacode-nerd ttf-croscore ttf-dejavu ttf-droid gsfonts ttf-roboto ttf-arphic-uming ttf-baekmuk \
-    gnu-free-fonts
+    ttf-nerd-fonts-symbols-mono ttf-croscore ttf-dejavu ttf-droid gsfonts ttf-arphic-uming ttf-baekmuk gnu-free-fonts otf-monaspace
 
 # CLI Utilities
 RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
@@ -121,15 +120,15 @@ RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-util
 
 # -Package list- Chaotic-AUR precompiled packages
 # niri-git | vesktop | flatpak-git | dms-shell-git |
-# ttf-symbola | opentabletdriver | colloid-catppuccin-gtk-theme-git | colloid-catppuccin-theme-git
+# ttf-symbola | opentabletdriver |
 
 # Arch apps
 # Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam | Mangohud
 
 # Flatpaks
-# Bazaar | Krita | Elisa | Pinta | OBS | Ark | Cave Story | Faugus Launcher | ProtonUp-QT | Kdenlive |
-# Okular | Kate | Warehouse | Fedora Media Writer | Gear Lever | Haruna | Space Cadet Pinball | Gwenview
-# Audacity | Not Tetris 2 | Floorp
+# Bazaar | Krita | Elisa | Pinta | OBS | Ark | Faugus Launcher | ProtonPlus | Kdenlive |
+# Okular | Kate | Warehouse | Fedora Media Writer | Gear Lever | Haruna | Gwenview
+# Audacity | Not Tetris 2 | Resources
 
 ##############################################################################################################################################
 # Section 3 - Chaotic AUR / AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
@@ -150,8 +149,7 @@ RUN pacman -Sy --noconfirm
 RUN pacman -S --noconfirm \
     chaotic-aur/niri-git chaotic-aur/flatpak-git chaotic-aur/obs-studio-stable chaotic-aur/obs-vkcapture-git \
     chaotic-aur/dms-shell-git chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
-    chaotic-aur/colloid-catppuccin-gtk-theme-git chaotic-aur/colloid-catppuccin-theme-git chaotic-aur/adwaita-qt5-git \
-    chaotic-aur/adwaita-qt6-git chaotic-aur/bootc chaotic-aur/ttf-twemoji
+    chaotic-aur/adwaita-qt5-git chaotic-aur/adwaita-qt6-git chaotic-aur/bootc chaotic-aur/ttf-twemoji chaotic-aur/vesktop
 
 # Regular AUR Build Section
 # Create build user
@@ -171,7 +169,7 @@ RUN --mount=type=tmpfs,dst=/tmp \
 
 # AUR packages
 RUN paru -S --noconfirm \
-        aur/uupd aur/gnome-themes-extra-gtk2 aur/vesktop-bin
+        aur/uupd
 
 USER root
 WORKDIR /
@@ -208,14 +206,11 @@ RUN echo -e "[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\n
 # Ark | For unzipping files and file compression! (Imagine a fox whose face you may squish...)
 RUN echo -e "[Flatpak Preinstall org.kde.ark]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Ark.preinstall
 
-# Cave Story, a free, public domain platformer! It's historically important to videogames and platformers as a genre.
-RUN echo -e "[Flatpak Preinstall com.gitlab.coringao.cavestory-nx]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/CaveStory.preinstall
-
 # Faugus Launcher | This is fantastic for using windows software on linux, throwing exes at it and whatnot
 RUN echo -e "[Flatpak Preinstall io.github.faugus.faugus-launcher]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/FaugusLauncher.preinstall
 
-# ProtonUp-Qt | For installing different versions of proton! Emulation for windows games via Steam/Valve's work
-RUN echo -e "[Flatpak Preinstall net.davidotek.pupgui2]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/ProtonUp-Qt.preinstall
+# ProtonPlus | For installing different versions of proton! Emulation for windows games via Steam/Valve's work
+RUN echo -e "[Flatpak Preinstall com.vysp3r.ProtonPlus]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/ProtonPlus.preinstall
 
 # Kdenlive | Video editing!
 RUN echo -e "[Flatpak Preinstall org.kde.kdenlive]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Kdenlive.preinstall
@@ -238,9 +233,6 @@ RUN echo -e "[Flatpak Preinstall it.mijorus.gearlever]\nBranch=stable\nIsRuntime
 # Haruna | Watch video files! I actually personally like this better than VLC Media Player, nicer look/featureset
 RUN echo -e "[Flatpak Preinstall org.kde.haruna]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Haruna.preinstall
 
-# Pinball | It's important. Shakes you. I need you to understand I NEED this and need to put this on your computer.
-RUN echo -e "[Flatpak Preinstall com.github.k4zmu2a.spacecadetpinball]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Pinball.preinstall
-
 # Gwenview | View images!
 RUN echo -e "[Flatpak Preinstall org.kde.gwenview]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Gwenview.preinstall
 
@@ -250,11 +242,11 @@ RUN echo -e "[Flatpak Preinstall org.audacityteam.Audacity]\nBranch=stable\nIsRu
 # Not Tetris 2 | DEFINITELY not Tetris... 2!!!
 RUN echo -e "[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/NotTetris2.preinstall
 
-# Floorp | A very nicely fast and very nicely featured Firefox fork! A fellow fox!!
-RUN echo -e "[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Floorp.preinstall
+# Firefox | A fellow fluffy fox!!
+RUN echo -e "[Flatpak Preinstall org.mozilla.firefox]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Firefox.preinstall
 
-# Rclone Shuttle | Files storage and transfer, at your service, my quing!
-RUN echo -e "[Flatpak Preinstall io.github.pieterdd.RcloneShuttle]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/RcloneShuttle.preinstall
+# System Monitor/System Processes Manager
+RUN echo -e "[Flatpak Preinstall flathub net.nokyan.Resources]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/SystemMonitor.preinstall
 
 ########################################################################################################################################
 # Section 5 - Linux OS stuffs | "I'd decide for myself whether his teachings are right or wrong." Near, Death Note #####################
@@ -275,6 +267,24 @@ Defaults secure_path="/usr/local/bin:/usr/bin:/bin:/home/linuxbrew/.linuxbrew/bi
 Defaults env_keep += "EDITOR VISUAL PATH"\n\
 Defaults timestamp_timeout=0' > /etc/sudoers.d/xenias-sudo-quiver && \
     chmod 440 /etc/sudoers.d/xenias-sudo-quiver
+
+RUN git clone --depth=1 https://github.com/vinceliuice/Colloid-icon-theme /tmp/colloid-icons && \
+    cd /tmp/colloid-icons && \
+    ./install.sh \
+      -s catppuccin \
+      -t orange \
+      -c dark \
+      -d /usr/share/icons && \
+    rm -rf /tmp/colloid-icons
+
+RUN git clone --depth=1 https://github.com/Hexality/Colloidppuccin /tmp/colloid-gtk && \
+    cd /tmp/colloid-gtk && \
+    ./install.sh \
+      -t orange \
+      -c dark \
+      -n Colloid-Orange-Dark-Catppuccin \
+      -d /usr/share/themes && \
+    rm -rf /tmp/colloid-gtk
 
 # Add greetd user manually for rebase issues that arise
 RUN useradd -M -G video,input -s /usr/bin/nologin greeter || true
@@ -350,7 +360,6 @@ RUN echo -e 'QT_QPA_PLATFORMTHEME=qt6ct\n\
 LD_BIND_NOW=1\n\
 OBS_VKCAPTURE=1\n\
 GTK_THEME=Colloid-Orange-Dark-Catppuccin\n\
-GTK2_RC_FILES=/usr/share/themes/Colloid-Orange-Dark-Catppuccin/gtk-2.0/gtkrc\n\
 QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin\n\
 XDG_MENU_PREFIX=arch-\n\
 XDG_MENU_PREFIX=plasma-' > /etc/environment
@@ -372,7 +381,7 @@ RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tm
 # Section 6 - Set up brew | terminal packages manager utility | https://brew.sh/ | Foxy witch will mix up a brew for you! ##############
 ########################################################################################################################################
 
-RUN curl -s https://api.github.com/repos/ublue-os/packages/releases/latest \
+RUN curl -s --variable '%AUTH_HEADER' --expand-header '{{AUTH_HEADER}}' https://api.github.com/repos/ublue-os/packages/releases/latest \
     | jq -r '.assets[] | select(.name | test("homebrew-x86_64.*\\.tar\\.zst")) | .browser_download_url' \
     | xargs -I {} wget -O /usr/share/homebrew.tar.zst {}
 
@@ -538,7 +547,7 @@ net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
 
 # Catppuccin style cursor, in a lovely orange, much like my furrrrr~
 RUN mkdir -p /usr/share/icons && \
-    curl -fsSLO https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
+    curl -fsSLO --variable '%AUTH_HEADER' --expand-header '{{AUTH_HEADER}}' https://github.com/catppuccin/cursors/releases/latest/download/catppuccin-mocha-peach-cursors.zip && \
     unzip -q catppuccin-mocha-peach-cursors.zip -d /usr/share/icons && \
     rm catppuccin-mocha-peach-cursors.zip && \
     rm -rf /usr/share/icons/default && \
@@ -546,7 +555,7 @@ RUN mkdir -p /usr/share/icons && \
 
 # Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
 RUN mkdir -p "/usr/share/fonts/Maple Mono" && \
-    curl --retry 5 --retry-all-errors -fSsLo "/tmp/maple.zip" "$(curl -s https://api.github.com/repos/subframe7536/maple-font/releases/latest | jq -r -c '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url')" && \
+    curl --retry 5 --retry-all-errors -fSsLo --variable '%AUTH_HEADER' --expand-header '{{AUTH_HEADER}}' "/tmp/maple.zip" "$(curl -s https://github.com/subframe7536/maple-font/releases/latest/download/MapleMono-Variable.zip | jq -r -c '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url')" && \
     unzip -q "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
 
 # Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
