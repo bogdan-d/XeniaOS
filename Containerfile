@@ -267,7 +267,7 @@ RUN gtk-update-icon-cache -f /usr/share/icons/Colloid-Orange-Catppuccin-Dark || 
 
 # Set up zram, this will help users not run out of memory. Fox will fix!
 RUN echo -e '[zram0]\nzram-size = min(ram, 8192)' > /usr/lib/systemd/zram-generator.conf
-RUN echo -e 'enable systemd-resolved.service' > usr/lib/systemd/system-preset/91-resolved-default.preset
+RUN echo -e 'enable systemd-resolved.service' > /usr/lib/systemd/system-preset/91-resolved-default.preset
 RUN echo -e 'L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf' > /usr/lib/tmpfiles.d/resolved-default.conf
 RUN systemctl preset systemd-resolved.service
 
