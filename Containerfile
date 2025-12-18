@@ -65,8 +65,9 @@ When = PostTransaction\n\
 Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" > /usr/share/libalpm/hooks/package-cleanup.hook
 
 # Initialize the database
-RUN pacman -Rdd linux-firmware --noconfirm \
-    pacman -Syu linux-firmware
+RUN pacman -Rdd linux-firmware --noconfirm
+
+RUN pacman -Syu linux-firmware --noconfirm
 
 # Use the Arch mirrorlist that will be best at the moment for both the containerfile and user too! Fox will help!
 RUN pacman -S --noconfirm reflector
