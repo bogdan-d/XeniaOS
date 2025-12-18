@@ -131,15 +131,16 @@ RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-util
 # Section 3 - Chaotic AUR / AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
 ##############################################################################################################################################
 
+#Chaotic AUR repo
 RUN pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-
 RUN pacman-key --init && pacman-key --lsign-key 3056513887B78AEB
-
 RUN pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm
-
 RUN pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm
-
 RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf
+# Heck's Bootc repo
+RUN pacman-key --recv-key 5DE6BF3EBC86402E7A5C5D241FA48C960F9604CB --keyserver keyserver.ubuntu.com
+RUN pacman-key --lsign-key 5DE6BF3EBC86402E7A5C5D241FA48C960F9604CB
+RUN echo -e '[bootc]\nSigLevel = Required\nServer=https://github.com/hecknt/arch-bootc-pkgs/releases/download/$repo' >> /etc/pacman.conf
 
 RUN pacman -Sy --noconfirm
 
@@ -148,39 +149,9 @@ RUN pacman -S --noconfirm \
     chaotic-aur/dms-shell-git chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
     chaotic-aur/adwaita-qt5-git chaotic-aur/adwaita-qt6-git chaotic-aur/bootc chaotic-aur/ttf-twemoji chaotic-aur/vesktop
 
-# Regular AUR Build Section
-# Create build user
-RUN useradd -m --shell=/bin/bash build && usermod -L build && \
-    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-# Install AUR packages
-USER build
-WORKDIR /home/build
-RUN --mount=type=tmpfs,dst=/tmp \
-    git clone https://aur.archlinux.org/paru.git --single-branch /tmp/paru && \
-    cd /tmp/paru && \
-    makepkg -si --noconfirm && \
-    cd .. && \
-    rm -drf paru
-
-# AUR packages
-RUN paru -S --noconfirm \
-        aur/uupd
-
-USER root
-WORKDIR /
-# Cleanup and delete build user
-RUN userdel -r build && \
-    rm -drf /home/build && \
-    sed -i '/build ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
-    sed -i '/root ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
-    rm -rf /home/build && \
-    rm -rf \
-        /tmp/* \
-        /var/cache/pacman/pkg/*
-
-#AUR script credit @KyleGospo @cyrv6737
+RUN pacman -S --noconfirm \
+  bootc/uupd && \
+  systemctl enable uupd.timer
 
 #######################################################################################################################################################
 # Section 4 - Flatpaks preinstalls | Don't forget. Always, somewhere, someone is fighting for you. You are not alone. -Madoka Magica ##################
@@ -286,10 +257,13 @@ RUN git clone --depth=1 https://github.com/Hexality/Colloidppuccin /tmp/colloid-
 # Add greetd user manually for rebase issues that arise
 RUN useradd -M -G video,input -s /usr/bin/nologin greeter || true
 
+# Refresh icon cache
+RUN gtk-update-icon-cache -f /usr/share/icons/Colloid-Orange-Catppuccin-Dark || true
+
 # Set up zram, this will help users not run out of memory. Fox will fix!
-RUN echo -e '[zram0]\nzram-size = min(ram, 8192)' >> /usr/lib/systemd/zram-generator.conf
-RUN echo -e 'enable systemd-resolved.service' >> usr/lib/systemd/system-preset/91-resolved-default.preset
-RUN echo -e 'L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf' >> /usr/lib/tmpfiles.d/resolved-default.conf
+RUN echo -e '[zram0]\nzram-size = min(ram, 8192)' > /usr/lib/systemd/zram-generator.conf
+RUN echo -e 'enable systemd-resolved.service' > usr/lib/systemd/system-preset/91-resolved-default.preset
+RUN echo -e 'L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf' > /usr/lib/tmpfiles.d/resolved-default.conf
 RUN systemctl preset systemd-resolved.service
 
 # OS Release and Update uwu
@@ -512,7 +486,6 @@ RUN systemctl enable polkit.service \
     greetd.service \
     flatpak-preinstall.service \
     xeniaos-group-fix.service \
-    uupd.timer \
     cups.socket \
     cups-browsed.service
 
