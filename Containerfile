@@ -263,9 +263,6 @@ RUN git clone --depth=1 https://github.com/Hexality/Colloidppuccin /tmp/colloid-
 # Add greetd user manually for rebase issues that arise
 RUN useradd -M -G video,input -s /usr/bin/nologin greeter || true
 
-# Refresh icon cache
-RUN gtk-update-icon-cache -f /usr/share/icons/Colloid-Orange-Catppuccin-Dark || true
-
 # Set up zram, this will help users not run out of memory. Fox will fix!
 RUN echo -e '[zram0]\nzram-size = min(ram, 8192)' > /usr/lib/systemd/zram-generator.conf
 RUN echo -e 'enable systemd-resolved.service' > /usr/lib/systemd/system-preset/91-resolved-default.preset
@@ -339,7 +336,8 @@ OBS_VKCAPTURE=1\n\
 GTK_THEME=Colloid-Orange-Dark-Catppuccin\n\
 QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin\n\
 XDG_MENU_PREFIX=arch-\n\
-XDG_MENU_PREFIX=plasma-' > /etc/environment
+XDG_MENU_PREFIX=plasma-\n\
+NIRI_CONFIG=$XDG_CONFIG_HOME/niri/xeniaos/config.kdl' > /etc/environment
 
 RUN kbuildsycoca6
 
@@ -549,7 +547,6 @@ org.freedesktop.impl.portal.Notification=kde;gtk;gnome' > /usr/share/xdg-desktop
 RUN echo -e 'eval "$(starship init bash)"' >> /etc/bash.bashrc
 
 # ReGreet login shell setup
-ENV NIRI_CONFIG=$XDG_CONFIG_HOME/niri/xeniaos/config.kdl
 RUN mkdir -p /etc/greetd/
 
 RUN echo -e 'spawn-sh-at-startup "regreet >/dev/null 2>&1; niri msg action quit --skip-confirmation"\n\
