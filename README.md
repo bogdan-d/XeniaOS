@@ -7,7 +7,7 @@
 
 <p align="center">
     <picture>
-<img alt="XeniaOS logo" src="https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_text_logo_delphic_melody.svg"width="800">
+<img alt="XeniaOS logo" src="https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos-text-logo-v2-delphic-melody.svg"width="800">
     </picture>
 </p>
 
