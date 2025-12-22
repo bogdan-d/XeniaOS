@@ -102,7 +102,7 @@ XeniaOS headed by [Xenia Meraki](https://xeniameraki.com)
 the transfem package fox
 
 
-Special thank yous to [Tulip](https://github.com/tulilirockz) and [Hecknt](https://github.com/hecknt) for general help
+Special thank yous to [Tulip](https://github.com/tulilirockz) and [hecknt](https://github.com/hecknt) for general help
 
 
 [Chimmie Firefly](https://github.com/GamePlayer-8/xenia.chimmie.k.vu) [Jasper Valery](https://www.artstation.com/jasperjvalery) [Delphic Melody](https://github.com/delphicmelody) [bri](https://github.com/b-)
