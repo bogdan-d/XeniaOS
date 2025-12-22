@@ -78,7 +78,7 @@ RUN pacman -S --noconfirm base linux-firmware dracut linux-cachyos-bore ostree s
 
 # Media/Install utilities/Media drivers
 RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid ddcutil dmidecode mesa-utils ntfs-3g \
-      vulkan-tools wayland-utils playerctl
+      vulkan-tools wayland-utils playerctl rsync
 
 # Fonts
 RUN pacman -S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-emoji unicode-emoji noto-fonts-extra \
