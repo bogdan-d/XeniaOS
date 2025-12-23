@@ -218,13 +218,13 @@ RUN echo -e "[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIs
 # Firefox | A fellow fluffy fox!!
 RUN echo -e "[Flatpak Preinstall org.mozilla.firefox]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Firefox.preinstall
 
-# System Monitor/System Processes Manager
+# Resources | System Monitor/System Processes Manager
 RUN echo -e "[Flatpak Preinstall net.nokyan.Resources]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/SystemMonitor.preinstall
 
-# Chat client
+# Vesktop | Instant Messaging Discord 3rd Party Chat client
 RUN echo -e "[Flatpak Preinstall dev.vencord.Vesktop]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/Vesktop.preinstall
 
-# Video recording
+# OBS | Video recording/Streaming
 RUN echo -e "[Flatpak Preinstall com.obsproject.Studio]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/OBS.preinstall
 RUN echo -e "[Flatpak Preinstall com.obsproject.Studio.Plugin.OBSVkCapture]\nBranch=stable\nRuntime=true" > /usr/share/flatpak/preinstall.d/OBSVKCapture.preinstall
 
