@@ -150,9 +150,9 @@ RUN echo -e '[bootc]\nSigLevel = Required\nServer=https://github.com/hecknt/arch
 RUN pacman -Sy --noconfirm
 
 RUN pacman -S --noconfirm \
-    chaotic-aur/niri-git chaotic-aur/flatpak-git chaotic-aur/obs-studio-tytan652 chaotic-aur/obs-vkcapture-git \
+    chaotic-aur/niri-git chaotic-aur/flatpak-git chaotic-aur/adwaita-qt6-git chaotic-aur/bootc \
     chaotic-aur/dms-shell-git chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde chaotic-aur/ttf-ms-fonts \
-    chaotic-aur/adwaita-qt5-git chaotic-aur/adwaita-qt6-git chaotic-aur/bootc
+    chaotic-aur/adwaita-qt5-git
 
 RUN pacman -S --noconfirm \
   bootc/uupd && \
@@ -223,6 +223,10 @@ RUN echo -e "[Flatpak Preinstall net.nokyan.Resources]\nBranch=stable\nRuntime=f
 
 # Chat client
 RUN echo -e "[Flatpak Preinstall dev.vencord.Vesktop]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/Vesktop.preinstall
+
+# Video recording
+RUN echo -e "[Flatpak Preinstall com.obsproject.Studio]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/OBS.preinstall
+RUN echo -e "[Flatpak Preinstall com.obsproject.Studio.Plugin.OBSVkCapture]\nBranch=stable\nRuntime=true" > /usr/share/flatpak/preinstall.d/OBSVKCapture.preinstall
 
 ########################################################################################################################################
 # Section 5 - Linux OS stuffs | "I'd decide for myself whether his teachings are right or wrong." Near, Death Note #####################
