@@ -81,9 +81,8 @@ RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid 
       vulkan-tools wayland-utils playerctl rsync
 
 # Fonts
-RUN pacman -S --noconfirm noto-fonts noto-fonts-emoji unicode-emoji noto-fonts-extra \
-    ttf-ibm-plex otf-font-awesome ttf-jetbrains-mono wqy-microhei ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-common \
-    ttf-nerd-fonts-symbols-mono ttf-croscore ttf-dejavu ttf-droid gsfonts ttf-arphic-uming gnu-free-fonts otf-monaspace
+RUN pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk unicode-emoji noto-fonts-extra ttf-ibm-plex otf-font-awesome \
+    ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-common ttf-nerd-fonts-symbols-mono
 
 # CLI Utilities
 RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
@@ -123,8 +122,7 @@ RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-util
 #######################################################################################################################################################
 
 # -Package list- Chaotic-AUR precompiled packages
-# niri-git | vesktop | flatpak-git | dms-shell-git |
-# opentabletdriver | bootc | OBS
+# niri-git | flatpak-git | dms-shell-git | opentabletdriver | bootc
 
 # Arch apps
 # Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam | Mangohud
@@ -132,7 +130,7 @@ RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-util
 # Flatpaks
 # Bazaar | Firefox | Krita | Elisa | Pinta | OBS | Ark | Faugus Launcher | ProtonPlus | Kdenlive |
 # Okular | Kate | Warehouse | Fedora Media Writer | Gear Lever | Haruna | Gwenview
-# Audacity | Not Tetris 2 | Resources
+# Audacity | Not Tetris 2 | Resources | Vesktop
 
 ##############################################################################################################################################
 # Section 3 - Chaotic AUR / AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
@@ -153,8 +151,8 @@ RUN pacman -Sy --noconfirm
 
 RUN pacman -S --noconfirm \
     chaotic-aur/niri-git chaotic-aur/flatpak-git chaotic-aur/obs-studio-tytan652 chaotic-aur/obs-vkcapture-git \
-    chaotic-aur/dms-shell-git chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde chaotic-aur/asian-fonts \
-    chaotic-aur/adwaita-qt5-git chaotic-aur/adwaita-qt6-git chaotic-aur/bootc chaotic-aur/ttf-twemoji chaotic-aur/vesktop
+    chaotic-aur/dms-shell-git chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde chaotic-aur/ttf-ms-fonts \
+    chaotic-aur/adwaita-qt5-git chaotic-aur/adwaita-qt6-git chaotic-aur/bootc
 
 RUN pacman -S --noconfirm \
   bootc/uupd && \
@@ -221,7 +219,10 @@ RUN echo -e "[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIs
 RUN echo -e "[Flatpak Preinstall org.mozilla.firefox]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Firefox.preinstall
 
 # System Monitor/System Processes Manager
-RUN echo -e "[Flatpak Preinstall flathub net.nokyan.Resources]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/SystemMonitor.preinstall
+RUN echo -e "[Flatpak Preinstall net.nokyan.Resources]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/SystemMonitor.preinstall
+
+# Chat client
+RUN echo -e "[Flatpak Preinstall dev.vencord.Vesktop]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/Vesktop.preinstall
 
 ########################################################################################################################################
 # Section 5 - Linux OS stuffs | "I'd decide for myself whether his teachings are right or wrong." Near, Death Note #####################
