@@ -336,8 +336,7 @@ OBS_VKCAPTURE=1\n\
 GTK_THEME=Colloid-Orange-Dark-Catppuccin\n\
 QT_STYLE_OVERRIDE=Colloid-Orange-Dark-Catppuccin\n\
 XDG_MENU_PREFIX=arch-\n\
-XDG_MENU_PREFIX=plasma-\n\
-NIRI_CONFIG=$XDG_CONFIG_HOME/niri/xeniaos/config.kdl' > /etc/environment
+XDG_MENU_PREFIX=plasma-\n' > /etc/environment
 
 RUN kbuildsycoca6
 
@@ -460,6 +459,8 @@ ExecStart=mkdir -p %h/.config/xeniaos/chezmoi\n\
 ExecStart=touch %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
 ExecStart=sh -c 'yes s | chezmoi apply --no-tty --keep-going -S /usr/share/xeniaos/zdots --verbose --config %h/.config/xeniaos/chezmoi/chezmoi.toml'\n\
 Type=oneshot" >> /usr/lib/systemd/user/chezmoi-update.service
+
+RUN sed -i 's|^\[Service\]|\[Service\]\nEnvironment="NIRI_CONFIG=%h/.config/niri/xeniaos/config.kdl"|' /usr/lib/systemd/user/niri.service
 
 # This fixes a user/groups error with rebasing from other problematic images.
 # FIXME Do NOT remove until fixed upstream or fixed universally. Updating with new fix also fine. Script created by Tulip.
