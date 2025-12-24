@@ -152,9 +152,8 @@ RUN echo -e '[bootc]\nSigLevel = Required\nServer=https://github.com/hecknt/arch
 RUN pacman -Syu --noconfirm
 
 RUN pacman -S --noconfirm \
-    chaotic-aur/niri-git chaotic-aur/flatpak-git chaotic-aur/adwaita-qt6-git chaotic-aur/bootc \
+    chaotic-aur/niri-git chaotic-aur/flatpak-git chaotic-aur/darkly-qt6-git chaotic-aur/bootc \
     chaotic-aur/dms-shell-git chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
-    chaotic-aur/adwaita-qt5-git
 
 RUN pacman -S --noconfirm \
   bootc/uupd && \
