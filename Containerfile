@@ -153,7 +153,7 @@ RUN pacman -Syu --noconfirm
 
 RUN pacman -S --noconfirm \
     chaotic-aur/niri-git chaotic-aur/flatpak-git chaotic-aur/darkly-qt6-git chaotic-aur/bootc \
-    chaotic-aur/dms-shell-git chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
+    chaotic-aur/dms-shell-git chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde
 
 RUN pacman -S --noconfirm \
   bootc/uupd && \
