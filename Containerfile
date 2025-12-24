@@ -81,8 +81,10 @@ RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid 
       vulkan-tools wayland-utils playerctl rsync
 
 # Fonts
-RUN pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk unicode-emoji noto-fonts-extra ttf-ibm-plex otf-font-awesome \
-    ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-common ttf-nerd-fonts-symbols-mono
+RUN pacman -S --noconfirm noto-fonts noto-fonts-extra noto-fonts-cjk noto-fonts-emoji unicode-emoji
+
+# recreate font-cache to pick up the added fonts
+RUN fc-cache --force --really-force --system-only --verbose
 
 # CLI Utilities
 RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
@@ -151,7 +153,7 @@ RUN pacman -Sy --noconfirm
 
 RUN pacman -S --noconfirm \
     chaotic-aur/niri-git chaotic-aur/flatpak-git chaotic-aur/adwaita-qt6-git chaotic-aur/bootc \
-    chaotic-aur/dms-shell-git chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde chaotic-aur/ttf-ms-fonts \
+    chaotic-aur/dms-shell-git chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde \
     chaotic-aur/adwaita-qt5-git
 
 RUN pacman -S --noconfirm \
