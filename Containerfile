@@ -63,9 +63,6 @@ Depends = coreutils\n\
 When = PostTransaction\n\
 Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" > /usr/share/libalpm/hooks/package-cleanup.hook
 
-# FIXME | Fix an issue with Cachy's docker, pacman -syu fails otherwise https://discuss.cachyos.org/t/cant-update-because-of-linux-firmware-notice/19835
-RUN mkdir /usr/lib/sysimage/lib/pacmanlocal -p
-
 # Initialize the database
 RUN pacman -Syu --noconfirm
 
