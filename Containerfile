@@ -27,7 +27,7 @@
 #                       `            Credit art: Cathodegaytube for original art, @catumin for ascii-ification
 
 FROM docker.io/cachyos/cachyos-v3:latest AS final
-
+COPY --from=ghcr.io/ublue-os/brew:latest /system_files /
 ENV DRACUT_NO_XATTR=1
 
 # ✩₊˚.⋆☾𓃦☽⋆⁺₊✧ Index
@@ -36,11 +36,10 @@ ENV DRACUT_NO_XATTR=1
 # Section 3 - Chaotic AUR / AUR
 # Section 4 - Flatpaks preinstalls
 # Section 5 - Linux OS Stuffs
-# Section 6 - Set up Brew
-# Section 7 - Systemd n Services
-# Section 8 - CachyOS Settings
-# Section 9 - Niri/Chezmoi/DMS
-# Section 10 - Final Bootc Setup
+# Section 6 - Systemd n Services
+# Section 7 - CachyOS Settings
+# Section 8 - Niri/Chezmoi/DMS
+# Section 9 - Final Bootc Setup
 
 ########################################################################################################################################
 # Section 1 - Package Installs | We grab every package we can from official arch repo/set up all non-flatpak apps for user ^^ ##########
@@ -357,40 +356,8 @@ RUN git clone --depth=1 https://github.com/Zeglius/media-automount-generator /tm
     ./install.sh && \
     rm -rf /tmp/media-automount-generator
 
-########################################################################################################################################
-# Section 6 - Set up brew | terminal packages manager utility | https://brew.sh/ | Foxy witch will mix up a brew for you! ##############
-########################################################################################################################################
-
-RUN curl -s --variable '%AUTH_HEADER' --expand-header '{{AUTH_HEADER}}' https://api.github.com/repos/ublue-os/packages/releases/latest \
-    | jq -r '.assets[] | select(.name | test("homebrew-x86_64.*\\.tar\\.zst")) | .browser_download_url' \
-    | xargs -I {} wget -O /usr/share/homebrew.tar.zst {}
-
-RUN echo '[[ -d /home/linuxbrew/.linuxbrew && $- == *i* ]] && \
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' > /etc/profile.d/brew.sh
-
-RUN echo -e "[Unit]\n\
-Description=Setup Homebrew from tarball\n\
-After=local-fs.target\n\
-ConditionPathExists=!/var/home/linuxbrew/.linuxbrew\n\
-ConditionPathExists=/usr/share/homebrew.tar.zst\n\
-\n\
-[Service]\n\
-Type=oneshot\n\
-ExecStart=/usr/bin/mkdir -p /tmp/homebrew\n\
-ExecStart=/usr/bin/mkdir -p /var/home/linuxbrew\n\
-ExecStart=/usr/bin/tar --zstd -xf /usr/share/homebrew.tar.zst -C /tmp/homebrew\n\
-ExecStart=/usr/bin/cp -R -n /tmp/homebrew/linuxbrew/.linuxbrew /var/home/linuxbrew\n\
-ExecStart=/usr/bin/chown -R 1000:1000 /var/home/linuxbrew\n\
-ExecStart=/usr/bin/rm -rf /tmp/homebrew\n\
-ExecStart=/usr/bin/touch /etc/.linuxbrew\n\
-\n\
-[Install]\n\
-WantedBy=multi-user.target" > /usr/lib/systemd/system/brew-setup.service
-
-RUN systemctl enable brew-setup.service
-
 ##############################################################################################################################################################################
-# Section 7 - Systemd n Services | Hope is just like every other kind of work you do on your body, it's cyclical, and needs to be refreshed every day -Harpy #################
+# Section 6 - Systemd n Services | Hope is just like every other kind of work you do on your body, it's cyclical, and needs to be refreshed every day -Harpy #################
 ##############################################################################################################################################################################
 
 # Systemd flatpak preinstall service, thanks Aurora
@@ -512,7 +479,7 @@ RUN systemctl --global enable \
     wl-clip-persist.service
 
 ########################################################################################################################################
-# Section 8 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
+# Section 7 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
 ########################################################################################################################################
 
 # Activate NTSync, wags my tail in your general direction
@@ -523,7 +490,7 @@ RUN echo -e 'net.core.default_qdisc=fq \n\
 net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
 
 ########################################################################################################################################
-# Section 9 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
+# Section 8 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
 ########################################################################################################################################
 
 # Catppuccin style cursor, in a lovely orange, much like my furrrrr~
@@ -602,7 +569,7 @@ resolution = "500ms"\n\
 label_width = 150' > /etc/greetd/regreet.toml
 
 ########################################################################################################################################
-# Section 10 - Final Bootc Setup | The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #####################
+# Section 9 - Final Bootc Setup | The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #####################
 ########################################################################################################################################
 
 RUN printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/lib/systemd/system\n" | tee /usr/lib/dracut/dracut.conf.d/30-bootcrew-fix-bootc-module.conf && \
