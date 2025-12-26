@@ -79,9 +79,6 @@ RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid 
 # Fonts
 RUN pacman -S --noconfirm noto-fonts noto-fonts-extra noto-fonts-cjk noto-fonts-emoji unicode-emoji
 
-# recreate font-cache to pick up the added fonts
-RUN fc-cache --force --really-force --system-only --verbose
-
 # CLI Utilities
 RUN pacman -S --noconfirm sudo bash bash-completion fastfetch btop jq less lsof nano openssh powertop man-db wget yt-dlp \
       tree usbutils vim wl-clip-persist cliphist unzip ptyxis glibc-locales tar udev starship tuned-ppd tuned hyfetch curl patchelf 
@@ -430,12 +427,12 @@ ExecStart=touch %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
 ExecStart=sh -c 'yes s | chezmoi apply --no-tty --keep-going -S /usr/share/xeniaos/zdots --verbose --config %h/.config/xeniaos/chezmoi/chezmoi.toml'\n\
 Type=oneshot" >> /usr/lib/systemd/user/chezmoi-update.service
 
+# Set Niri config at a different location than default for smooth rebases
 RUN sed -i 's|^\[Service\]|\[Service\]\nEnvironment="NIRI_CONFIG=%h/.config/niri/xeniaos/config.kdl"|' /usr/lib/systemd/user/niri.service
 
 # This fixes a user/groups error with rebasing from other problematic images.
 # FIXME Do NOT remove until fixed upstream or fixed universally. Updating with new fix also fine. Script created by Tulip.
 RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
-
 RUN echo -e '#!/bin/sh\ncat /usr/lib/sysusers.d/*.conf | grep -e "^g" | grep -v -e "^#" | awk "NF" | awk '\''{print $2}'\'' | grep -v -e "wheel" -e "root" -e "sudo" | xargs -I{} sed -i "/{}/d" $1' > /usr/libexec/xeniaos-group-fix
 RUN chmod +x /usr/libexec/xeniaos-group-fix
 RUN echo -e '[Unit]\n\
@@ -504,8 +501,10 @@ RUN mkdir -p "/usr/share/fonts/Maple Mono" && \
       https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-Variable.zip \
       -o /tmp/maple.zip && \
     unzip -q /tmp/maple.zip -d "/usr/share/fonts/Maple Mono" && \
-    rm -f /tmp/maple.zip && \
-    fc-cache -f || true
+    rm -f /tmp/maple.zip
+
+# Redo font cache to pick up not just Maple Mono but All of our installed fonts
+RUN fc-cache --force --really-force --system-only --verbose
 
 # Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
 RUN echo -e '[preferred] \n\
