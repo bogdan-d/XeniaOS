@@ -117,10 +117,10 @@ RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-util
 #######################################################################################################################################################
 
 # -Package list- Chaotic-AUR precompiled packages
-# niri-git | flatpak-git | dms-shell-git | opentabletdriver | bootc
+# niri-git | flatpak-git | dms-shell-git | opentabletdriver | bootc | coolercontrol
 
 # Arch apps
-# Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam | Mangohud
+# Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam | Mangohud | Gamescope
 
 # Flatpaks
 # Bazaar | Firefox | Krita | Elisa | Pinta | OBS | Ark | Faugus Launcher | ProtonPlus | Kdenlive |
@@ -146,7 +146,7 @@ RUN pacman -Syu --noconfirm
 
 RUN pacman -S --noconfirm \
     chaotic-aur/niri-git chaotic-aur/flatpak-git chaotic-aur/darkly-qt6-git chaotic-aur/bootc \
-    chaotic-aur/dms-shell-git chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde
+    chaotic-aur/dms-shell-git chaotic-aur/opentabletdriver chaotic-aur/qt6ct-kde chaotic-aur/coolercontrold
 
 RUN pacman -S --noconfirm \
   bootc/uupd && \
@@ -466,7 +466,8 @@ RUN systemctl --global enable \
     chezmoi-init.service \
     chezmoi-update.service \
     chezmoi-update.timer \
-    opentabletdriver.service
+    opentabletdriver.service \
+    coolercontrold.service
 
 ########################################################################################################################################
 # Section 7 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
