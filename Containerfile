@@ -466,8 +466,7 @@ RUN systemctl --global enable \
     chezmoi-init.service \
     chezmoi-update.service \
     chezmoi-update.timer \
-    opentabletdriver.service \
-    coolercontrold.service
+    opentabletdriver.service
 
 ########################################################################################################################################
 # Section 7 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
