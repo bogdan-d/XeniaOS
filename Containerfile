@@ -385,15 +385,6 @@ ExecStart=/usr/bin/udiskie\n\
 WantedBy=default.target' > /usr/lib/systemd/user/udiskie.service
 
 RUN echo -e '[Unit]\n\
-Description=Persistent wayland clipboard\n\
-\n\
-[Service]\n\
-ExecStart=/usr/bin/wl-clip-persist --clipboard regular\n\
-\n\
-[Install]\n\
-WantedBy=default.target' > /usr/lib/systemd/user/wl-clip-persist.service
-
-RUN echo -e '[Unit]\n\
 Description=Initializes Chezmoi if directory is missing\n\
 ConditionPathExists=!%h/.config/xeniaos/chezmoi\n\
 \n\
@@ -404,7 +395,7 @@ ExecStart=chezmoi apply -S /usr/share/xeniaos/zdots --config %h/.config/xeniaos/
 Type=oneshot\n\
 \n\
 [Install]\n\
-WantedBy=graphical-session-pre.target' >> /usr/lib/systemd/user/chezmoi-init.service
+WantedBy=graphical-session-pre.target' > /usr/lib/systemd/user/chezmoi-init.service
 
 RUN echo -e '[Unit]\n\
 Description=Timer for Chezmoi Update\n\
@@ -416,7 +407,7 @@ OnBootSec=5m\n\
 OnUnitInactiveSec=1d\n\
 \n\
 [Install]\n\
-WantedBy=timers.target' >> /usr/lib/systemd/user/chezmoi-update.timer
+WantedBy=timers.target' > /usr/lib/systemd/user/chezmoi-update.timer
 
 RUN echo -e "[Unit]\n\
 Description=Chezmoi Update\n\
@@ -425,7 +416,7 @@ Description=Chezmoi Update\n\
 ExecStart=mkdir -p %h/.config/xeniaos/chezmoi\n\
 ExecStart=touch %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
 ExecStart=sh -c 'yes s | chezmoi apply --no-tty --keep-going -S /usr/share/xeniaos/zdots --verbose --config %h/.config/xeniaos/chezmoi/chezmoi.toml'\n\
-Type=oneshot" >> /usr/lib/systemd/user/chezmoi-update.service
+Type=oneshot" > /usr/lib/systemd/user/chezmoi-update.service
 
 # This fixes a user/groups error with rebasing from other problematic images.
 # FIXME Do NOT remove until fixed upstream or fixed universally. Updating with new fix also fine. Script created by Tulip.
