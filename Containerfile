@@ -235,7 +235,6 @@ RUN mkdir -p /etc/plymouth && \
 # All kindsa Sudo changes for ease and flavor
 RUN echo -e '%wheel ALL=(ALL:ALL) ALL\n\
 \n\
-Defaults insults\n\
 Defaults pwfeedback\n\
 Defaults secure_path="/usr/local/bin:/usr/bin:/bin:/home/linuxbrew/.linuxbrew/bin"\n\
 Defaults env_keep += "EDITOR VISUAL PATH"\n\
