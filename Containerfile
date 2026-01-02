@@ -345,7 +345,8 @@ RUN echo -e "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility
 
 # Set up fictional Xenia shell companion in terminal
 RUN curl --retry 5 -s https://api.github.com/repos/fwdekker/mommy/releases/latest | grep "browser_download_url.*\.pacman" | cut -d : -f 2,3 | tr -d \" | xargs curl -sLOJ && \
-    sudo pacman -U ./mommy-*.pacman && \
+    sudo pacman -U --noconfirm ./mommy-*.pacman && \
+    echo e 'PROMPT_COMMAND="mommy -1 -s \$?; $PROMPT_COMMAND"' >> /etc/bash.bashrc && \
     echo -e 'MOMMY_SWEETIE="foxgirl"\n\
 MOMMY_CAREGIVER="Xenia"\n\
 MOMMY_COLOR="208"\n\
