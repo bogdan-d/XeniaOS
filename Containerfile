@@ -125,7 +125,7 @@ RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-util
 # Flatpaks
 # Bazaar | Firefox | Krita | Elisa | Pinta | OBS | Ark | Faugus Launcher | ProtonPlus | Kdenlive |
 # Okular | Kate | Warehouse | Fedora Media Writer | Gear Lever | Haruna | Gwenview
-# Audacity | Not Tetris 2 | Resources | Vesktop
+# Audacity | Not Tetris 2 | Resources | Discord
 
 ##############################################################################################################################################
 # Section 3 - Chaotic AUR / AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
@@ -216,7 +216,7 @@ RUN echo -e "[Flatpak Preinstall org.mozilla.firefox]\nBranch=stable\nIsRuntime=
 RUN echo -e "[Flatpak Preinstall net.nokyan.Resources]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/SystemMonitor.preinstall
 
 # Vesktop | Instant Messaging Discord 3rd Party Chat client
-RUN echo -e "[Flatpak Preinstall dev.vencord.Vesktop]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/Vesktop.preinstall
+RUN echo -e "[Flatpak Preinstall com.discordapp.Discord]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/Discord.preinstall
 
 # OBS | Video recording/Streaming
 RUN echo -e "[Flatpak Preinstall com.obsproject.Studio]\nBranch=stable\nRuntime=false" > /usr/share/flatpak/preinstall.d/OBS.preinstall
@@ -342,6 +342,14 @@ RUN kbuildsycoca6
 # Set vm.max_map_count for stability/improved gaming performance
 # https://wiki.archlinux.org/title/Gaming#Increase_vm.max_map_count
 RUN echo -e "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility.conf
+
+# Set up fictional Xenia shell companion in terminal
+RUN curl --retry 5 -s https://api.github.com/repos/fwdekker/mommy/releases/latest | grep "browser_download_url.*\.pacman" | cut -d : -f 2,3 | tr -d \" | xargs curl -sLOJ && \
+    sudo pacman -U ./mommy-*.pacman && \
+    echo -e 'MOMMY_SWEETIE="foxgirl"\n\
+MOMMY_CAREGIVER="Xenia"\n\
+MOMMY_COLOR="208"\n\
+MOMMY_CAPITALIZE="1"' > /etc/mommy/config.sh
 
 # Automount ext4/btrfs drives, feel free to mount your own in fstab if you understand how to do so
 # To turn off, run sudo ln -s /dev/null /etc/media-automount.d/_all.conf
