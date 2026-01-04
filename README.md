@@ -49,8 +49,8 @@ This OS can be used by first installing [Zirconium](https://github.com/zirconium
 `sudo bootc switch ghcr.io/xeniameraki/xeniaos:latest`
 
 
+(You may be aware from Bazzite a warning to not rebase between desktop environments. This has to do with KDE -> Gnome, or Gnome -> KDE. Rebasing from KDE or Gnome or Niri Bootc to XeniaOS' Niri base is unproblematic.)
 
-(You may be aware from Bazzite a warning to not rebase between desktop environments. This has to do with KDE -> Gnome, or Gnome -> KDE. Rebasing from KDE or Gnome Bootc to XeniaOS' Niri base is unproblematic.)
 
 ## Featuressss
 
