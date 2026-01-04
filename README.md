@@ -40,7 +40,7 @@ This is an opinionated gaming-oriented [bootc image](https://github.com/bootc-de
 
 
 ## Installation requirements and instructions
--AMD/Intel cpu/gpu -V3 cpu possibly -[Secureboot](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/disabling-secure-boot?view=windows-11) must be off -On a Virtual Machine, [opengl acceleration](https://askubuntu.com/a/1389829) is needed
+-AMD/Intel cpu/gpu -V3 cpu possibly -[Secureboot](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/disabling-secure-boot?view=windows-11) must be off -On a Virtual Machine, [opengl acceleration](https://askubuntu.com/a/1389829) is needed -This OS is not intended for nor should be used by minors
 
 
 This OS can be used by first installing [Zirconium](https://github.com/zirconium-dev/zirconium) and rebasing with terminal command:
