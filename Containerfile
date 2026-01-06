@@ -514,7 +514,7 @@ RUN echo -e 'eval "$(starship init bash)"' >> /etc/bash.bashrc
 # ReGreet login shell setup
 RUN mkdir -p /etc/greetd/
 
-RUN echo -e 'spawn-sh-at-startup "regreet >/dev/null 2>&1; niri msg action quit --skip-confirmation"\n\
+RUN echo -e 'spawn-sh-at-startup "regreet; niri msg action quit --skip-confirmation"\n\
 hotkey-overlay {\n\
     skip-at-startup\n\
 }\n\
@@ -526,7 +526,7 @@ RUN echo -e '[terminal]\n\
 vt = 1\n\
 \n\
 [default_session]\n\
-command = "/usr/bin/dbus-run-session /usr/bin/niri --config /etc/greetd/niri.kdl >/dev/null 2>&1"\n\
+command = "/usr/bin/dbus-run-session /usr/bin/niri --config /etc/greetd/niri.kdl"\n\
 user = "greeter"' > /etc/greetd/config.toml
 
 RUN echo -e '[background]\n\
