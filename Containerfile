@@ -110,7 +110,7 @@ RUN pacman -S --noconfirm greetd xwayland-satellite xdg-desktop-portal-kde xdg-d
       breeze brightnessctl ddcutil xdg-utils kservice5 archlinux-xdg-menu shared-mime-info kio glycin greetd-regreet gnome-themes-extra
 
 # User frontend programs/apps
-RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility mangohud lib32-mangohud bazaar
+RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-utility mangohud lib32-mangohud
 
 #######################################################################################################################################################
 # Section 2 - Package List | For my info and yours too! No secrets here. | Enjoy your life, and love everyone around you as much as possible ########
@@ -222,6 +222,9 @@ RUN echo -e "[Flatpak Preinstall com.obsproject.Studio.Plugin.OBSVkCapture]\nBra
 ########################################################################################################################################
 # Section 5 - Linux OS stuffs | "I'd decide for myself whether his teachings are right or wrong." Near, Death Note #####################
 ########################################################################################################################################
+# Bazaar installed After flatpak-git for dependency trouble
+# Also installed not as a flatpak because of perms trouble FIXME (possibly)
+RUN pacman -S --noconfirm bazaar
 
 # Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
 RUN mkdir -p /etc/plymouth && \
@@ -342,6 +345,7 @@ RUN echo -e "vm.max_map_count = 2147483642" > /etc/sysctl.d/80-gamecompatibility
 # Set up fictional Xenia shell companion in terminal
 RUN curl --retry 5 -s https://api.github.com/repos/fwdekker/mommy/releases/latest | grep "browser_download_url.*\.pacman" | cut -d : -f 2,3 | tr -d \" | xargs curl -sLOJ && \
     sudo pacman -U --noconfirm ./mommy-*.pacman && \
+    echo -e 'PROMPT_COMMAND="mommy -1 -s \$?; $PROMPT_COMMAND"' >> /etc/bash.bashrc && \
     mkdir -p /etc/mommy && \
     echo -e 'MOMMY_SWEETIE="foxgirl"\n\
 MOMMY_CAREGIVER="Xenia"\n\
