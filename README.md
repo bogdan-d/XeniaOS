@@ -79,7 +79,7 @@ This OS can be used by first installing [Zirconium](https://github.com/zirconium
 - You are encouraged to use Bazaar for a majority of your software installs, use flatpaks and appimages whenever possible
 
 
-This OS is only compatible and intended for desktop PCs with AMD/Intel graphics, and has optimizations for [V3 cpus](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels). Nvidia graphics is unsupported by this image and will never be supported directly, a custom image fork of this OS would be allowed and called for and would be the only real way of playing games on XeniaOS with Nvidia GPUs. Please do not ask us directly for support with Nvidia GPUs.
+This OS is only compatible and intended for desktop PCs with AMD/Intel graphics, and has optimizations for [V3 cpus](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels). Nvidia graphics is unsupported by this image and will never be supported directly, a custom image fork of this OS would be allowed and called for and would be the only real way of playing games on XeniaOS with Nvidia GPUs. Please do not ask us directly for support with Nvidia GPUs. We also do not support secureboot because frankly I don't think I should have to take a knee to Microslop and be judged as Worth via Their certification process.
 
 
 <p align="center">
