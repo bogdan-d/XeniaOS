@@ -25,7 +25,7 @@
 </div></h1>
 
 
-<h3 align="center">Arch Bootc / Niri / DMS / Xenia / Gaming On Linux</h3>
+<h3 align="center">CachyOS Bootc / Niri / DMS / Xenia / Gaming On Linux</h3>
 
 
 # Simple explanation: 
