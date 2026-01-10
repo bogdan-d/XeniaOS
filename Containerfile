@@ -18,7 +18,7 @@
 #      11]]][[[[[[[[[[[[[[[]]]]]]]                         
 #       111]]]]'[[[[[[[[[[[[[[]]]]
 #         111-]]]]][[[[[[[[[[[[[]]  Software that makes this OS possible - Distros/software for inspiration and whose members helped in some way
-#           11111]]]]]_[[[[[[[[[[]                   Arch | Bootc | Aurora | Bazzite | Bluebuild | Zirconium | Bluefin
+#           11111]]]]]_[[[[[[[[[[]               Arch | CachyOS | Bootc | Aurora | Bazzite | Bluebuild | Zirconium | Bluefin
 #               11111]]]i[[[[[[[[                          Docker | Podman | Fedora | Proton | Wine | Ubuntu
 #                  1111]]+[[[[[[^                                @kylegospo @valerie-tar-gz @cyrv6737
 #                    11 ]][[[[[[
