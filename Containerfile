@@ -152,44 +152,6 @@ RUN pacman -S --noconfirm \
   bootc/uupd && \
   systemctl enable uupd.timer
 
-##############################################################################################################################################
-# Regular AUR build (FIXME god I hate including AUR Build) ###################################################################################
-##############################################################################################################################################
-#Regular AUR build (FIXME god I hate including AUR Build)
-RUN pacman -S base-devel --noconfirm
-
-# Create build user
-RUN useradd -m --shell=/bin/bash build && usermod -L build && \
-    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-# Install AUR packages
-USER build
-WORKDIR /home/build
-RUN --mount=type=tmpfs,dst=/tmp \
-    git clone https://aur.archlinux.org/paru-bin.git --single-branch /tmp/paru && \
-    cd /tmp/paru && \
-    makepkg -si --noconfirm && \
-    cd .. && \
-    rm -drf paru-bin
-
-RUN paru -S --noconfirm aur/autofs
-
-USER root
-WORKDIR /
-
-# Cleanup and delete build user
-RUN userdel -r build && \
-    rm -drf /home/build && \
-    sed -i '/build ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
-    sed -i '/root ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers && \
-    rm -rf /home/build && \
-    rm -rf \
-        /tmp/* \
-        /var/cache/pacman/pkg/*
-
-RUN pacman -Rns --noconfirm base-devel 
-
 #######################################################################################################################################################
 # Section 4 - Flatpaks preinstalls | Don't forget. Always, somewhere, someone is fighting for you. You are not alone. -Madoka Magica ##################
 #######################################################################################################################################################
