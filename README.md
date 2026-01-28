@@ -16,9 +16,11 @@
 [![TransRights]][transrights_url]
 ![Sponsored by the Gay Agenda][sponsored]
 [![License](https://img.shields.io/badge/License-GPL3.0-orange)](#license)
+[![Static Badge](https://badgen.net/static/PGHRT/DIY/F0AAB9?labelColor=6DCFFA&icon=https://pghrt.diy/img/pghrtsvg.svg)](https://pghrt.diy)
 
 [transrights_url]: https://en.wikipedia.org/wiki/Transgender_rights_movement
 ![Badge](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FXeniaMeraki%2FXeniaOS&label=Views&icon=browser-firefox&color=%23ff7800&message=&style=plastic&tz=US%2FArizona)
+
 
 [TransRights]: https://pride-badges.pony.workers.dev/static/v1?label=trans%20rights&stripeWidth=6&stripeColors=5BCEFA,F5A9B8,FFFFFF,F5A9B8,5BCEFA
 [sponsored]: https://pride-badges.pony.workers.dev/static/v1?label=sponsored+by+the+gay+agenda&labelColor=%23555&stripeWidth=6&stripeColors=E40303%2CFF8C00%2CFFED00%2C008026%2C24408E%2C732982
